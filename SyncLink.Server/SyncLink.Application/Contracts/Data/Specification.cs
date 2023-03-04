@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using Application.Application.Queries;
 using SyncLink.Data.Models;
 
 namespace SyncLink.Application.Contracts.Data

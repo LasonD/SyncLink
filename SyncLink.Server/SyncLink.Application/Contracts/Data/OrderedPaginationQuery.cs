@@ -1,4 +1,4 @@
-﻿namespace Application.Application.Queries
+﻿namespace SyncLink.Application.Contracts.Data
 {
     public class OrderedPaginationQuery
     {

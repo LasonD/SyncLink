@@ -6,5 +6,9 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.3" />
+	  <PackageReference Include="NinjaNye.SearchExtensions" Version="3.0.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\SyncLink.Application\SyncLink.Application.csproj" />
 	</ItemGroup>
 </Project>

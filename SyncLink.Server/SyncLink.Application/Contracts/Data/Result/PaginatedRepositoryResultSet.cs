@@ -1,16 +1,15 @@
 ﻿using SyncLink.Application.Contracts.Data.Result.Pagination;
-using SyncLink.Data.Models;
 
 namespace SyncLink.Application.Contracts.Data.Result;
 
-internal class PaginatedRepositoryResultSet<TEntity> : RepositoryResultSet<TEntity> where TEntity : EntityBase
+public class PaginatedRepositoryResultSet<TEntity> : RepositoryResult
 {
     public PaginatedRepositoryResultSet(RepositoryActionStatus status, IPaginatedEnumerable<TEntity> results, Exception? exception = null) : base(status, results, exception)
     {
-        PaginatedResults = results;
+        Results = results;
     }
 
-    public IPaginatedEnumerable<TEntity> PaginatedResults { get; }
+    public IPaginatedEnumerable<TEntity> Results { get; }
 
-    public override IEnumerable<TEntity> Results => PaginatedResults;
+    public static PaginatedRepositoryResultSet<TEntity> Ok(IPaginatedEnumerable<TEntity> results) => new(RepositoryActionStatus.Ok, results);
 }
