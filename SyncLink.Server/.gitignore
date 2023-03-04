@@ -1,0 +1,56 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.vscode
+*.suo
+*.cache
+*.pdb
+*.log
+
+# Visual Studio
+/.vs/
+*.sln.ide
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build
+build/
+
+# NuGet
+*.nuget.props
+*.nuget.targets
+packages/
+
+# MSTest
+TestResults/
+
+# Resharper
+_resharper/
+
+# Others
+*.[Cc]ache
+*.bak
+*.tmp
+*.log
+*.swp
+*~
+Thumbs.db
+desktop.ini
+
+# Ignore the npm cache folder
+node_modules/
+
+# Ignore the bower_components folder
+bower_components/
+
+# Ignore the Webpack build output folder
+/dist/
+
+# Ignore the logs folder
+/logs/
+
+# Ignore the VS Code settings folder
+/.vscode/
