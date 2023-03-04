@@ -4,7 +4,7 @@ using SyncLink.Data.Models.Identity;
 
 namespace SyncLink.Data.Context;
 
-public class SyncLinkDbContext : IdentityDbContext<User>
+public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>
 {
     public SyncLinkDbContext(DbContextOptions<SyncLinkDbContext> options)
         : base(options)

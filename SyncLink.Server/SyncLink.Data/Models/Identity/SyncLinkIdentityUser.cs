@@ -2,7 +2,7 @@
 
 namespace SyncLink.Data.Models.Identity;
 
-public class User : IdentityUser
+public class SyncLinkIdentityUser : IdentityUser
 {
 }
 

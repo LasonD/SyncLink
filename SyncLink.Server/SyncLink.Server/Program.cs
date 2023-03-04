@@ -4,6 +4,7 @@ using SyncLink.Data.Context;
 using SyncLink.Data.Models.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var connectionString = builder.Configuration.GetConnectionString("SyncLinkDbContextConnection") ?? throw new InvalidOperationException("Connection string 'SyncLinkDbContextConnection' not found.");
 
 builder.Services.AddDbContext<SyncLinkDbContext>(options => options.UseSqlServer(connectionString));
@@ -11,6 +12,9 @@ builder.Services.AddDbContext<SyncLinkDbContext>(options => options.UseSqlServer
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<SyncLinkDbContext>();
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSignalR();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
