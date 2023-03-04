@@ -9,7 +9,7 @@ public class RepositoryResultSet<TEntity> : RepositoryResult where TEntity : Ent
         Results = results;
     }
 
-    public IEnumerable<TEntity> Results { get; }
+    public virtual IEnumerable<TEntity> Results { get; }
 
     public static RepositoryResultSet<TEntity> Ok(IEnumerable<TEntity> results) => new(RepositoryActionStatus.Ok, results.ToList());
 }
