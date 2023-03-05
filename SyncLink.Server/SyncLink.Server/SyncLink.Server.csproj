@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SyncLink.Data\SyncLink.Data.csproj" />
+    <ProjectReference Include="..\SyncLink.Data\SyncLink.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

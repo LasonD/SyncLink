@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using SyncLink.Data.Context;
-using SyncLink.Data.Models.Identity;
+using SyncLink.Infrastructure.Data.Context;
+using SyncLink.Infrastructure.Data.Models.Identity;
 
 namespace SyncLink.Server.Helpers;
 

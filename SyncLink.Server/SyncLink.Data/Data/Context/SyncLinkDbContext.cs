@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SyncLink.Data.Models.Identity;
+using SyncLink.Infrastructure.Data.Models.Identity;
 
-namespace SyncLink.Data.Context;
+namespace SyncLink.Infrastructure.Data.Context;
 
 public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>
 {

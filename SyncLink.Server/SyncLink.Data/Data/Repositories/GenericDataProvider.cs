@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.Result;
-using SyncLink.Data.Context;
-using SyncLink.Data.Helpers;
 using SyncLink.Data.Models;
 using NinjaNye.SearchExtensions;
+using SyncLink.Infrastructure.Data.Context;
+using SyncLink.Infrastructure.Data.Helpers;
 
-namespace SyncLink.Data.Repositories;
+namespace SyncLink.Infrastructure.Data.Repositories;
 
 public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
 {
@@ -39,7 +39,7 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : E
         return RepositoryEntityResult<TEntity>.Ok(entity);
     }
 
-    public virtual async Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync<TQuery>(Specification<TEntity, TQuery> specification, CancellationToken cancellationToken) 
+    public virtual async Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync<TQuery>(Specification<TEntity, TQuery> specification, CancellationToken cancellationToken)
         where TQuery : OrderedPaginationQuery
     {
         var queryInfo = specification.Query;
@@ -103,7 +103,7 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : E
         var paginatedQuery = ApplyPagination(queryWithInclusions, specification);
         var searchQuery = ApplySearching(paginatedQuery, specification);
         var orderedQuery = ApplyOrdering(searchQuery, specification);
-            
+
         return orderedQuery.AsNoTracking();
     }
 
