@@ -7,6 +7,8 @@ builder.Services.AddConfiguredIdentity(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddControllers();
+
 builder.Services.AddSignalR();
 
 builder.Services.AddSwaggerGen();
@@ -23,5 +25,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 app.Run();
