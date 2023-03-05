@@ -9,11 +9,11 @@ using SyncLink.Infrastructure.Data.Helpers;
 
 namespace SyncLink.Infrastructure.Data.Repositories;
 
-public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
+public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : EntityBase
 {
     private readonly SyncLinkDbContext _dbContext;
 
-    public GenericRepository(SyncLinkDbContext dbContext)
+    public GenericEntityRepository(SyncLinkDbContext dbContext)
     {
         _dbContext = dbContext;
     }

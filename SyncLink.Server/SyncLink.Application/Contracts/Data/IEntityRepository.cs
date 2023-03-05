@@ -4,7 +4,7 @@ using SyncLink.Data.Models;
 
 namespace SyncLink.Application.Contracts.Data;
 
-public interface IRepository<TEntity> where TEntity : EntityBase
+public interface IEntityRepository<TEntity> where TEntity : EntityBase
 {
     Task<RepositoryEntityResult<TEntity>> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] inclusions);
 

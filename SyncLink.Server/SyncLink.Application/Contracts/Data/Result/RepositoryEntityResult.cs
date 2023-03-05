@@ -1,8 +1,6 @@
-﻿using SyncLink.Data.Models;
+﻿namespace SyncLink.Application.Contracts.Data.Result;
 
-namespace SyncLink.Application.Contracts.Data.Result;
-
-public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : EntityBase
+public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : class
 {
     public RepositoryEntityResult(RepositoryActionStatus status, TEntity? result, Exception? exception = null) : base(status, exception)
     {

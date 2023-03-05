@@ -1,5 +1,6 @@
 ﻿namespace SyncLink.Application.Contracts.Data;
 
-internal interface IUserRepository
+public interface IAuthRepository
 {
+
 }

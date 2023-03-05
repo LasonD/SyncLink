@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
+using SyncLink.Infrastructure.Extensions;
 
 namespace SyncLink.Server.Helpers;
 
@@ -17,9 +18,9 @@ internal static class ServiceCollectionExtensions
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<SyncLinkDbContext>();
 
-        var issuer = config.GetRequiredConfig("JwtSettings:Issuer");
-        var audience = config.GetRequiredConfig("JwtSettings:Audience");
-        var key = config.GetRequiredConfig("JwtSettings:Key");
+        var issuer = config.GetIssuer();
+        var audience = config.GetAudience();
+        var key = config.GetTokenGenerationKey();
 
         services.AddAuthentication(options =>
             {
@@ -55,12 +56,5 @@ internal static class ServiceCollectionExtensions
         services.AddDbContext<SyncLinkDbContext>(options => options.UseSqlServer(connectionString));
 
         return services;
-    }
-
-    private static string GetRequiredConfig(this IConfiguration config, string key)
-    {
-        var value = config[key] ?? throw new InvalidOperationException($"Configuration '{key}' not found.");
-
-        return value;
     }
 }
