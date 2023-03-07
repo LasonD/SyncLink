@@ -1,3 +1,6 @@
+using SyncLink.Application.Contracts.Data;
+using SyncLink.Application.UseCases.Register;
+using SyncLink.Infrastructure.Data.Repositories;
 using SyncLink.Server.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +15,11 @@ builder.Services.AddControllers();
 builder.Services.AddSignalR();
 
 builder.Services.AddSwaggerGen();
+
+// TODO:
+
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(RegisterHandler).Assembly));
+builder.Services.AddTransient<IAuthRepository, AuthRepository>();
 
 var app = builder.Build();
 

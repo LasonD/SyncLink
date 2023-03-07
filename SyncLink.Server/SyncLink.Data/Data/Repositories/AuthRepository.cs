@@ -52,8 +52,8 @@ public class AuthRepository : IAuthRepository
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var userName = !string.IsNullOrWhiteSpace(registrationData.UserName)
-            ? $"{registrationData.FirstName} {registrationData.LastName}"
+        var userName = string.IsNullOrWhiteSpace(registrationData.UserName)
+            ? $"{registrationData.FirstName}_{registrationData.LastName}"
             : registrationData.UserName; 
 
         var newUser = new SyncLinkIdentityUser()

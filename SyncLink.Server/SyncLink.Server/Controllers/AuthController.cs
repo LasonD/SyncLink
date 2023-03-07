@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SyncLink.Application.UseCases.Authenticate;
+using SyncLink.Application.UseCases.Register;
 using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Controllers;
@@ -8,15 +11,37 @@ namespace SyncLink.Server.Controllers;
 [AllowAnonymous]
 public class AuthController : ControllerBase
 {
-    [HttpPost("/login")]
-    public Task<IActionResult> Login([FromBody] LoginDto loginData)
+    private readonly IMediator _mediator;
+
+    public AuthController(IMediator mediator)
     {
-        return Task.FromResult<IActionResult>(Ok(loginData));
+        _mediator = mediator;
+    }
+
+    [HttpPost("/login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto loginData, CancellationToken cancellationToken)
+    {
+        var authResult = await _mediator.Send(new AuthenticateRequest
+        {
+            Password = loginData.Password,
+            UsernameOrEmail = loginData.UsernameOrEmail
+        }, cancellationToken);
+
+        return Ok(authResult);
     }
 
     [HttpPost("/register")]
-    public Task<IActionResult> Register([FromBody] RegistrationDto registerData)
+    public async Task<IActionResult> Register([FromBody] RegistrationDto registerData, CancellationToken cancellationToken)
     {
-        return Task.FromResult<IActionResult>(Ok(registerData));
+        var authResult = await _mediator.Send(new RegisterRequest
+        {
+            Password = registerData.Password,
+            Email = registerData.Email,
+            FirstName = registerData.FirstName,
+            LastName = registerData.LastName,
+            UserName = registerData.Username,
+        }, cancellationToken);
+
+        return Ok(authResult);
     }
 }
