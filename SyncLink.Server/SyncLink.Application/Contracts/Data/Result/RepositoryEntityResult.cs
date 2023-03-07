@@ -2,7 +2,12 @@
 
 public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : class
 {
-    public RepositoryEntityResult(RepositoryActionStatus status, TEntity? result, Exception? exception = null) : base(status, exception)
+    public RepositoryEntityResult(
+        RepositoryActionStatus status,
+        TEntity? result,
+        Exception? exception = null,
+        IEnumerable<RepositoryError>? errors = null
+    ) : base(status, exception, errors)
     {
         Result = result;
     }
@@ -16,4 +21,6 @@ public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : 
     public static RepositoryEntityResult<TEntity> Deleted(TEntity result) => new(RepositoryActionStatus.Deleted, result);
 
     public static RepositoryEntityResult<TEntity> Ok(TEntity result) => new(RepositoryActionStatus.Ok, result);
+
+    public static RepositoryEntityResult<TEntity> Conflict(IEnumerable<RepositoryError>? errors) => new(RepositoryActionStatus.Conflict, null, errors: errors?.ToList());
 }

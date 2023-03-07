@@ -43,6 +43,47 @@ public class AuthRepository : IAuthRepository
             return RepositoryEntityResult<AuthResult>.NotFound();
         }
 
+        var authResult = await PrepareAuthResultAsync(user);
+
+        return RepositoryEntityResult<AuthResult>.Ok(authResult);
+    }
+
+    public async Task<RepositoryEntityResult<AuthResult>> RegisterUserAsync(RegistrationData registrationData, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var userName = !string.IsNullOrWhiteSpace(registrationData.UserName)
+            ? $"{registrationData.FirstName} {registrationData.LastName}"
+            : registrationData.UserName; 
+
+        var newUser = new SyncLinkIdentityUser()
+        {
+            Email = registrationData.Email,
+            FirstName = registrationData.FirstName,
+            LastName = registrationData.LastName,
+            UserName = userName,
+        };
+
+        var identityResult = await _userManager.CreateAsync(newUser, registrationData.Password);
+
+        if (!identityResult.Succeeded)
+        {
+            var repositoryErrors = identityResult
+                .Errors
+                .Select(e => new RepositoryError(e.Description, e.Code));
+
+            return RepositoryEntityResult<AuthResult>.Conflict(repositoryErrors);
+        }
+
+        var authResult = await PrepareAuthResultAsync(newUser);
+
+        return RepositoryEntityResult<AuthResult>.Ok(authResult);
+    }
+
+    #region Private methods
+
+    private async Task<AuthResult> PrepareAuthResultAsync(SyncLinkIdentityUser user)
+    {
         var tokenClaims = await CollectClaimsAsync(user);
         var tokenStr = GenerateToken(tokenClaims);
 
@@ -56,17 +97,8 @@ public class AuthRepository : IAuthRepository
             LastName = user.LastName,
         };
 
-        return RepositoryEntityResult<AuthResult>.Ok(authResult);
+        return authResult;
     }
-
-    public async Task<RepositoryEntityResult<AuthResult>> RegisterUserAsync(RegistrationData registrationData, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-
-    }
-
-    #region Private methods
 
     private string GenerateToken(IEnumerable<Claim> tokenClaims)
     {
