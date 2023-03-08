@@ -16,7 +16,7 @@ builder.Services.AddSignalR();
 
 builder.Services.AddSwaggerGen();
 
-// TODO:
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(RegisterHandler).Assembly));
 builder.Services.AddTransient<IAuthRepository, AuthRepository>();

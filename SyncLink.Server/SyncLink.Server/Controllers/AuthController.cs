@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SyncLink.Application.UseCases.Authenticate;
+using SyncLink.Application.UseCases.Login;
 using SyncLink.Application.UseCases.Register;
 using SyncLink.Server.Dtos;
 
@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
     [HttpPost("/login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginData, CancellationToken cancellationToken)
     {
-        var authResult = await _mediator.Send(new AuthenticateRequest
+        var authResult = await _mediator.Send(new LoginRequest
         {
             Password = loginData.Password,
             UsernameOrEmail = loginData.UsernameOrEmail

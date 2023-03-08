@@ -3,18 +3,18 @@ using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Contracts.Dtos;
 
-namespace SyncLink.Application.UseCases.Authenticate;
+namespace SyncLink.Application.UseCases.Login;
 
-public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, AuthResult>
+public class LoginHandler : IRequestHandler<LoginRequest, AuthResult>
 {
     private readonly IAuthRepository _authRepository;
 
-    public AuthenticateHandler(IAuthRepository authRepository)
+    public LoginHandler(IAuthRepository authRepository)
     {
         _authRepository = authRepository;
     }
 
-    public async Task<AuthResult> Handle(AuthenticateRequest request, CancellationToken cancellationToken)
+    public async Task<AuthResult> Handle(LoginRequest request, CancellationToken cancellationToken)
     {
         // TODO: use AutoMapper
         var loginData = new LoginData()
