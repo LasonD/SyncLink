@@ -1,4 +1,4 @@
-﻿namespace SyncLink.Application.Contracts.Dtos;
+﻿namespace SyncLink.Application.Dtos;
 
 public class AuthResult
 {

@@ -1,5 +1,5 @@
 ﻿using SyncLink.Application.Contracts.Data.Result;
-using SyncLink.Application.Contracts.Dtos;
+using SyncLink.Application.Dtos;
 
 namespace SyncLink.Application.Contracts.Data;
 

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SyncLink.Application.Contracts.Dtos;
+using SyncLink.Application.Dtos;
 
 namespace SyncLink.Application.UseCases.Register
 {

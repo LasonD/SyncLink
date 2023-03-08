@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.Result;
-using SyncLink.Application.Contracts.Dtos;
+using SyncLink.Application.Dtos;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Extensions;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
