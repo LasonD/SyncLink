@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SyncLink.Application.Contracts.Data;
+using SyncLink.Application.UseCases.Register;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
+using SyncLink.Infrastructure.Data.Repositories;
 using SyncLink.Infrastructure.Extensions;
 
 namespace SyncLink.Server.Helpers;
@@ -54,6 +57,31 @@ internal static class ServiceCollectionExtensions
         var connectionString = config.GetConnectionString("SyncLinkDbContextConnection") ?? throw new InvalidOperationException("Connection string 'SyncLinkDbContextConnection' not found.");
 
         services.AddDbContext<SyncLinkDbContext>(options => options.UseSqlServer(connectionString));
+
+        return services;
+    }
+
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(Program));
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(RegisterHandler).Assembly));
+
+        return services;
+    }
+
+    public static IServiceCollection AddApiWithSwagger(this IServiceCollection services)
+    {
+        services.AddEndpointsApiExplorer();
+        services.AddControllers();
+        services.AddSignalR();
+        services.AddSwaggerGen();
+
+        return services;
+    }
+
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    {
+        services.AddTransient<IAuthRepository, AuthRepository>();
 
         return services;
     }
