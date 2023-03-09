@@ -4,7 +4,7 @@ using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Contracts.Dtos;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Register
+namespace SyncLink.Application.UseCases.Auth.Register
 {
     public class RegisterHandler : IRequestHandler<RegisterRequest, AuthResult>
     {
