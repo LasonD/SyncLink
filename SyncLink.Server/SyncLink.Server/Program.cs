@@ -1,4 +1,5 @@
 using SyncLink.Server.Helpers;
+using SyncLink.Server.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseMiddleware<ErrorHandler>();
 
 app.UseAuthentication();
 app.UseAuthorization();
