@@ -2,11 +2,11 @@
 
 namespace SyncLink.Application.Domain;
 
-internal class Message : EntityBase
+public class Message : EntityBase
 {
-    public User Sender { get; private set; }
+    public User Sender { get; protected set; } = null!;
 
-    public Room Room { get; private set; }
+    public Room Room { get; protected set; } = null!;
 
-    public DateTime SentDateTime { get; private set; } 
+    public DateTime SentDateTime { get; protected set; } 
 }

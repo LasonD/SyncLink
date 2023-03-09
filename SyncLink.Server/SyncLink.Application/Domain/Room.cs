@@ -4,7 +4,7 @@ namespace SyncLink.Application.Domain;
 
 public class Room : EntityBase
 {
-    private List<User> Members { get; set; }
+    public IReadOnlyCollection<User> Members { get; protected set; } = null!;
 
-    private List<Message> Messages { get; set; }
+    public IReadOnlyCollection<Message> Messages { get; protected set; } = null!;
 }

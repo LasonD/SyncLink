@@ -2,10 +2,10 @@
 
 public class AuthException : BusinessException
 {
-    public AuthException(IEnumerable<string> errors)
+    public AuthException(IEnumerable<string>? errors)
     {
         Errors = errors;
     }
 
-    public IEnumerable<string> Errors { get; }
+    public IEnumerable<string>? Errors { get; }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using SyncLink.Data.Models;
+using SyncLink.Application.Domain;
 
 namespace SyncLink.Application.Contracts.Data
 {

@@ -2,7 +2,7 @@
 
 public class RegistrationException : AuthException
 {
-    public RegistrationException(IEnumerable<string> errors) : base(errors)
+    public RegistrationException(IEnumerable<string>? errors) : base(errors)
     {
     }
 }

@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SyncLink.Application.Contracts.Data;
+using SyncLink.Application.Mapping;
 using SyncLink.Application.UseCases.Auth.Register;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Data.Repositories;
 using SyncLink.Infrastructure.Extensions;
+using SyncLink.Server.Middleware;
 
 namespace SyncLink.Server.Helpers;
 
@@ -63,8 +65,9 @@ internal static class ServiceCollectionExtensions
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(Program));
+        services.AddAutoMapper(typeof(Program), typeof(ApplicationProfile), typeof(SyncLinkDbContext));
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(RegisterHandler).Assembly));
+        services.AddScoped<ErrorHandler>();
 
         return services;
     }

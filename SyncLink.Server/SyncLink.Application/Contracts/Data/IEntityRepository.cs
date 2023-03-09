@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using SyncLink.Application.Contracts.Data.Result;
-using SyncLink.Data.Models;
+using SyncLink.Application.Domain;
 
 namespace SyncLink.Application.Contracts.Data;
 

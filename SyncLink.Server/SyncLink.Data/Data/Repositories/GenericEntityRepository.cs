@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.Result;
-using SyncLink.Data.Models;
 using NinjaNye.SearchExtensions;
+using SyncLink.Application.Domain;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Helpers;
 
