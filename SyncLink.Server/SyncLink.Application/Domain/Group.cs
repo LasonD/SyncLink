@@ -1,6 +1,4 @@
-﻿using SyncLink.Data.Models;
-
-namespace SyncLink.Application.Domain;
+﻿namespace SyncLink.Application.Domain;
 
 public class Group : EntityBase
 {
