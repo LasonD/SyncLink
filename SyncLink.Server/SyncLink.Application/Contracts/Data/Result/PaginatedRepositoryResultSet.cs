@@ -2,14 +2,9 @@
 
 namespace SyncLink.Application.Contracts.Data.Result;
 
-public class PaginatedRepositoryResultSet<TEntity> : RepositoryResult
+public class PaginatedRepositoryResultSet<TEntity> : RepositoryEntityResult<IPaginatedEnumerable<TEntity>>
 {
-    public PaginatedRepositoryResultSet(RepositoryActionStatus status, IPaginatedEnumerable<TEntity> results, Exception? exception = null) : base(status, exception)
+    public PaginatedRepositoryResultSet(RepositoryActionStatus status, IPaginatedEnumerable<TEntity>? result, Exception? exception = null, IEnumerable<RepositoryError>? errors = null) : base(status, result, exception, errors)
     {
-        Results = results;
     }
-
-    public IPaginatedEnumerable<TEntity> Results { get; }
-
-    public static PaginatedRepositoryResultSet<TEntity> Ok(IPaginatedEnumerable<TEntity> results) => new(RepositoryActionStatus.Ok, results);
 }
