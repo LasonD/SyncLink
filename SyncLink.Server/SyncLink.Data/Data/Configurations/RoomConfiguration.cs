@@ -22,5 +22,13 @@ internal class RoomConfiguration : IEntityTypeConfiguration<Room>
             .HasOne(x => x.Group)
             .WithMany(x => x.Rooms)
             .HasForeignKey(x => x.GroupId);
+
+        builder.Metadata
+            .FindNavigation(nameof(Room.Messages))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Metadata
+            .FindNavigation(nameof(Room.RoomMembers))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

@@ -17,5 +17,13 @@ internal class GroupConfiguration : IEntityTypeConfiguration<Group>
             .HasMany(x => x.Rooms)
             .WithOne(x => x.Group)
             .HasForeignKey(x => x.GroupId);
+
+        builder.Metadata
+            .FindNavigation(nameof(Group.Rooms))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Metadata
+            .FindNavigation(nameof(Group.UserGroups))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

@@ -23,5 +23,17 @@ internal class ApplicationUserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(x => x.Sender)
             .HasForeignKey(x => x.SenderId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Metadata
+            .FindNavigation(nameof(User.Messages))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Metadata
+            .FindNavigation(nameof(User.UserGroups))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Metadata
+            .FindNavigation(nameof(User.UserRooms))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
