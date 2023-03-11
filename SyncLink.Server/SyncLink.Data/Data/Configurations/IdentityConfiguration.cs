@@ -8,7 +8,9 @@ internal class IdentityConfiguration : IEntityTypeConfiguration<SyncLinkIdentity
 {
     public void Configure(EntityTypeBuilder<SyncLinkIdentityUser> builder)
     {
-        builder.HasOne(x => x.ApplicationUser)
-            .WithOne();
+        builder
+            .HasOne(x => x.ApplicationUser)
+            .WithOne()
+            .HasForeignKey(typeof(SyncLinkIdentityUser), nameof(SyncLinkIdentityUser.ApplicationUserId));
     }
 }
