@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.Result;
 using NinjaNye.SearchExtensions;
-using SyncLink.Application.Domain;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Helpers;
+using SyncLink.Application.Domain.Base;
 
 namespace SyncLink.Infrastructure.Data.Repositories;
 

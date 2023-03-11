@@ -1,4 +1,4 @@
-﻿namespace SyncLink.Application.Domain;
+﻿namespace SyncLink.Application.Domain.Base;
 
 public class EntityBase
 {

@@ -1,4 +1,5 @@
-﻿using SyncLink.Common.Validation;
+﻿using SyncLink.Application.Domain.Base;
+using SyncLink.Common.Validation;
 
 namespace SyncLink.Application.Domain;
 
@@ -8,11 +9,27 @@ public class Message : EntityBase
 
     public Message(User sender, Room room, string text)
     {
-        sender.ThrowIfNull(nameof(sender));
-        room.ThrowIfNull(nameof(room));
-
-        Text = text;
+        Sender = sender.GetValueOrThrowIfNull(nameof(sender));
+        Room = room.GetValueOrThrowIfNull(nameof(room));
+        Text = text.GetValueOrThrowIfNullOrWhiteSpace(nameof(text));
     }
+
+    public bool Edit(string newText)
+    {
+        newText.ThrowIfNullOrWhiteSpace(nameof(newText));
+
+        if (Text == newText)
+        {
+            return false;
+        }
+
+        Text = newText;
+        EditedDateTime = DateTime.UtcNow;
+
+        return true;
+    }
+
+    public DateTime EditedDateTime { get; private set; } = default;
 
     public bool IsEdited { get; private set; } = false;
 
