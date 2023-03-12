@@ -12,8 +12,8 @@ using SyncLink.Infrastructure.Data.Context;
 namespace SyncLink.Infrastructure.Migrations
 {
     [DbContext(typeof(SyncLinkDbContext))]
-    [Migration("20230307211336_Initial")]
-    partial class Initial
+    [Migration("20230312204443_ModelAdjustments3")]
+    partial class ModelAdjustments3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,12 +158,154 @@ namespace SyncLink.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SyncLink.Application.Domain.Associations.UserGroup", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCreator")
+                        .HasColumnType("bit");
+
+                    b.HasKey("UserId", "GroupId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("UserGroup");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Associations.UserRoom", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoomId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("UserRoom");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Group");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EditedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsEdited")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUsers");
+                });
+
             modelBuilder.Entity("SyncLink.Infrastructure.Data.Models.Identity.SyncLinkIdentityUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ApplicationUserId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -219,6 +361,9 @@ namespace SyncLink.Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -280,6 +425,108 @@ namespace SyncLink.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Associations.UserGroup", b =>
+                {
+                    b.HasOne("SyncLink.Application.Domain.Group", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SyncLink.Application.Domain.User", "User")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Associations.UserRoom", b =>
+                {
+                    b.HasOne("SyncLink.Application.Domain.Room", "Room")
+                        .WithMany("RoomMembers")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SyncLink.Application.Domain.User", "User")
+                        .WithMany("UserRooms")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Message", b =>
+                {
+                    b.HasOne("SyncLink.Application.Domain.Room", "Room")
+                        .WithMany("Messages")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SyncLink.Application.Domain.User", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Room", b =>
+                {
+                    b.HasOne("SyncLink.Application.Domain.Group", "Group")
+                        .WithMany("Rooms")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("SyncLink.Infrastructure.Data.Models.Identity.SyncLinkIdentityUser", b =>
+                {
+                    b.HasOne("SyncLink.Application.Domain.User", "ApplicationUser")
+                        .WithOne()
+                        .HasForeignKey("SyncLink.Infrastructure.Data.Models.Identity.SyncLinkIdentityUser", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Group", b =>
+                {
+                    b.Navigation("Rooms");
+
+                    b.Navigation("UserGroups");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.Room", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("RoomMembers");
+                });
+
+            modelBuilder.Entity("SyncLink.Application.Domain.User", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("UserGroups");
+
+                    b.Navigation("UserRooms");
                 });
 #pragma warning restore 612, 618
         }

@@ -202,6 +202,13 @@ namespace SyncLink.Infrastructure.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Group");
@@ -218,6 +225,9 @@ namespace SyncLink.Infrastructure.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("EditedDateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsEdited")
                         .HasColumnType("bit");
 
@@ -226,6 +236,10 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.Property<int>("SenderId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -249,6 +263,9 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

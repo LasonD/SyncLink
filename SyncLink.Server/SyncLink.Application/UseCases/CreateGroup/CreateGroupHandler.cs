@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain;
-using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
@@ -11,13 +11,13 @@ public partial class CreateGroup
 {
     public class Handler : IRequestHandler<Command, GroupDto>
     {
-        private readonly IGroupRepository _groupRepository;
+        private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
 
-        public Handler(IGroupRepository groupRepository, IUserRepository userRepository)
+        public Handler(IUserRepository userRepository, IMapper mapper)
         {
-            _groupRepository = groupRepository;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task<GroupDto> Handle(Command request, CancellationToken cancellationToken)
@@ -34,9 +34,13 @@ public partial class CreateGroup
 
             var group = new Group(request.Name, request.Description);
 
-            var userGroup = new UserGroup(user, group, isCreator: true, isAdmin: true);
+            user.AddGroup(group, isCreator: true, isAdmin: true);
 
-            _groupRepository.CreateAsync();
+           await _userRepository.SaveChangesAsync(cancellationToken);
+
+           var dto = _mapper.Map<GroupDto>(group);
+
+           return dto;
         }
     }
 }

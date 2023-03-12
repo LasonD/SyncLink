@@ -18,7 +18,7 @@ public class RepositoryActionException : Exception
 
     public IReadOnlyCollection<RepositoryError>? Errors { get; }
 
-    public IEnumerable<string> GetClientFacingErrors()
+    public ICollection<string> GetClientFacingErrors()
     {
         return GetClientFacingErrors(Status, Errors?.ToList(), EntityType);
     }
@@ -28,7 +28,7 @@ public class RepositoryActionException : Exception
         return string.Join(", ", GetClientFacingErrors(status, errors, entityType));
     }
 
-    private static IEnumerable<string> GetClientFacingErrors(RepositoryActionStatus status, ICollection<RepositoryError>? errors, Type entityType)
+    private static ICollection<string> GetClientFacingErrors(RepositoryActionStatus status, ICollection<RepositoryError>? errors, Type entityType)
     {
         if (errors.IsNullOrEmpty())
         {

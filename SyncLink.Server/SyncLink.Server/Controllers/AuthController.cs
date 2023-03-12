@@ -9,6 +9,7 @@ using SyncLink.Server.Dtos;
 namespace SyncLink.Server.Controllers;
 
 [ApiController]
+[Route("api/[controller]")]
 [AllowAnonymous]
 public class AuthController : ControllerBase
 {

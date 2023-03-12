@@ -15,7 +15,14 @@ public class User : EntityBase
         UserName = userName.GetValueOrThrowIfNullOrWhiteSpace(nameof(userName));
     }
 
-    public string UserName { get; private set; } = null!;
+    public string UserName { get; private set; }
+
+    public void AddGroup(Group group, bool isCreator, bool isAdmin)
+    {
+        var userGroup = new UserGroup(this, group, isCreator, isAdmin);
+
+        _userGroups.Add(userGroup);
+    }
 
     public IReadOnlyCollection<UserGroup> UserGroups => _userGroups.AsReadOnly();
 

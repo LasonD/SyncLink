@@ -21,8 +21,7 @@ internal class ApplicationUserConfiguration : IEntityTypeConfiguration<User>
         builder
             .HasMany(x => x.Messages)
             .WithOne(x => x.Sender)
-            .HasForeignKey(x => x.SenderId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .HasForeignKey(x => x.SenderId);
 
         builder.Metadata
             .FindNavigation(nameof(User.Messages))!

@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Controllers;
 
 [Authorize]
+[Route("api/[controller]")]
 [ApiController]
 public class GroupsController : ControllerBase
 {
-    [HttpPost("/")]
-    public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto createGroupDto, CancellationToken cancellationToken)
+    [HttpGet("/{id:int}")]
+    [ActionName("test")]
+    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
-
+        return Ok();
     }
 }
