@@ -2,14 +2,16 @@
 
 public class RepositoryError
 {
-    public RepositoryError(string description, string? code = default)
+    public RepositoryError(string description, string? code = default, bool isClientFacing = true)
     {
         Description = description;
         Code = code;
+        IsClientFacing = isClientFacing;
     }
 
     public string Description { get; }
     public string? Code { get; }
+    public bool IsClientFacing { get; }
 
     public static implicit operator string(RepositoryError d) => d.ToString();
 

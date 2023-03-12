@@ -11,6 +11,7 @@ using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Data.Repositories;
 using SyncLink.Infrastructure.Extensions;
+using SyncLink.Server.Filters;
 using SyncLink.Server.Middleware;
 
 namespace SyncLink.Server.Helpers;
@@ -75,7 +76,7 @@ internal static class ServiceCollectionExtensions
     public static IServiceCollection AddApiWithSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddControllers();
+        services.AddControllers(options => options.Filters.Add<ValidateModelStateAttribute>());
         services.AddSignalR();
         services.AddSwaggerGen();
 

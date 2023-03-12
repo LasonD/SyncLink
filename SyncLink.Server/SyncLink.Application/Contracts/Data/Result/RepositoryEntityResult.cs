@@ -1,5 +1,4 @@
 ﻿using SyncLink.Application.Contracts.Data.Result.Exceptions;
-using SyncLink.Common.Helpers;
 using System.Diagnostics;
 
 namespace SyncLink.Application.Contracts.Data.Result;
@@ -10,7 +9,7 @@ public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : 
         RepositoryActionStatus status,
         TEntity? result,
         Exception? exception = null,
-        IEnumerable<RepositoryError>? errors = null
+        ICollection<RepositoryError>? errors = null
     ) : base(status, exception, errors)
     {
         Result = result;
@@ -25,13 +24,11 @@ public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : 
             return Result!;
         }
 
-        var errorMessage = GetFormattedErrorMessage();
-
         throw Status switch
         {
-            RepositoryActionStatus.NotFound => new NotFoundException(errorMessage, Exception),
-            RepositoryActionStatus.Conflict => new ConflictException(errorMessage, Exception),
-            RepositoryActionStatus.UnknownError => new RepositoryActionException(errorMessage, Exception),
+            RepositoryActionStatus.NotFound => new NotFoundException(Status, Errors?.ToList(), typeof(TEntity), Exception),
+            RepositoryActionStatus.Conflict => new ConflictException(Status, Errors?.ToList(), typeof(TEntity), Exception),
+            RepositoryActionStatus.UnknownError => new RepositoryActionException(Status, Errors?.ToList(), typeof(TEntity), Exception),
             _ => new UnreachableException("Wtf ??", Exception)
         };
     }
@@ -45,14 +42,4 @@ public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : 
     public static RepositoryEntityResult<TEntity> Ok(TEntity result) => new(RepositoryActionStatus.Ok, result);
 
     public static RepositoryEntityResult<TEntity> Conflict(IEnumerable<RepositoryError>? errors) => new(RepositoryActionStatus.Conflict, null, errors: errors?.ToList());
-
-    private string GetFormattedErrorMessage()
-    {
-        if (Errors.IsNullOrEmpty())
-        {
-            return $"Unexpected repository action state for '{typeof(TEntity).Name}': {Status}";
-        }
-
-        return string.Join(", ", Errors!) ;
-    }
 }

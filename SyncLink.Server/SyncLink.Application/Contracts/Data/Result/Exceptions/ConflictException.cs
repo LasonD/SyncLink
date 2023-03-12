@@ -6,4 +6,10 @@ internal class ConflictException : RepositoryActionException
     {
 
     }
+
+    public ConflictException(RepositoryActionStatus status, ICollection<RepositoryError>? errors, Type entityType, Exception? innerException = null) :
+        base(status, errors, entityType, innerException)
+    {
+
+    }
 }

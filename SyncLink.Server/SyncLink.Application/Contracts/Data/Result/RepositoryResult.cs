@@ -9,16 +9,16 @@ public class RepositoryResult
         RepositoryActionStatus.UnknownError,
     };
 
-    public RepositoryResult(RepositoryActionStatus status, Exception? exception = null, IEnumerable<RepositoryError>? errors = null)
+    public RepositoryResult(RepositoryActionStatus status, Exception? exception = null, ICollection<RepositoryError>? errors = null)
     {
         Status = status;
         Exception = exception;
-        Errors = errors;
+        Errors = errors?.ToList().AsReadOnly();
     }
 
     public Exception? Exception { get; }
 
-    public IEnumerable<RepositoryError>? Errors { get; }
+    public IReadOnlyCollection<RepositoryError>? Errors { get; }
 
     public RepositoryActionStatus Status { get; }
 
