@@ -5,40 +5,39 @@ using SyncLink.Application.Contracts.Data.Result.Exceptions;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
-namespace SyncLink.Application.UseCases.Auth.Register
+namespace SyncLink.Application.UseCases.Auth.Register;
+
+public class RegisterHandler : IRequestHandler<RegisterRequest, AuthResult>
 {
-    public class RegisterHandler : IRequestHandler<RegisterRequest, AuthResult>
+    private readonly IAuthRepository _authRepository;
+    private readonly IMapper _mapper;
+
+    public RegisterHandler(IAuthRepository authRepository, IMapper mapper)
     {
-        private readonly IAuthRepository _authRepository;
-        private readonly IMapper _mapper;
+        _authRepository = authRepository;
+        _mapper = mapper;
+    }
 
-        public RegisterHandler(IAuthRepository authRepository, IMapper mapper)
+    public async Task<AuthResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
+    {
+        try
         {
-            _authRepository = authRepository;
-            _mapper = mapper;
+            return await HandleInternalAsync(request, cancellationToken);
         }
-
-        public async Task<AuthResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
+        catch (RepositoryActionException ex)
         {
-            try
-            {
-                return await HandleInternalAsync(request, cancellationToken);
-            }
-            catch (RepositoryActionException ex)
-            {
-                throw new RegistrationException(ex.GetClientFacingErrors());
-            }
+            throw new RegistrationException(ex.GetClientFacingErrors());
         }
+    }
 
-        private async Task<AuthResult> HandleInternalAsync(RegisterRequest request, CancellationToken cancellationToken)
-        {
-            var registerData = _mapper.Map<RegistrationData>(request);
+    private async Task<AuthResult> HandleInternalAsync(RegisterRequest request, CancellationToken cancellationToken)
+    {
+        var registerData = _mapper.Map<RegistrationData>(request);
 
-            var result = await _authRepository.RegisterUserAsync(registerData, cancellationToken);
+        var result = await _authRepository.RegisterUserAsync(registerData, cancellationToken);
 
-            var authResult = result.GetResult();
+        var authResult = result.GetResult();
 
-            return authResult;
-        }
+        return authResult;
     }
 }
