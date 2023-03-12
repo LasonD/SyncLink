@@ -5,7 +5,7 @@ namespace SyncLink.Application.UseCases.Auth.Register;
 
 public partial class Register
 {
-    public class Command : IRequest<AuthResult>
+    public record Command : IRequest<AuthResult>
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;

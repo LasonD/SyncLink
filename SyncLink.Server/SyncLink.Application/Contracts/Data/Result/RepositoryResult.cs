@@ -6,6 +6,7 @@ public class RepositoryResult
     {
         RepositoryActionStatus.Conflict,
         RepositoryActionStatus.NotFound,
+        RepositoryActionStatus.ValidationFailed,
         RepositoryActionStatus.UnknownError,
     };
 

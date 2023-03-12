@@ -35,4 +35,6 @@ public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : 
     public static RepositoryEntityResult<TEntity> Ok(TEntity result) => new(RepositoryActionStatus.Ok, result);
 
     public static RepositoryEntityResult<TEntity> Conflict(IEnumerable<RepositoryError>? errors) => new(RepositoryActionStatus.Conflict, null, errors: errors?.ToList());
+
+    public static RepositoryEntityResult<TEntity> ValidationFailed(IEnumerable<RepositoryError>? errors) => new(RepositoryActionStatus.ValidationFailed, null, errors: errors?.ToList());
 }

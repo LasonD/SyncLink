@@ -1,7 +1,7 @@
 ﻿using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.Contracts.Data;
+namespace SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 
 public interface IAuthRepository
 {

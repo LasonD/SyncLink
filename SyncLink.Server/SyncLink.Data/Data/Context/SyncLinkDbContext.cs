@@ -27,30 +27,30 @@ public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        var rooms = new Room[]
-        {
-            new()
-            {
-
-            }
-        };
-
-        var identities = new SyncLinkIdentityUser[]
-        {
-            new()
-            {
-                Email = "test1@gmail.com",
-                UserName = "DavidBRakhum",
-                FirstName = "David",
-                LastName = "Brakhum",
-                ApplicationUser = new User()
-                {
-                    Id = 1,
-                }
-            }
-        };
-
-        builder.Entity<SyncLinkIdentityUser>()
-            .HasData(identities);
+        // var rooms = new Room[]
+        // {
+        //     new()
+        //     {
+        //
+        //     }
+        // };
+        //
+        // var identities = new SyncLinkIdentityUser[]
+        // {
+        //     new()
+        //     {
+        //         Email = "test1@gmail.com",
+        //         UserName = "DavidBRakhum",
+        //         FirstName = "David",
+        //         LastName = "Brakhum",
+        //         ApplicationUser = new User()
+        //         {
+        //             Id = 1,
+        //         }
+        //     }
+        // };
+        //
+        // builder.Entity<SyncLinkIdentityUser>()
+        //     .HasData(identities);
     }
 }

@@ -8,5 +8,6 @@ public enum RepositoryActionStatus
     Deleted = 3,
     NotFound = 4,
     Conflict = 5,
-    UnknownError = 6,
+    ValidationFailed = 6,
+    UnknownError = 7,
 }

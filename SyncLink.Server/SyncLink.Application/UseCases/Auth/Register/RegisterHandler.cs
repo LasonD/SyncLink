@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using SyncLink.Application.Contracts.Data;
+using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Exceptions;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;

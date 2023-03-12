@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using SyncLink.Application.Contracts.Data;
+using Microsoft.OpenApi.Models;
+using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Mapping;
 using SyncLink.Application.UseCases.Auth.Register;
 using SyncLink.Infrastructure.Data.Context;
@@ -67,7 +68,7 @@ internal static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(Program), typeof(ApplicationProfile), typeof(SyncLinkDbContext));
-        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(RegisterHandler).Assembly));
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Register).Assembly));
         services.AddScoped<ErrorHandler>();
 
         return services;
@@ -78,7 +79,33 @@ internal static class ServiceCollectionExtensions
         services.AddEndpointsApiExplorer();
         services.AddControllers(options => options.Filters.Add<ValidateModelStateAttribute>());
         services.AddSignalR();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(c => {
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "JWTToken_Auth_API",
+                Version = "v1"
+            });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                {
+                    new OpenApiSecurityScheme {
+                        Reference = new OpenApiReference {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] {}
+                }
+            });
+        });
 
         return services;
     }
@@ -86,6 +113,8 @@ internal static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddTransient<IAuthRepository, AuthRepository>();
+        services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<IGroupRepository, GroupsRepository>();
 
         return services;
     }

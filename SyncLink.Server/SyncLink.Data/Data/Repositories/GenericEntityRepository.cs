@@ -6,23 +6,24 @@ using NinjaNye.SearchExtensions;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Helpers;
 using SyncLink.Application.Domain.Base;
+using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 
 namespace SyncLink.Infrastructure.Data.Repositories;
 
 public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : EntityBase
 {
-    private readonly SyncLinkDbContext _dbContext;
+    protected readonly SyncLinkDbContext DbContext;
 
     public GenericEntityRepository(SyncLinkDbContext dbContext)
     {
-        _dbContext = dbContext;
+        DbContext = dbContext;
     }
 
     public async Task<RepositoryEntityResult<TEntity>> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] inclusions)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var query = _dbContext.Set<TEntity>().AsQueryable<TEntity>();
+        var query = DbContext.Set<TEntity>().AsQueryable<TEntity>();
 
         foreach (var inclusion in inclusions)
         {
@@ -60,7 +61,7 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
 
         var entry = result.Result!;
 
-        _dbContext.Update(entry);
+        DbContext.Update(entry);
 
         return RepositoryEntityResult<TEntity>.Updated(entry);
     }
@@ -76,20 +77,20 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
 
         var entry = result.Result!;
 
-        _dbContext.Remove(entry);
+        DbContext.Remove(entry);
 
         return RepositoryEntityResult<TEntity>.Deleted(entry);
     }
 
-    public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)
+    public async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        var entry = await _dbContext.AddAsync(entity, cancellationToken);
+        var entry = await DbContext.AddAsync(entity, cancellationToken);
         return entry.Entity;
     }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
-        return _dbContext.SaveChangesAsync(cancellationToken);
+        return DbContext.SaveChangesAsync(cancellationToken);
     }
 
     #region Queryable transformation methods
@@ -97,7 +98,7 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
     private IQueryable<TEntity> PrepareQuery<TQuery>(Specification<TEntity, TQuery> specification)
         where TQuery : OrderedPaginationQuery
     {
-        var set = _dbContext.Set<TEntity>();
+        var set = DbContext.Set<TEntity>();
         var filteredQuery = ApplyFiltering(set, specification);
         var queryWithInclusions = ApplyInclusions(filteredQuery, specification);
         var paginatedQuery = ApplyPagination(queryWithInclusions, specification);

@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SyncLink.Application.Contracts.Data;
+using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Dtos;
 using SyncLink.Infrastructure.Data.Models.Identity;
@@ -69,7 +69,7 @@ public class AuthRepository : IAuthRepository
                 .Errors
                 .Select(e => new RepositoryError(e.Description, e.Code));
 
-            return RepositoryEntityResult<AuthResult>.Conflict(repositoryErrors);
+            return RepositoryEntityResult<AuthResult>.ValidationFailed(repositoryErrors);
         }
 
         var authResult = await PrepareAuthResultAsync(newUser);
@@ -109,8 +109,8 @@ public class AuthRepository : IAuthRepository
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _config[issuer],
-            audience: _config[audience],
+            issuer: issuer,
+            audience: audience,
             claims: tokenClaims,
             expires: DateTime.UtcNow.AddMinutes(tokenDurationMinutes),
             signingCredentials: credentials

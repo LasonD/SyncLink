@@ -14,6 +14,6 @@ public static class PaginationExtensions
     public static PaginatedRepositoryResultSet<T> ToPaginatedOkResult<T>(this ICollection<T> items, int page, int pageSize)
     {
         var paginatedResult = items.ToPaginatedEnumerable(page, pageSize);
-        return PaginatedRepositoryResultSet<T>.Ok(paginatedResult);
+        return PaginatedRepositoryResultSet<T>.OkSet(paginatedResult);
     }
 }

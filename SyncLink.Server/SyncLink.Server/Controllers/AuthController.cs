@@ -24,9 +24,9 @@ public class AuthController : ControllerBase
     [HttpPost("/login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginData, CancellationToken cancellationToken)
     {
-        var loginRequest = _mapper.Map<LoginRequest>(loginData);
+        var loginCommand = _mapper.Map<Login.Command>(loginData);
 
-        var authResult = await _mediator.Send(loginRequest, cancellationToken);
+        var authResult = await _mediator.Send(loginCommand, cancellationToken);
 
         return Ok(authResult);
     }
@@ -34,9 +34,9 @@ public class AuthController : ControllerBase
     [HttpPost("/register")]
     public async Task<IActionResult> Register([FromBody] RegistrationDto registerData, CancellationToken cancellationToken)
     {
-        var registerRequest = _mapper.Map<RegisterRequest>(registerData);
+        var registerCommand = _mapper.Map<Register.Command>(registerData);
 
-        var authResult = await _mediator.Send(registerRequest, cancellationToken);
+        var authResult = await _mediator.Send(registerCommand, cancellationToken);
 
         return Ok(authResult);
     }

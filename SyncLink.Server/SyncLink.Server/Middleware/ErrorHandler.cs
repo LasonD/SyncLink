@@ -38,6 +38,7 @@ internal class ErrorHandler : IMiddleware
         {
             RepositoryActionStatus.NotFound => WriteErrorResponse(context, HttpStatusCode.NotFound, repositoryException.GetClientFacingErrors()),
             RepositoryActionStatus.Conflict => WriteErrorResponse(context, HttpStatusCode.Conflict, repositoryException.GetClientFacingErrors()),
+            RepositoryActionStatus.ValidationFailed => WriteErrorResponse(context, HttpStatusCode.BadRequest, repositoryException.GetClientFacingErrors()),
             RepositoryActionStatus.UnknownError => WriteErrorResponse(context, HttpStatusCode.InternalServerError, repositoryException.GetClientFacingErrors()),
             _ => HandleUnknownError(context)
         };
@@ -48,7 +49,7 @@ internal class ErrorHandler : IMiddleware
         return businessException switch
         {
             AuthException authException => HandleAuthErrorAsync(context, authException),
-            _ => HandleUnknownError(context)
+            _ => WriteErrorResponse(context, HttpStatusCode.BadRequest, new[] { businessException.Message })
         };
     }
 

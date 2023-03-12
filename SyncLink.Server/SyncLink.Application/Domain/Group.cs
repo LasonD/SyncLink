@@ -11,12 +11,15 @@ public class Group : EntityBase
 
     protected Group() { }
 
-    public Group(string name)
+    public Group(string name, string? description)
     {
         Name = name.GetValueOrThrowIfNullOrWhiteSpace(nameof(name));
+        Description = description;
     }
 
     public string Name { get; private set; } = null!;
+
+    public string? Description { get; private set; }
 
     public IReadOnlyCollection<UserGroup> UserGroups => _userGroups.AsReadOnly();
 

@@ -9,7 +9,7 @@ public class ApplicationProfile : Profile
 {
     public ApplicationProfile()
     {
-        CreateMap<LoginRequest, LoginData>();
-        CreateMap<RegisterRequest, RegistrationData>();
+        CreateMap<Login.Command, LoginData>();
+        CreateMap<Register.Command, RegistrationData>();
     }
 }

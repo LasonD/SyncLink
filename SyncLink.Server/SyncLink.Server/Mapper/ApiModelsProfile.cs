@@ -9,7 +9,7 @@ public class ApiModelsProfile : Profile
 {
     public ApiModelsProfile()
     {
-        CreateMap<LoginDto, LoginRequest>();
-        CreateMap<RegistrationDto, RegisterRequest>();
+        CreateMap<LoginDto, Login.Command>();
+        CreateMap<RegistrationDto, Register.Command>();
     }
 }
