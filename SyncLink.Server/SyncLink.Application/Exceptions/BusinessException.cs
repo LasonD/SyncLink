@@ -2,5 +2,7 @@
 
 public class BusinessException : Exception
 {
-    public string ClientFacingErrorMessage { get; private set; }
+    public const string DefaultClientErrorMessage = "Something went wrong.";
+
+    public string ClientFacingErrorMessage { get; private set; } = DefaultClientErrorMessage;
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SyncLink.Application.Contracts.Data;
-using SyncLink.Application.Contracts.Data.Result;
+using SyncLink.Application.Contracts.Data.Result.Exceptions;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
@@ -20,17 +20,23 @@ public class LoginHandler : IRequestHandler<LoginRequest, AuthResult>
 
     public async Task<AuthResult> Handle(LoginRequest request, CancellationToken cancellationToken)
     {
+        try
+        {
+            return await HandleInternalAsync(request, cancellationToken);
+        }
+        catch (RepositoryActionException ex)
+        {
+            throw new LoginException(ex.GetClientFacingErrors());
+        }
+    }
+
+    private async Task<AuthResult> HandleInternalAsync(LoginRequest request, CancellationToken cancellationToken)
+    {
         var loginData = _mapper.Map<LoginData>(request);
 
         var result = await _authRepository.AuthenticateUserAsync(loginData, cancellationToken);
 
-        // TODO: rewrite it in a better way
-        if (result.Status != RepositoryActionStatus.Ok)
-        {
-            throw new LoginException(result.Errors?.Select(e => e.ToString()));
-        }
-
-        var authResult = result.Result!;
+        var authResult = result.GetResult();
 
         return authResult;
     }

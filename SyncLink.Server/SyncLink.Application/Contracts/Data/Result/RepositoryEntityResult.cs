@@ -1,5 +1,4 @@
 ﻿using SyncLink.Application.Contracts.Data.Result.Exceptions;
-using System.Diagnostics;
 
 namespace SyncLink.Application.Contracts.Data.Result;
 
@@ -19,18 +18,12 @@ public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : 
 
     public TEntity GetResult()
     {
-        if (Status == RepositoryActionStatus.Ok)
+        if (IsSuccessStatus(Status))
         {
             return Result!;
         }
 
-        throw Status switch
-        {
-            RepositoryActionStatus.NotFound => new NotFoundException(Status, Errors?.ToList(), typeof(TEntity), Exception),
-            RepositoryActionStatus.Conflict => new ConflictException(Status, Errors?.ToList(), typeof(TEntity), Exception),
-            RepositoryActionStatus.UnknownError => new RepositoryActionException(Status, Errors?.ToList(), typeof(TEntity), Exception),
-            _ => new UnreachableException("Wtf ??", Exception)
-        };
+        throw new RepositoryActionException(Status, Errors?.ToList(), typeof(TEntity), Exception);
     }
 
     public static RepositoryEntityResult<TEntity> NotFound() => new(RepositoryActionStatus.NotFound, null);

@@ -4,11 +4,6 @@ namespace SyncLink.Application.Contracts.Data.Result.Exceptions;
 
 public class RepositoryActionException : Exception
 {
-    public RepositoryActionException(string message, Exception? innerException = null) : base(message, innerException)
-    {
-
-    }
-
     public RepositoryActionException(RepositoryActionStatus status, ICollection<RepositoryError>? errors, Type entityType, Exception? innerException = null) : 
         base(GetFormattedErrorMessage(status, errors, entityType), innerException)
     {
@@ -17,19 +12,29 @@ public class RepositoryActionException : Exception
         Errors = errors?.ToList().AsReadOnly();
     }
 
-    public RepositoryActionStatus Status { get; } = RepositoryActionStatus.UnknownError;
+    public RepositoryActionStatus Status { get; }
 
-    public Type? EntityType { get; }
+    public Type EntityType { get; }
 
     public IReadOnlyCollection<RepositoryError>? Errors { get; }
 
+    public IEnumerable<string> GetClientFacingErrors()
+    {
+        return GetClientFacingErrors(Status, Errors?.ToList(), EntityType);
+    }
+
     private static string GetFormattedErrorMessage(RepositoryActionStatus status, ICollection<RepositoryError>? errors, Type entityType)
+    {
+        return string.Join(", ", GetClientFacingErrors(status, errors, entityType));
+    }
+
+    private static IEnumerable<string> GetClientFacingErrors(RepositoryActionStatus status, ICollection<RepositoryError>? errors, Type entityType)
     {
         if (errors.IsNullOrEmpty())
         {
-            return $"Unexpected result for '{entityType.Name}': {status}";
+            return new List<string> { $"Unexpected result for '{entityType.Name}': {status}" };
         }
 
-        return string.Join(", ", errors!.Where(e => e.IsClientFacing));
+        return errors!.Where(e => e.IsClientFacing).Select(e => e.ToString()).ToList();
     }
 }

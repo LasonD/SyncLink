@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using SyncLink.Application.Contracts.Data.Result;
+using SyncLink.Application.Contracts.Data.Result.Exceptions;
 using SyncLink.Application.Exceptions;
 using SyncLink.Server.Dtos;
 
@@ -6,6 +8,8 @@ namespace SyncLink.Server.Middleware;
 
 internal class ErrorHandler : IMiddleware
 {
+    private const string DefaultFallbackErrorMessage = "Something went wrong.";
+
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
@@ -23,6 +27,18 @@ internal class ErrorHandler : IMiddleware
         return exception switch
         {
             BusinessException businessException => HandleBusinessExceptionAsync(context, businessException),
+            RepositoryActionException repositoryException => HandleRepositoryActionException(context, repositoryException),
+            _ => HandleUnknownError(context)
+        };
+    }
+
+    private static Task HandleRepositoryActionException(HttpContext context, RepositoryActionException repositoryException)
+    {
+        return repositoryException.Status switch
+        {
+            RepositoryActionStatus.NotFound => WriteErrorResponse(context, HttpStatusCode.NotFound, repositoryException.GetClientFacingErrors()),
+            RepositoryActionStatus.Conflict => WriteErrorResponse(context, HttpStatusCode.Conflict, repositoryException.GetClientFacingErrors()),
+            RepositoryActionStatus.UnknownError => WriteErrorResponse(context, HttpStatusCode.InternalServerError, repositoryException.GetClientFacingErrors()),
             _ => HandleUnknownError(context)
         };
     }
@@ -48,7 +64,7 @@ internal class ErrorHandler : IMiddleware
 
     private static Task HandleUnknownError(HttpContext context)
     {
-        return WriteErrorResponse(context, HttpStatusCode.InternalServerError, new[] { "Something went wrong." });
+        return WriteErrorResponse(context, HttpStatusCode.InternalServerError, new[] { DefaultFallbackErrorMessage });
     }
 
     private static Task WriteErrorResponse(HttpContext context, HttpStatusCode statusCode, IEnumerable<string>? errors)

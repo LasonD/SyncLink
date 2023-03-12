@@ -26,7 +26,7 @@ namespace SyncLink.Application.UseCases.Auth.Register
             }
             catch (RepositoryActionException ex)
             {
-                throw new RegistrationException(ex.Errors.AsEnumerable())
+                throw new RegistrationException(ex.GetClientFacingErrors());
             }
         }
 
