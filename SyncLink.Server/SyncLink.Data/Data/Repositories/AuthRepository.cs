@@ -52,16 +52,13 @@ public class AuthRepository : IAuthRepository
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var userName = string.IsNullOrWhiteSpace(registrationData.UserName)
-            ? $"{registrationData.FirstName}_{registrationData.LastName}"
-            : registrationData.UserName; 
-
         var newUser = new SyncLinkIdentityUser()
         {
             Email = registrationData.Email,
             FirstName = registrationData.FirstName,
             LastName = registrationData.LastName,
-            UserName = userName,
+            UserName = registrationData.UserName,
+            ApplicationUser = new Application.Domain.User(registrationData.UserName!)
         };
 
         var identityResult = await _userManager.CreateAsync(newUser, registrationData.Password);

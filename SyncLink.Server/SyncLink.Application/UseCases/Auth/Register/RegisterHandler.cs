@@ -4,6 +4,7 @@ using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.Result.Exceptions;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
+using SyncLink.Common.Helpers;
 
 namespace SyncLink.Application.UseCases.Auth.Register;
 
@@ -32,12 +33,24 @@ public class RegisterHandler : IRequestHandler<RegisterRequest, AuthResult>
 
     private async Task<AuthResult> HandleInternalAsync(RegisterRequest request, CancellationToken cancellationToken)
     {
-        var registerData = _mapper.Map<RegistrationData>(request);
+        var registerData = MapRegisterData(request);
 
         var result = await _authRepository.RegisterUserAsync(registerData, cancellationToken);
 
         var authResult = result.GetResult();
 
         return authResult;
+    }
+
+    private RegistrationData MapRegisterData(RegisterRequest request)
+    {
+        var registerData = _mapper.Map<RegistrationData>(request);
+
+        if (registerData.UserName.IsNullOrWhiteSpace())
+        {
+            registerData.UserName = $"{registerData.FirstName}_{registerData.LastName}";
+        }
+
+        return registerData;
     }
 }
