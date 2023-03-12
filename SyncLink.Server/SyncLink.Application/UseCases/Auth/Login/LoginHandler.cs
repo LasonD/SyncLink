@@ -7,37 +7,41 @@ using SyncLink.Application.Exceptions;
 
 namespace SyncLink.Application.UseCases.Auth.Login;
 
-public class LoginHandler : IRequestHandler<LoginRequest, AuthResult>
+public partial class Login
 {
-    private readonly IAuthRepository _authRepository;
-    private readonly IMapper _mapper;
-
-    public LoginHandler(IAuthRepository authRepository, IMapper mapper)
+    public class Handler : IRequestHandler<Command, AuthResult>
     {
-        _authRepository = authRepository;
-        _mapper = mapper;
-    }
+        private readonly IAuthRepository _authRepository;
+        private readonly IMapper _mapper;
 
-    public async Task<AuthResult> Handle(LoginRequest request, CancellationToken cancellationToken)
-    {
-        try
+        public Handler(IAuthRepository authRepository, IMapper mapper)
         {
-            return await HandleInternalAsync(request, cancellationToken);
+            _authRepository = authRepository;
+            _mapper = mapper;
         }
-        catch (RepositoryActionException ex)
+
+        public async Task<AuthResult> Handle(Command request, CancellationToken cancellationToken)
         {
-            throw new LoginException(ex.GetClientFacingErrors());
+            try
+            {
+                return await HandleInternalAsync(request, cancellationToken);
+            }
+            catch (RepositoryActionException ex)
+            {
+                throw new LoginException(ex.GetClientFacingErrors());
+            }
         }
-    }
 
-    private async Task<AuthResult> HandleInternalAsync(LoginRequest request, CancellationToken cancellationToken)
-    {
-        var loginData = _mapper.Map<LoginData>(request);
+        private async Task<AuthResult> HandleInternalAsync(Command request, CancellationToken cancellationToken)
+        {
+            var loginData = _mapper.Map<LoginData>(request);
 
-        var result = await _authRepository.AuthenticateUserAsync(loginData, cancellationToken);
+            var result = await _authRepository.AuthenticateUserAsync(loginData, cancellationToken);
 
-        var authResult = result.GetResult();
+            var authResult = result.GetResult();
 
-        return authResult;
+            return authResult;
+        }
     }
 }
+

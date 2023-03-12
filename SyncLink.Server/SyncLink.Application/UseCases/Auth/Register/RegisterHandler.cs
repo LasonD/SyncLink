@@ -8,49 +8,53 @@ using SyncLink.Common.Helpers;
 
 namespace SyncLink.Application.UseCases.Auth.Register;
 
-public class RegisterHandler : IRequestHandler<RegisterRequest, AuthResult>
+public partial class Register
 {
-    private readonly IAuthRepository _authRepository;
-    private readonly IMapper _mapper;
-
-    public RegisterHandler(IAuthRepository authRepository, IMapper mapper)
+    public class Handler : IRequestHandler<Command, AuthResult>
     {
-        _authRepository = authRepository;
-        _mapper = mapper;
-    }
+        private readonly IAuthRepository _authRepository;
+        private readonly IMapper _mapper;
 
-    public async Task<AuthResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
-    {
-        try
+        public Handler(IAuthRepository authRepository, IMapper mapper)
         {
-            return await HandleInternalAsync(request, cancellationToken);
-        }
-        catch (RepositoryActionException ex)
-        {
-            throw new RegistrationException(ex.GetClientFacingErrors());
-        }
-    }
-
-    private async Task<AuthResult> HandleInternalAsync(RegisterRequest request, CancellationToken cancellationToken)
-    {
-        var registerData = MapRegisterData(request);
-
-        var result = await _authRepository.RegisterUserAsync(registerData, cancellationToken);
-
-        var authResult = result.GetResult();
-
-        return authResult;
-    }
-
-    private RegistrationData MapRegisterData(RegisterRequest request)
-    {
-        var registerData = _mapper.Map<RegistrationData>(request);
-
-        if (registerData.UserName.IsNullOrWhiteSpace())
-        {
-            registerData.UserName = $"{registerData.FirstName}_{registerData.LastName}";
+            _authRepository = authRepository;
+            _mapper = mapper;
         }
 
-        return registerData;
+        public async Task<AuthResult> Handle(Command command, CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await HandleInternalAsync(command, cancellationToken);
+            }
+            catch (RepositoryActionException ex)
+            {
+                throw new RegistrationException(ex.GetClientFacingErrors());
+            }
+        }
+
+        private async Task<AuthResult> HandleInternalAsync(Command command, CancellationToken cancellationToken)
+        {
+            var registerData = MapRegisterData(command);
+
+            var result = await _authRepository.RegisterUserAsync(registerData, cancellationToken);
+
+            var authResult = result.GetResult();
+
+            return authResult;
+        }
+
+        private RegistrationData MapRegisterData(Command command)
+        {
+            var registerData = _mapper.Map<RegistrationData>(command);
+
+            if (registerData.UserName.IsNullOrWhiteSpace())
+            {
+                registerData.UserName = $"{registerData.FirstName}_{registerData.LastName}";
+            }
+
+            return registerData;
+        }
     }
 }
+
