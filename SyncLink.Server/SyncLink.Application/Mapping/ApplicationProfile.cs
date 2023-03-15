@@ -14,5 +14,6 @@ public class ApplicationProfile : Profile
         CreateMap<Register.Command, RegistrationData>();
 
         CreateMap<Group, GroupDto>();
+        CreateMap<Room, RoomDto>();
     }
 }
