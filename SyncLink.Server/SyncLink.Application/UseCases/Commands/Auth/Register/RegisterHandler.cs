@@ -6,7 +6,7 @@ using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 using SyncLink.Common.Helpers;
 
-namespace SyncLink.Application.UseCases.Auth.Register;
+namespace SyncLink.Application.UseCases.Commands.Auth.Register;
 
 public partial class Register
 {

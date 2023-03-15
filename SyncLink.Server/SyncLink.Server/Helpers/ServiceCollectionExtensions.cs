@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Mapping;
-using SyncLink.Application.UseCases.Auth.Register;
+using SyncLink.Application.UseCases.Commands.Auth.Register;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Data.Repositories;

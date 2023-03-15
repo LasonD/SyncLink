@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SyncLink.Application.UseCases.CreateGroup;
+using SyncLink.Application.UseCases.Commands.CreateGroup;
 using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Controllers;

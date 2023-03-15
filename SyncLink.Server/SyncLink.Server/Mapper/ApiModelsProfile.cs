@@ -1,7 +1,7 @@
 using AutoMapper;
-using SyncLink.Application.UseCases.Auth.Login;
-using SyncLink.Application.UseCases.Auth.Register;
-using SyncLink.Application.UseCases.CreateGroup;
+using SyncLink.Application.UseCases.Commands.Auth.Login;
+using SyncLink.Application.UseCases.Commands.Auth.Register;
+using SyncLink.Application.UseCases.Commands.CreateGroup;
 using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Mapper;

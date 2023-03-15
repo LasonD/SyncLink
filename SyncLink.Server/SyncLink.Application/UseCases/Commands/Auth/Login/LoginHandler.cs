@@ -5,7 +5,7 @@ using SyncLink.Application.Contracts.Data.Result.Exceptions;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
-namespace SyncLink.Application.UseCases.Auth.Login;
+namespace SyncLink.Application.UseCases.Commands.Auth.Login;
 
 public partial class Login
 {
