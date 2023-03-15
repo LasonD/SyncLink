@@ -6,7 +6,7 @@ namespace SyncLink.Application.Domain;
 
 public class Group : EntityBase
 {
-    private readonly IList<UserGroup> _userGroups = null!;
+    private readonly IList<UserGroup> _userGroups = new List<UserGroup>();
     private readonly IList<Room> _rooms = null!;
 
     protected Group() { }

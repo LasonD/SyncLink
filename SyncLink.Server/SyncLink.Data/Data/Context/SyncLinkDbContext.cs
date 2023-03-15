@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SyncLink.Application.Domain;
+using SyncLink.Application.Domain.Associations;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using System.Reflection;
 
@@ -20,6 +21,10 @@ public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>
     public DbSet<Group> Group { get; protected set; } = null!;
 
     public DbSet<User> ApplicationUsers { get; set; } = null!;
+
+    public DbSet<UserGroup> UsersToGroups { get; set; } = null!;
+
+    public DbSet<UserRoom> UsersToRooms { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

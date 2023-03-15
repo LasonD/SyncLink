@@ -30,6 +30,6 @@ public class UsersController : ControllerBase
 
         var groupDto = await _mediator.Send(command, cancellationToken);
 
-        return CreatedAtAction(nameof(GroupsController.GetById), nameof(GroupsController), new { id = groupDto.Id }, groupDto);
+        return CreatedAtAction("GetById", "Groups", new { id = groupDto.Id }, groupDto);
     }
 }

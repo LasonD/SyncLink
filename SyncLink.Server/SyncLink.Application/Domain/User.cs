@@ -6,9 +6,9 @@ namespace SyncLink.Application.Domain;
 
 public class User : EntityBase
 {
-    private readonly IList<UserGroup> _userGroups = null!;
-    private readonly IList<UserRoom> _userRooms = null!;
-    private readonly IList<Message> _messages = null!;
+    private readonly IList<UserGroup> _userGroups = new List<UserGroup>();
+    private readonly IList<UserRoom> _userRooms = new List<UserRoom>();
+    private readonly IList<Message> _messages = new List<Message>();
 
     public User(string userName)
     {
@@ -30,4 +30,3 @@ public class User : EntityBase
 
     public IReadOnlyCollection<Message> Messages => _messages.AsReadOnly();
 }
-

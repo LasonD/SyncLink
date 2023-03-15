@@ -22,12 +22,13 @@ public partial class CreateGroup
 
         public async Task<GroupDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var userResult = await _userRepository.GetByIdAsync(request.UserId, cancellationToken, 
-                 include: u => u.UserGroups);
+            var userResult = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
 
             var user = userResult.GetResult();
 
-            if (user.UserGroups.Any(ug => ug.Group.Name == request.Name))
+            var userHasGroupWithSameName = await _userRepository.UserHasGroupWithNameAsync(user.Id, request.Name, cancellationToken);
+
+            if (userHasGroupWithSameName)
             {
                 throw new BusinessException($"User {user.UserName} already has group with name {request.Name}");
             }
@@ -36,12 +37,11 @@ public partial class CreateGroup
 
             user.AddGroup(group, isCreator: true, isAdmin: true);
 
-           await _userRepository.SaveChangesAsync(cancellationToken);
+            await _userRepository.SaveChangesAsync(cancellationToken);
 
-           var dto = _mapper.Map<GroupDto>(group);
+            var dto = _mapper.Map<GroupDto>(group);
 
-           return dto;
+            return dto;
         }
     }
 }
-

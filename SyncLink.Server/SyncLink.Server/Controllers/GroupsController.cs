@@ -9,7 +9,6 @@ namespace SyncLink.Server.Controllers;
 public class GroupsController : ControllerBase
 {
     [HttpGet("/{id:int}")]
-    [ActionName("test")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         return Ok();

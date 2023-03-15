@@ -5,8 +5,8 @@ namespace SyncLink.Application.Domain;
 
 public class Room : EntityBase
 {
-    private readonly IList<UserRoom> _roomMembers = null!;
-    private readonly IList<Message> _messages = null!;
+    private readonly IList<UserRoom> _roomMembers = new List<UserRoom>();
+    private readonly IList<Message> _messages = new List<Message>();
 
     protected Room() { }
 
