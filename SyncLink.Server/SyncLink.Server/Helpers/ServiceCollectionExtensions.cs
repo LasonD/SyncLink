@@ -114,7 +114,7 @@ internal static class ServiceCollectionExtensions
     {
         services.AddTransient<IAuthRepository, AuthRepository>();
         services.AddTransient<IUserRepository, UserRepository>();
-        services.AddTransient<IGroupRepository, GroupsRepository>();
+        services.AddTransient<IGroupsRepository, GroupsRepository>();
         services.AddTransient<IRoomsRepository, RoomsRepository>();
         services.AddTransient<IMessagesRepository, MessagesRepository>();
 

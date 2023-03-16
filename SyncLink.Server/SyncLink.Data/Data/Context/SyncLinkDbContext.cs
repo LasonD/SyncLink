@@ -18,7 +18,7 @@ public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>
 
     public DbSet<Room> Rooms { get; protected set; } = null!;
 
-    public DbSet<Group> Group { get; protected set; } = null!;
+    public DbSet<Group> Groups { get; protected set; } = null!;
 
     public DbSet<User> ApplicationUsers { get; set; } = null!;
 

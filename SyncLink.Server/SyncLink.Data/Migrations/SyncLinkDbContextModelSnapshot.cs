@@ -191,7 +191,7 @@ namespace SyncLink.Infrastructure.Migrations
                     b.ToTable("UserRoom");
                 });
 
-            modelBuilder.Entity("SyncLink.Application.Domain.Group", b =>
+            modelBuilder.Entity("SyncLink.Application.Domain.Groups", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,7 +211,7 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Group");
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("SyncLink.Application.Domain.Message", b =>
@@ -426,7 +426,7 @@ namespace SyncLink.Infrastructure.Migrations
 
             modelBuilder.Entity("SyncLink.Application.Domain.Associations.UserGroup", b =>
                 {
-                    b.HasOne("SyncLink.Application.Domain.Group", "Group")
+                    b.HasOne("SyncLink.Application.Domain.Groups", "Groups")
                         .WithMany("UserGroups")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -438,7 +438,7 @@ namespace SyncLink.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Group");
+                    b.Navigation("Groups");
 
                     b.Navigation("User");
                 });
@@ -483,13 +483,13 @@ namespace SyncLink.Infrastructure.Migrations
 
             modelBuilder.Entity("SyncLink.Application.Domain.Room", b =>
                 {
-                    b.HasOne("SyncLink.Application.Domain.Group", "Group")
+                    b.HasOne("SyncLink.Application.Domain.Groups", "Groups")
                         .WithMany("Rooms")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Group");
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("SyncLink.Infrastructure.Data.Models.Identity.SyncLinkIdentityUser", b =>
@@ -503,7 +503,7 @@ namespace SyncLink.Infrastructure.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("SyncLink.Application.Domain.Group", b =>
+            modelBuilder.Entity("SyncLink.Application.Domain.Groups", b =>
                 {
                     b.Navigation("Rooms");
 

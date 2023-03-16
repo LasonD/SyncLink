@@ -40,7 +40,7 @@ namespace SyncLink.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Group",
+                name: "Groups",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -125,7 +125,7 @@ namespace SyncLink.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Rooms_Group_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Group",
+                        principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -151,7 +151,7 @@ namespace SyncLink.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_UserGroup_Group_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Group",
+                        principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -406,7 +406,7 @@ namespace SyncLink.Infrastructure.Migrations
                 name: "ApplicationUsers");
 
             migrationBuilder.DropTable(
-                name: "Group");
+                name: "Groups");
         }
     }
 }

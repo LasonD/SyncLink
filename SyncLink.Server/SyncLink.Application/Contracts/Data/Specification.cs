@@ -1,54 +1,53 @@
 ﻿using System.Linq.Expressions;
 using SyncLink.Application.Domain.Base;
 
-namespace SyncLink.Application.Contracts.Data
+namespace SyncLink.Application.Contracts.Data;
+
+public abstract class Specification<TEntity, TQuery>
+    where TEntity : EntityBase 
+    where TQuery : OrderedPaginationQuery
 {
-    public abstract class Specification<TEntity, TQuery>
-        where TEntity : EntityBase 
-        where TQuery : OrderedPaginationQuery
+    protected static Dictionary<string, Expression<Func<TEntity, object>>> OrderingLookup = new(StringComparer.InvariantCultureIgnoreCase);
+
+    protected static Expression<Func<TEntity, object>> DefaultOrdering = _ => 1;
+
+    protected Specification(TQuery query)
     {
-        protected static Dictionary<string, Expression<Func<TEntity, object>>> OrderingLookup = new(StringComparer.InvariantCultureIgnoreCase);
+        Query = query;
+    }
 
-        protected static Expression<Func<TEntity, object>> DefaultOrdering = _ => 1;
+    public TQuery Query { get; }
 
-        protected Specification(TQuery query)
+    public abstract Expression<Func<TEntity, bool>> GetFilteringCondition();
+
+    public abstract IEnumerable<IEnumerable<(Expression<Func<TEntity, string>> prop, string[] terms)>> GetSearchTerms();
+
+    public virtual IEnumerable<Expression<Func<TEntity, object>>> GetInclusions()
+    {
+        yield break;
+    }
+
+    public Expression<Func<TEntity, object>> GetOrderByExpression()
+    {
+        if (Query.OrderBy == null)
         {
-            Query = query;
+            return DefaultOrdering;
         }
 
-        public TQuery Query { get; }
+        OrderingLookup.TryGetValue(Query.OrderBy, out var orderBy);
 
-        public abstract Expression<Func<TEntity, bool>> GetFilteringCondition();
+        return orderBy ?? DefaultOrdering;
+    }
 
-        public abstract IEnumerable<IEnumerable<(Expression<Func<TEntity, string>> prop, string[] terms)>> GetSearchTerms();
-
-        public virtual IEnumerable<Expression<Func<TEntity, object>>> GetInclusions()
+    public Expression<Func<TEntity, object>> GetThenByExpression()
+    {
+        if (Query.ThenBy == null)
         {
-            yield break;
+            return DefaultOrdering;
         }
 
-        public Expression<Func<TEntity, object>> GetOrderByExpression()
-        {
-            if (Query.OrderBy == null)
-            {
-                return DefaultOrdering;
-            }
+        OrderingLookup.TryGetValue(Query.ThenBy, out var thenBy);
 
-            OrderingLookup.TryGetValue(Query.OrderBy, out var orderBy);
-
-            return orderBy ?? DefaultOrdering;
-        }
-
-        public Expression<Func<TEntity, object>> GetThenByExpression()
-        {
-            if (Query.ThenBy == null)
-            {
-                return DefaultOrdering;
-            }
-
-            OrderingLookup.TryGetValue(Query.ThenBy, out var thenBy);
-
-            return thenBy ?? DefaultOrdering;
-        }
+        return thenBy ?? DefaultOrdering;
     }
 }
