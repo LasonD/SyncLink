@@ -14,13 +14,14 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
     {
     }
 
-    public Task<PaginatedRepositoryResultSet<User>> GetUsersFromGroupAsync(int groupId, IEnumerable<int> userIds, CancellationToken cancellationToken)
-    {
-        DbContext.Groups
-            .Where(g => g.Id == groupId)
-            .SelectMany(g => g.UserGroups.Select(ug => ug.User))
-            .ToListAsync(cancellationToken);
-    }
+    // public Task<PaginatedRepositoryResultSet<User>> GetUsersFromGroupAsync(int groupId, IEnumerable<int> userIds, CancellationToken cancellationToken)
+    // {
+    //     DbContext.Groups
+    //         .Where(g => g.Id == groupId)
+    //         .SelectMany(g => g.UserGroups.Select(ug => ug.User))
+    //         .Take()
+    //         .ToListAsync(cancellationToken);
+    // }
 
     public Task<bool> UserHasGroupWithNameAsync(int userId, string groupName, CancellationToken cancellationToken)
     {

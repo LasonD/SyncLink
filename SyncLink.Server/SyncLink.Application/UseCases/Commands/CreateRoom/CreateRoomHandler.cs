@@ -11,18 +11,18 @@ public partial class CreateRoom
     {
         private readonly IMapper _mapper;
         private IRoomsRepository _roomsRepository;
-        private IGroupRepository _groupRepository;
+        private IGroupsRepository _groupsRepository;
 
-        public Handler(IRoomsRepository roomsRepository, IMapper mapper, IGroupRepository groupRepository)
+        public Handler(IRoomsRepository roomsRepository, IMapper mapper, IGroupsRepository groupsRepository)
         {
             _roomsRepository = roomsRepository;
             _mapper = mapper;
-            _groupRepository = groupRepository;
+            _groupsRepository = groupsRepository;
         }
 
         public Task<RoomDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            
+            return Task.FromResult((RoomDto)null!);
         }
     }
 }

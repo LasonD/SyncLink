@@ -2,6 +2,6 @@
 
 namespace SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 
-public interface IRoomRepository : IEntityRepository<Room>
+public interface IRoomsRepository : IEntityRepository<Room>
 {
 }

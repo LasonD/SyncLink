@@ -7,6 +7,11 @@ public static class CollectionHelpers
         return source == null || !source.Any();
     }
 
+    public static bool IsNotNullOrEmpty(this IEnumerable<object>? source)
+    {
+        return !source.IsNullOrEmpty();
+    }
+
     public static List<T> WrapInList<T>(T value)
     {
         return new List<T> { value };

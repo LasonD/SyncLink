@@ -11,8 +11,8 @@ public class GroupsRepository : GenericEntityRepository<Group>, IGroupsRepositor
     {
     }
 
-    public Task<RepositoryEntityResult<Group>> GetGroupForUserAsync(int userId, int groupId, CancellationToken cancellationToken)
-    {
-        var result = GetBySpecificationAsync<>
-    }
+    // public Task<RepositoryEntityResult<Group>> GetGroupForUserAsync(int userId, int groupId, CancellationToken cancellationToken)
+    // {
+    //     var result = GetBySpecificationAsync<>
+    // }
 }

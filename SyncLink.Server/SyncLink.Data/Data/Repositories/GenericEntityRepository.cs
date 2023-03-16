@@ -7,6 +7,7 @@ using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Helpers;
 using SyncLink.Application.Domain.Base;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+using SyncLink.Common.Helpers;
 
 namespace SyncLink.Infrastructure.Data.Repositories;
 
@@ -40,14 +41,24 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
         return RepositoryEntityResult<TEntity>.Ok(entity);
     }
 
-    public virtual async Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync<TQuery>(Specification<TEntity, TQuery> specification, CancellationToken cancellationToken)
-        where TQuery : OrderedPaginationQuery
+    public virtual async Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync<TQuery>(OrderedPaginationQuery<TEntity> specification, CancellationToken cancellationToken)
     {
-        var queryInfo = specification.Query;
-        var query = PrepareQuery(specification);
+        var set = DbContext.Set<TEntity>();
+        var query = ApplyQuerySpecification(set, specification);
         var items = await query.ToListAsync(cancellationToken);
 
-        return items.ToPaginatedOkResult(queryInfo.Page, queryInfo.PageSize);
+        return items.ToPaginatedOkResult(specification.Page, specification.PageSize);
+    }
+
+    protected IQueryable<TEntity> ApplyQuerySpecification(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
+    {
+        query = ApplyFiltering(query, queryData);
+        query = ApplyOrdering(query, queryData);
+        query = ApplyInclusions(query, queryData);
+        query = ApplySearching(query, queryData);
+        query = ApplyPagination(query, queryData);
+
+        return query;
     }
 
     public async Task<RepositoryEntityResult<TEntity>> UpdateAsync(int id, TEntity entity, CancellationToken cancellationToken)
@@ -95,47 +106,32 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
 
     #region Queryable transformation methods
 
-    private IQueryable<TEntity> PrepareQuery<TQuery>(Specification<TEntity, TQuery> specification)
-        where TQuery : OrderedPaginationQuery
+    private static IQueryable<TEntity> ApplyPagination(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
     {
-        var set = DbContext.Set<TEntity>();
-        var filteredQuery = ApplyFiltering(set, specification);
-        var queryWithInclusions = ApplyInclusions(filteredQuery, specification);
-        var paginatedQuery = ApplyPagination(queryWithInclusions, specification);
-        var searchQuery = ApplySearching(paginatedQuery, specification);
-        var orderedQuery = ApplyOrdering(searchQuery, specification);
+        var itemsToSkipCount = (queryData.Page - 1) * queryData.PageSize;
+        var itemsToTakeCount = queryData.PageSize;
 
-        return orderedQuery.AsNoTracking();
+        query = query.Skip(itemsToSkipCount).Take(itemsToTakeCount);
+        return query;
     }
 
-    private IQueryable<TEntity> ApplySearching<TQuery>(IQueryable<TEntity> query, Specification<TEntity, TQuery> specification)
-        where TQuery : OrderedPaginationQuery
+    private static IQueryable<TEntity> ApplySearching(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
     {
-        foreach (var searchTerms in specification.GetSearchTerms().Select(st => st.ToArray()))
+        if (!queryData.SearchTerms.IsNotNullOrEmpty()) return query;
+
+        foreach (var searchTerm in queryData.SearchTerms)
         {
-            var props = searchTerms.Select(t => t.prop).ToArray();
-            var terms = searchTerms.SelectMany(t => t.terms).ToArray();
-            query = query.Search(props).Containing(terms);
+            query = query.Search(searchTerm.Expression).Containing(searchTerm.Terms.ToArray());
         }
 
         return query;
     }
 
-    private IQueryable<TEntity> ApplyPagination<TQuery>(IQueryable<TEntity> query, Specification<TEntity, TQuery> specification)
-        where TQuery : OrderedPaginationQuery
+    private static IQueryable<TEntity> ApplyInclusions(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
     {
-        var queryData = specification.Query;
+        if (!queryData.IncludeExpressions.IsNotNullOrEmpty()) return query;
 
-        var itemsToSkipCount = (queryData.Page - 1) * queryData.PageSize;
-        var itemsToTakeCount = queryData.PageSize;
-
-        return query.Skip(itemsToSkipCount).Take(itemsToTakeCount);
-    }
-
-    private IQueryable<TEntity> ApplyInclusions<TQuery>(IQueryable<TEntity> query, Specification<TEntity, TQuery> specification)
-        where TQuery : OrderedPaginationQuery
-    {
-        foreach (var inclusion in specification.GetInclusions())
+        foreach (var inclusion in queryData.IncludeExpressions)
         {
             query = query.Include(inclusion);
         }
@@ -143,20 +139,38 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
         return query;
     }
 
-    private IQueryable<TEntity> ApplyFiltering<TQuery>(IQueryable<TEntity> query, Specification<TEntity, TQuery> specification)
-        where TQuery : OrderedPaginationQuery
+    private static IQueryable<TEntity> ApplyOrdering(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
     {
-        var filter = specification.GetFilteringCondition();
-        return query.Where(filter);
+        if (!queryData.OrderingExpressions.IsNotNullOrEmpty()) return query;
+
+        var firstOrdering = queryData.OrderingExpressions.First();
+
+        var orderedQuery = firstOrdering.IsAscending
+            ? query.OrderBy(firstOrdering.Expression)
+            : query.OrderByDescending(firstOrdering.Expression);
+
+        foreach (var ordering in queryData.OrderingExpressions.Skip(1))
+        {
+            orderedQuery = ordering.IsAscending
+                ? orderedQuery.ThenBy(ordering.Expression)
+                : orderedQuery.ThenByDescending(ordering.Expression);
+        }
+
+        query = orderedQuery;
+
+        return query;
     }
 
-    private IOrderedQueryable<TEntity> ApplyOrdering<TQuery>(IQueryable<TEntity> query, Specification<TEntity, TQuery> specification)
-        where TQuery : OrderedPaginationQuery
+    private static IQueryable<TEntity> ApplyFiltering(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
     {
-        var orderBy = specification.GetOrderByExpression();
-        var thenBy = specification.GetThenByExpression();
+        if (!queryData.FilteringExpressions.IsNotNullOrEmpty()) return query;
 
-        return query.OrderBy(orderBy).ThenBy(thenBy);
+        foreach (var expression in queryData.FilteringExpressions)
+        {
+            query = query.Where(expression);
+        }
+
+        return query;
     }
 
     #endregion

@@ -8,7 +8,7 @@ public interface IEntityRepository<TEntity> where TEntity : EntityBase
 {
     Task<RepositoryEntityResult<TEntity>> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] include);
 
-    Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync<TQuery>(Specification<TEntity, TQuery> specification, CancellationToken cancellationToken) where TQuery : OrderedPaginationQuery;
+    Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync<TQuery>(OrderedPaginationQuery<TEntity> specification, CancellationToken cancellationToken);
 
     Task<RepositoryEntityResult<TEntity>> UpdateAsync(int id, TEntity entity, CancellationToken cancellationToken);
 
