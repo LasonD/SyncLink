@@ -33,7 +33,7 @@ public partial class CreateGroup
                 throw new BusinessException($"User {user.UserName} already has group with name {request.Name}");
             }
 
-            var group = new Group(request.Name, request.Description);
+            var group = new Group(request.Name, request.Description, request.IsPrivate);
 
             user.AddGroup(group, isCreator: true, isAdmin: true);
 
