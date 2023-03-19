@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
+using SyncLink.Application.Exceptions;
 
 namespace SyncLink.Application.UseCases.Commands.CreateRoom;
 
@@ -27,6 +29,8 @@ public partial class CreateRoom
 
             var users = usersResult.GetResult();
 
+            CheckAllUsersBelongToGroup(request, users);
+
             var room = new Room(request.Name);
 
             room.AddMembers(users);
@@ -36,6 +40,18 @@ public partial class CreateRoom
             await _roomsRepository.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<RoomDto>(room);
+        }
+
+        private static void CheckAllUsersBelongToGroup(Command request, IPaginatedEnumerable<User> users)
+        {
+            var userDifference = users
+                .ExceptBy(request.UserIds, u => u.Id)
+                .ToList();
+
+            if (userDifference.Any())
+            {
+                throw new BusinessException($"Users with ids {string.Join(", ", userDifference)} don't belong to group with id {request.GroupId}");
+            }
         }
     }
 }
