@@ -5,6 +5,7 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
 using SyncLink.Infrastructure.Data.Context;
+using SyncLink.Infrastructure.Data.Helpers;
 
 namespace SyncLink.Infrastructure.Data.Repositories;
 
@@ -14,14 +15,26 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
     {
     }
 
-    // public Task<PaginatedRepositoryResultSet<User>> GetUsersFromGroupAsync(int groupId, IEnumerable<int> userIds, CancellationToken cancellationToken)
-    // {
-    //     DbContext.Groups
-    //         .Where(g => g.Id == groupId)
-    //         .SelectMany(g => g.UserGroups.Select(ug => ug.User))
-    //         .Take()
-    //         .ToListAsync(cancellationToken);
-    // }
+    public async Task<PaginatedRepositoryResultSet<User>> GetUsersFromGroupAsync(int groupId, IEnumerable<int> userIds, CancellationToken cancellationToken)
+    {
+        var specification = new OrderedPaginationQuery<User>
+        {
+            FilteringExpressions = new List<Expression<Func<User, bool>>>()
+            {
+                u => userIds.Contains(u.Id),
+                u => u.UserGroups.Any(ug => ug.GroupId == groupId),
+            },
+            Page = 0,
+            PageSize = int.MaxValue 
+        };
+
+        var query = DbContext.ApplicationUsers;
+
+        var users = await ApplyQuerySpecification(query, specification)
+            .ToListAsync(cancellationToken);
+
+        return users.ToPaginatedOkResult(specification.Page, specification.PageSize);
+    }
 
     public Task<bool> UserHasGroupWithNameAsync(int userId, string groupName, CancellationToken cancellationToken)
     {

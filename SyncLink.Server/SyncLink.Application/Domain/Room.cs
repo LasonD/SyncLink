@@ -1,5 +1,6 @@
 ﻿using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Domain.Base;
+using SyncLink.Common.Validation;
 
 namespace SyncLink.Application.Domain;
 
@@ -16,6 +17,23 @@ public class Room : EntityBase
     }
 
     public string? Name { get; private set; }
+
+    public void AddMembers(IEnumerable<User> users)
+    {
+        foreach (var user in users)
+        {
+            AddMember(user);
+        }
+    }
+
+    public void AddMember(User user)
+    {
+        user.ThrowIfNull(nameof(user));
+
+        var userRoom = new UserRoom(user, this);
+
+        _roomMembers.Add(userRoom);
+    }
 
     public IReadOnlyCollection<UserRoom> RoomMembers => _roomMembers.AsReadOnly();
 
