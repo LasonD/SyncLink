@@ -15,6 +15,8 @@ public class RepositoryError
 
     public static implicit operator string(RepositoryError d) => d.ToString();
 
+    public static implicit operator RepositoryError(string d) => new(d);
+
     public override string ToString()
     {
         var codePart = !string.IsNullOrEmpty(Code) ? $"{Code} : " : string.Empty;

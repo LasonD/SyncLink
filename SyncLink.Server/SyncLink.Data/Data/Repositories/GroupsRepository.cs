@@ -1,5 +1,4 @@
 ﻿using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
-using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
 using SyncLink.Infrastructure.Data.Context;
 

@@ -26,7 +26,7 @@ public class RepositoryEntityResult<TEntity> : RepositoryResult where TEntity : 
         throw new RepositoryActionException(Status, Errors?.ToList(), typeof(TEntity), Exception);
     }
 
-    public static RepositoryEntityResult<TEntity> NotFound() => new(RepositoryActionStatus.NotFound, null);
+    public static RepositoryEntityResult<TEntity> NotFound(IEnumerable<RepositoryError>? errors = null) => new(RepositoryActionStatus.NotFound, null, errors: errors?.ToList());
 
     public static RepositoryEntityResult<TEntity> Updated(TEntity result) => new(RepositoryActionStatus.Updated, result);
 
