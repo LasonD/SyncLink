@@ -10,6 +10,14 @@ export const AUTO_LOGIN_START = "[Auth] AUTO_LOGIN_START"
 export const AUTO_LOGIN_FAILURE = "[Auth] AUTO_LOGIN_FAILURE"
 export const LOGOUT = "[Auth] LOGOUT";
 
+interface SignupModel {
+  firstname: string,
+  lastname: string,
+  username: string | null,
+  email: string,
+  password: string
+}
+
 export class LoginStart implements Action {
   readonly type = LOGIN_START;
 
@@ -34,7 +42,7 @@ export class LoginFailure implements Action {
 export class SignupStart implements Action {
   readonly type = SIGNUP_START;
 
-  constructor(public payload: {firstName: string, lastName: string, email: string, password: string}) {
+  constructor(public payload: SignupModel) {
   }
 }
 

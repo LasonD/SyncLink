@@ -12,8 +12,8 @@ using SyncLink.Infrastructure.Data.Context;
 namespace SyncLink.Infrastructure.Migrations
 {
     [DbContext(typeof(SyncLinkDbContext))]
-    [Migration("20230312204443_ModelAdjustments3")]
-    partial class ModelAdjustments3
+    [Migration("20230320171821_Adjust-Models")]
+    partial class AdjustModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -176,7 +176,7 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("UserGroup");
+                    b.ToTable("UsersToGroups");
                 });
 
             modelBuilder.Entity("SyncLink.Application.Domain.Associations.UserRoom", b =>
@@ -191,7 +191,7 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("UserRoom");
+                    b.ToTable("UsersToRooms");
                 });
 
             modelBuilder.Entity("SyncLink.Application.Domain.Group", b =>
@@ -208,13 +208,16 @@ namespace SyncLink.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Group");
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("SyncLink.Application.Domain.Message", b =>
@@ -266,6 +269,9 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

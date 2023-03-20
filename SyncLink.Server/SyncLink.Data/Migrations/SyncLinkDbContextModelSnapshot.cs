@@ -173,7 +173,7 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("UserGroup");
+                    b.ToTable("UsersToGroups");
                 });
 
             modelBuilder.Entity("SyncLink.Application.Domain.Associations.UserRoom", b =>
@@ -188,10 +188,10 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("UserRoom");
+                    b.ToTable("UsersToRooms");
                 });
 
-            modelBuilder.Entity("SyncLink.Application.Domain.Groups", b =>
+            modelBuilder.Entity("SyncLink.Application.Domain.Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,6 +204,9 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -263,6 +266,9 @@ namespace SyncLink.Infrastructure.Migrations
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -426,7 +432,7 @@ namespace SyncLink.Infrastructure.Migrations
 
             modelBuilder.Entity("SyncLink.Application.Domain.Associations.UserGroup", b =>
                 {
-                    b.HasOne("SyncLink.Application.Domain.Groups", "Groups")
+                    b.HasOne("SyncLink.Application.Domain.Group", "Group")
                         .WithMany("UserGroups")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -438,7 +444,7 @@ namespace SyncLink.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Groups");
+                    b.Navigation("Group");
 
                     b.Navigation("User");
                 });
@@ -483,13 +489,13 @@ namespace SyncLink.Infrastructure.Migrations
 
             modelBuilder.Entity("SyncLink.Application.Domain.Room", b =>
                 {
-                    b.HasOne("SyncLink.Application.Domain.Groups", "Groups")
+                    b.HasOne("SyncLink.Application.Domain.Group", "Group")
                         .WithMany("Rooms")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Groups");
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("SyncLink.Infrastructure.Data.Models.Identity.SyncLinkIdentityUser", b =>
@@ -503,7 +509,7 @@ namespace SyncLink.Infrastructure.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("SyncLink.Application.Domain.Groups", b =>
+            modelBuilder.Entity("SyncLink.Application.Domain.Group", b =>
                 {
                     b.Navigation("Rooms");
 

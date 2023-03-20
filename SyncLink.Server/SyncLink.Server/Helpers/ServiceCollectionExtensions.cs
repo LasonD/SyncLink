@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+using SyncLink.Application.Domain;
 using SyncLink.Application.Mapping;
 using SyncLink.Application.UseCases.Commands.Auth.Register;
 using SyncLink.Infrastructure.Data.Context;
@@ -117,6 +118,8 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IGroupsRepository, GroupsRepository>();
         services.AddTransient<IRoomsRepository, RoomsRepository>();
         services.AddTransient<IMessagesRepository, MessagesRepository>();
+
+        services.AddTransient<IEntityRepository<Group>, GroupsRepository>();
 
         return services;
     }

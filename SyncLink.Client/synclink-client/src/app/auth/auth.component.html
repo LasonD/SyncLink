@@ -1,1 +1,39 @@
-<p>auth works!</p>
+<div class="container">
+  <div class="card">
+    <div class="card-header">{{ mode === 'signin' ? 'Sign In' : 'Sign Up' }}</div>
+    <div class="card-body">
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+        <div class="form-floating mb-3">
+          <input type="email" class="form-control" id="email" formControlName="email" placeholder="{{ mode === 'signin' ? 'Username or Email' : 'Email' }}" required>
+          <label for="email">{{ mode === 'signin' ? 'Username or Email' : 'Email' }}</label>
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        </div>
+        <div class="form-floating mb-3" *ngIf="mode === 'signup'">
+          <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="First Name" required>
+          <label for="firstName">First Name</label>
+          <div class="invalid-feedback">Please enter a valid first name.</div>
+        </div>
+        <div class="form-floating mb-3" *ngIf="mode === 'signup'">
+          <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Last Name" required>
+          <label for="lastName">Last Name</label>
+          <div class="invalid-feedback">Please enter a valid last name.</div>
+        </div>
+        <div class="form-floating mb-3" *ngIf="mode === 'signup'">
+          <input type="text" class="form-control" id="username" formControlName="username" placeholder="Username (optional)">
+          <label for="username">Username (optional)</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="password" formControlName="password" placeholder="Password" required>
+          <label for="password">Password</label>
+          <div class="invalid-feedback">Please enter a valid password.</div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="!registrationForm.valid">{{ mode === 'signin' ? 'Sign In' : 'Sign Up' }}</button>
+      </form>
+      <div class="text-center mt-3">
+        <span *ngIf="mode === 'signin'">Don't have an account? </span>
+        <span *ngIf="mode === 'signup'">Already have an account? </span>
+        <a class="link-primary" (click)="toggleMode()">{{ mode === 'signin' ? 'Sign Up' : 'Sign In' }}</a>
+      </div>
+    </div>
+  </div>
+</div>

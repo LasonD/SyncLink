@@ -28,7 +28,7 @@ public class AuthRepository : IAuthRepository
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var user = await _userManager.FindByNameAsync(loginData.UsernameOrEmail) ?? 
+        var user = await _userManager.FindByNameAsync(loginData.UsernameOrEmail) ??
                    await _userManager.FindByEmailAsync(loginData.UsernameOrEmail);
 
         if (user == null)
@@ -84,14 +84,19 @@ public class AuthRepository : IAuthRepository
         var tokenClaims = await CollectClaimsAsync(user);
         var tokenStr = GenerateToken(tokenClaims);
 
+        var tokenDurationMinutes = _config.GetTokenDurationMinutes();
+        var durationMs = tokenDurationMinutes * 1000;
+
         var authResult = new AuthResult()
         {
-            UserId = user.Id,
+            IdentityId = user.Id,
+            UserId = user.ApplicationUserId,
             Username = user.UserName,
             Email = user.Email,
             AccessToken = tokenStr,
             FirstName = user.FirstName,
             LastName = user.LastName,
+            ExpiresIn = durationMs,
         };
 
         return authResult;
@@ -108,11 +113,13 @@ public class AuthRepository : IAuthRepository
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+        var expirationTime = DateTime.UtcNow.AddMinutes(tokenDurationMinutes);
+
         var token = new JwtSecurityToken(
             issuer: issuer,
             audience: audience,
             claims: tokenClaims,
-            expires: DateTime.UtcNow.AddMinutes(tokenDurationMinutes),
+            expires: expirationTime,
             signingCredentials: credentials
         );
 

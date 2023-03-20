@@ -1,6 +1,20 @@
+export interface AuthResult {
+  identityId: string;
+  userId: number;
+  username: string | null;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+  accessToken: string;
+  expiresIn: number;
+}
+
 export class User {
-  constructor(public id: string,
-              public userName: string,
+  constructor(public identityId: string,
+              public userId: number,
+              public username: string | null,
+              public firstname: string,
+              public lastname: string,
               public email: string,
               private _token: string,
               private expiresIn: number = null,
@@ -19,13 +33,4 @@ export class User {
 
     return this._token;
   }
-}
-
-export interface UserModel {
-  expirationDate: Date,
-  id: string,
-  userName: string,
-  email: string,
-  _token: string,
-  expiresIn: number,
 }

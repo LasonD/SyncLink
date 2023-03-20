@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SyncLink.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class ModelAdjustments3 : Migration
+    public partial class AdjustModels : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,11 +47,12 @@ namespace SyncLink.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsPrivate = table.Column<bool>(type: "bit", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Group", x => x.Id);
+                    table.PrimaryKey("PK_Groups", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,6 +117,7 @@ namespace SyncLink.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsPrivate = table.Column<bool>(type: "bit", nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -123,7 +125,7 @@ namespace SyncLink.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Rooms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Rooms_Group_GroupId",
+                        name: "FK_Rooms_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id",
@@ -131,7 +133,7 @@ namespace SyncLink.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserGroup",
+                name: "UsersToGroups",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
@@ -141,15 +143,15 @@ namespace SyncLink.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserGroup", x => new { x.UserId, x.GroupId });
+                    table.PrimaryKey("PK_UsersToGroups", x => new { x.UserId, x.GroupId });
                     table.ForeignKey(
-                        name: "FK_UserGroup_ApplicationUsers_UserId",
+                        name: "FK_UsersToGroups_ApplicationUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "ApplicationUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserGroup_Group_GroupId",
+                        name: "FK_UsersToGroups_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id",
@@ -272,7 +274,7 @@ namespace SyncLink.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRoom",
+                name: "UsersToRooms",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
@@ -280,15 +282,15 @@ namespace SyncLink.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoom", x => new { x.UserId, x.RoomId });
+                    table.PrimaryKey("PK_UsersToRooms", x => new { x.UserId, x.RoomId });
                     table.ForeignKey(
-                        name: "FK_UserRoom_ApplicationUsers_UserId",
+                        name: "FK_UsersToRooms_ApplicationUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "ApplicationUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoom_Rooms_RoomId",
+                        name: "FK_UsersToRooms_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -356,13 +358,13 @@ namespace SyncLink.Infrastructure.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserGroup_GroupId",
-                table: "UserGroup",
+                name: "IX_UsersToGroups_GroupId",
+                table: "UsersToGroups",
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRoom_RoomId",
-                table: "UserRoom",
+                name: "IX_UsersToRooms_RoomId",
+                table: "UsersToRooms",
                 column: "RoomId");
         }
 
@@ -388,10 +390,10 @@ namespace SyncLink.Infrastructure.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "UserGroup");
+                name: "UsersToGroups");
 
             migrationBuilder.DropTable(
-                name: "UserRoom");
+                name: "UsersToRooms");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
