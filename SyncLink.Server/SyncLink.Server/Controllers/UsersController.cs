@@ -8,8 +8,8 @@ using SyncLink.Server.Dtos;
 namespace SyncLink.Server.Controllers;
 
 [Authorize]
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
     private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ public class UsersController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("/{id:int}/groups")]
+    [HttpPost("{id:int}/groups")]
     public async Task<IActionResult> CreateGroup(int id, [FromBody] CreateGroupDto createGroupDto, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateGroup.Command>(createGroupDto);

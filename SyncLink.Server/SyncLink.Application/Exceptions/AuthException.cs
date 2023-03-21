@@ -18,10 +18,10 @@ public class AuthException : BusinessException
 
         if (errors.IsNullOrEmpty())
         {
-            return messageBuilder.ToString();
+            return messageBuilder.Append('.').ToString();
         }
 
-        foreach (var error in errors)
+        foreach (var error in errors!)
         {
             messageBuilder.Append(error);
         }

@@ -20,12 +20,11 @@ import { environment } from "../../environments/environment";
 @Injectable()
 export class AuthEffects {
   private readonly userDataKey = 'userData';
-  readonly apiKey: string;
 
   onLoginStart$ = createEffect(() => this.actions$.pipe(
       ofType(LOGIN_START),
       switchMap((authData: LoginStart) =>
-        this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/auth/login`, authData)),
+        this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/login`, authData.payload)),
       map(this.handleAuthResponse.bind(this)),
       catchError(this.handleError.bind(this)),
     )
@@ -44,8 +43,9 @@ export class AuthEffects {
   onSignupStart$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SIGNUP_START),
-      switchMap((signupData: SignupStart) =>
-        this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/auth/register`, signupData)),
+      switchMap((signupData: SignupStart) => {
+        return this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/register`, signupData.payload);
+      }),
       map(this.handleAuthResponse.bind(this)),
       catchError(this.handleError.bind(this)),
     );
@@ -91,7 +91,6 @@ export class AuthEffects {
               private httpClient: HttpClient,
               private router: Router
   ) {
-    this.apiKey = environment.apiBaseUrl;
   }
 
   private handleAuthResponse(authResponse: AuthResult) {
@@ -117,21 +116,23 @@ export class AuthEffects {
   private static extractResponseErrors(errorResponse: HttpErrorResponse): string[] {
     const errorMessages = [];
 
-    for (const error of errorResponse?.error?.error?.errors?.map(e => e.message)) {
-      switch (error) {
-        case 'EMAIL_EXISTS':
-          errorMessages.push('This email is already registered.');
-          break;
-        case 'EMAIL_NOT_FOUND':
-        case 'INVALID_PASSWORD':
-          errorMessages.push('Invalid email or password.');
-          break;
-        case undefined:
-          continue;
-        default:
-          errorMessages.push(error);
-      }
-    }
+    console.log(errorResponse);
+
+    // for (const error of errorResponse?.error?.error?.errors?.map(e => e.message)) {
+    //   switch (error) {
+    //     case 'EMAIL_EXISTS':
+    //       errorMessages.push('This email is already registered.');
+    //       break;
+    //     case 'EMAIL_NOT_FOUND':
+    //     case 'INVALID_PASSWORD':
+    //       errorMessages.push('Invalid email or password.');
+    //       break;
+    //     case undefined:
+    //       continue;
+    //     default:
+    //       errorMessages.push(error);
+    //   }
+    // }
 
     return errorMessages;
   }

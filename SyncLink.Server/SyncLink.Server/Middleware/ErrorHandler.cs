@@ -58,7 +58,7 @@ internal class ErrorHandler : IMiddleware
         return authException switch
         {
             LoginException loginException => WriteErrorResponse(context, HttpStatusCode.Unauthorized, loginException.Errors),
-            RegistrationException registrationException => WriteErrorResponse(context, HttpStatusCode.Conflict, registrationException.Errors),
+            RegistrationException registrationException => WriteErrorResponse(context, HttpStatusCode.BadRequest, registrationException.Errors),
             _ => HandleUnknownError(context)
         };
     }
@@ -70,6 +70,8 @@ internal class ErrorHandler : IMiddleware
 
     private static Task WriteErrorResponse(HttpContext context, HttpStatusCode statusCode, IEnumerable<string>? errors)
     {
+        context.Response.StatusCode = (int)statusCode;
+
         return context.Response.WriteAsJsonAsync(new ErrorDetails
         {
             StatusCode = statusCode,

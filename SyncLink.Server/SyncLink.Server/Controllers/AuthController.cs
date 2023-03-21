@@ -9,8 +9,8 @@ using SyncLink.Server.Dtos;
 namespace SyncLink.Server.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
 [AllowAnonymous]
+[Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpPost("/login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginData, CancellationToken cancellationToken)
     {
         var loginCommand = _mapper.Map<Login.Command>(loginData);
@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
         return Ok(authResult);
     }
 
-    [HttpPost("/register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegistrationDto registerData, CancellationToken cancellationToken)
     {
         var registerCommand = _mapper.Map<Register.Command>(registerData);

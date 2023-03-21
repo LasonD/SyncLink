@@ -6,8 +6,8 @@ using SyncLink.Application.UseCases.Queries.GetById.Group;
 namespace SyncLink.Server.Controllers;
 
 [Authorize]
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class GroupsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -17,7 +17,7 @@ public class GroupsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var query = new GetGroupById.Query { Id = id };

@@ -13,6 +13,7 @@ using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Data.Repositories;
 using SyncLink.Infrastructure.Extensions;
+using SyncLink.Server.Common;
 using SyncLink.Server.Filters;
 using SyncLink.Server.Middleware;
 
@@ -77,6 +78,14 @@ internal static class ServiceCollectionExtensions
 
     public static IServiceCollection AddApiWithSwagger(this IServiceCollection services)
     {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(Constants.AllowAllCorsPolicy, builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+            );
+        });
         services.AddEndpointsApiExplorer();
         services.AddControllers(options => options.Filters.Add<ValidateModelStateAttribute>());
         services.AddSignalR();

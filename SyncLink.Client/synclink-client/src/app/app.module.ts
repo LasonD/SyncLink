@@ -6,6 +6,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { StoreModule } from "@ngrx/store";
 import { appReducer } from "./store/app.reducer";
+import { AuthEffects } from "./auth/store/auth.effects";
+import { EffectsModule } from "@ngrx/effects";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -15,8 +18,10 @@ import { appReducer } from "./store/app.reducer";
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     MatSlideToggleModule,
-    StoreModule.forRoot(appReducer)
+    StoreModule.forRoot(appReducer),
+    EffectsModule.forRoot([AuthEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent]
