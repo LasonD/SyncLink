@@ -17,26 +17,38 @@ export class AuthComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.registrationForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      username: '',
-      password: ['', Validators.required]
-    });
+    this.buildForm();
+  }
+
+  buildForm(): void {
+    if (this.mode === 'signin') {
+      this.registrationForm = this.fb.group({
+        usernameOrEmail: ['', Validators.required],
+        password: ['', Validators.required]
+      });
+    } else {
+      this.registrationForm = this.fb.group({
+        firstName: ['', Validators.required],
+        lastName: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        username: '',
+        password: ['', Validators.required]
+      });
+    }
   }
 
   toggleMode(): void {
-    this.mode = this.mode === 'signin' ? 'signup' : 'signin'
+    this.mode = this.mode === 'signin' ? 'signup' : 'signin';
+    this.buildForm();
   }
 
   onSubmit(): void {
     console.log(this.registrationForm.value);
 
     if (this.mode === 'signin') {
-      this.store.dispatch(new LoginStart(this.registrationForm.value))
+      this.store.dispatch(new LoginStart(this.registrationForm.value));
     } else {
-      this.store.dispatch(new SignupStart(this.registrationForm.value))
+      this.store.dispatch(new SignupStart(this.registrationForm.value));
     }
   }
 }

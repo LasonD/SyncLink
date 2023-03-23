@@ -9,7 +9,7 @@ import {
   SIGNUP_START,
   SignupStart
 } from "./auth.actions";
-import { catchError, map, switchMap, tap, } from "rxjs/operators";
+import { catchError, map, mergeMap, tap, } from "rxjs/operators";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { of } from "rxjs";
@@ -23,10 +23,13 @@ export class AuthEffects {
 
   onLoginStart$ = createEffect(() => this.actions$.pipe(
       ofType(LOGIN_START),
-      switchMap((authData: LoginStart) =>
-        this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/login`, authData.payload)),
-      map(this.handleAuthResponse.bind(this)),
-      catchError(this.handleError.bind(this)),
+      mergeMap((authData: LoginStart) =>
+        this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/login`, authData.payload)
+          .pipe(
+            map(this.handleAuthResponse.bind(this)),
+            catchError(this.handleError.bind(this))
+          )
+      )
     )
   );
 
@@ -43,11 +46,13 @@ export class AuthEffects {
   onSignupStart$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SIGNUP_START),
-      switchMap((signupData: SignupStart) => {
-        return this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/register`, signupData.payload);
+      mergeMap((signupData: SignupStart) => {
+        return this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/register`, signupData.payload)
+          .pipe(
+            map(this.handleAuthResponse.bind(this)),
+            catchError(this.handleError.bind(this))
+          );
       }),
-      map(this.handleAuthResponse.bind(this)),
-      catchError(this.handleError.bind(this)),
     );
   });
 
