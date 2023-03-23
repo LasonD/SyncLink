@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SyncLink.Server.Exceptions;
 
 namespace SyncLink.Server.Filters;
 
@@ -12,6 +12,6 @@ public class ValidateModelStateAttribute : ActionFilterAttribute
             return;
         }
 
-        throw new ModelValidationException(context.ModelState);
+        context.Result = new BadRequestObjectResult(context.ModelState);
     }
 }

@@ -9,7 +9,6 @@ import { appReducer } from "./store/app.reducer";
 import { AuthEffects } from "./auth/store/auth.effects";
 import { EffectsModule } from "@ngrx/effects";
 import { HttpClientModule } from "@angular/common/http";
-import { StoreRouterConnectingModule } from "@ngrx/router-store";
 
 @NgModule({
   declarations: [
@@ -22,7 +21,6 @@ import { StoreRouterConnectingModule } from "@ngrx/router-store";
     HttpClientModule,
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
-    StoreRouterConnectingModule.forRoot(),
     EffectsModule.forRoot([AuthEffects]),
   ],
   providers: [],

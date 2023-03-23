@@ -38,7 +38,6 @@ export function authReducer(state = initialState, action: AuthActions): State {
         isLoading: true,
       };
     case LOGIN_FAILURE:
-      console.log('In login failure');
       return {
         ...state,
         user: null,

@@ -7,7 +7,7 @@ namespace SyncLink.Application.Domain;
 public class Group : EntityBase
 {
     private readonly IList<UserGroup> _userGroups = new List<UserGroup>();
-    private readonly IList<Room> _rooms = new List<Room>();
+    private readonly IList<Room> _rooms = null!;
 
     protected Group() { }
 
@@ -23,22 +23,6 @@ public class Group : EntityBase
     public string? Description { get; private set; }
 
     public bool IsPrivate { get; private set; }
-
-    public void AddUser(User user, bool isAdmin = false)
-    {
-        user.ThrowIfNull(nameof(user));
-
-        var userGroup = new UserGroup(user, this, isCreator: false, isAdmin);
-
-        _userGroups.Add(userGroup);
-    }
-
-    public void AddRoom(Room room)
-    {
-        room.ThrowIfNull(nameof(room));
-
-        _rooms.Add(room);
-    }
 
     public IReadOnlyCollection<UserGroup> UserGroups => _userGroups.AsReadOnly();
 
