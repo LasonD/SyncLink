@@ -9,7 +9,7 @@ import {
   SIGNUP_START,
   SignupStart
 } from "./auth.actions";
-import { catchError, map, switchMap, tap, } from "rxjs/operators";
+import { catchError, map, mergeMap, tap, } from "rxjs/operators";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { of } from "rxjs";
@@ -17,16 +17,23 @@ import { Router } from "@angular/router";
 import { AuthResult, User } from "../user.model";
 import { environment } from "../../environments/environment";
 
+interface ModelStateError {
+  [key: string]: string[];
+}
+
 @Injectable()
 export class AuthEffects {
   private readonly userDataKey = 'userData';
 
   onLoginStart$ = createEffect(() => this.actions$.pipe(
       ofType(LOGIN_START),
-      switchMap((authData: LoginStart) =>
-        this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/login`, authData.payload)),
-      map(this.handleAuthResponse.bind(this)),
-      catchError(this.handleError.bind(this)),
+      mergeMap((authData: LoginStart) => {
+        return this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/login`, authData.payload)
+          .pipe(
+            map(this.handleAuthResponse.bind(this)),
+            catchError(this.handleError.bind(this)),
+          );
+      }),
     )
   );
 
@@ -43,11 +50,13 @@ export class AuthEffects {
   onSignupStart$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SIGNUP_START),
-      switchMap((signupData: SignupStart) => {
-        return this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/register`, signupData.payload);
+      mergeMap((signupData: SignupStart) => {
+        return this.httpClient.post<AuthResult>(`${environment.apiBaseUrl}/api/auth/register`, signupData.payload)
+          .pipe(
+            map(this.handleAuthResponse.bind(this)),
+            catchError(this.handleError.bind(this)),
+          );
       }),
-      map(this.handleAuthResponse.bind(this)),
-      catchError(this.handleError.bind(this)),
     );
   });
 
@@ -109,30 +118,28 @@ export class AuthEffects {
     return new LoginSuccess({user, shouldRedirect: true});
   }
 
-  private handleError(err: HttpErrorResponse) {
+  private handleError(err: HttpErrorResponse | any) {
+    console.log('In handle error', err);
     return of(new LoginFailure({authErrors: AuthEffects.extractResponseErrors(err)}));
   }
 
   private static extractResponseErrors(errorResponse: HttpErrorResponse): string[] {
-    const errorMessages = [];
+    const errors: Array<ModelStateError> | Array<string> = errorResponse?.error?.errors;
+    let errorMessages: Array<string>;
 
-    console.log(errorResponse);
+    console.log(errors);
 
-    // for (const error of errorResponse?.error?.error?.errors?.map(e => e.message)) {
-    //   switch (error) {
-    //     case 'EMAIL_EXISTS':
-    //       errorMessages.push('This email is already registered.');
-    //       break;
-    //     case 'EMAIL_NOT_FOUND':
-    //     case 'INVALID_PASSWORD':
-    //       errorMessages.push('Invalid email or password.');
-    //       break;
-    //     case undefined:
-    //       continue;
-    //     default:
-    //       errorMessages.push(error);
-    //   }
-    // }
+    if (errors?.length) {
+      errorMessages = errors.flatMap((e: ModelStateError | string) => {
+        if (typeof e === 'string') {
+          return [e];
+        }
+
+        return [];
+      });
+    } else {
+      errorMessages = ['Something went wrong...'];
+    }
 
     return errorMessages;
   }

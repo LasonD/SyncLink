@@ -3,6 +3,7 @@ using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Contracts.Data.Result.Exceptions;
 using SyncLink.Application.Exceptions;
 using SyncLink.Server.Dtos;
+using SyncLink.Server.Exceptions;
 
 namespace SyncLink.Server.Middleware;
 
@@ -28,8 +29,19 @@ internal class ErrorHandler : IMiddleware
         {
             BusinessException businessException => HandleBusinessExceptionAsync(context, businessException),
             RepositoryActionException repositoryException => HandleRepositoryActionException(context, repositoryException),
+            ModelValidationException validationException => HandleValidationException(context, validationException),
             _ => HandleUnknownError(context)
         };
+    }
+
+    private static Task HandleValidationException(HttpContext context, ModelValidationException validationException)
+    {
+        var errors = validationException.ModelState.Values
+            .SelectMany(v => v.Errors)
+            .Select(e => e.ErrorMessage)
+            .ToArray();
+
+        return WriteErrorResponse(context, HttpStatusCode.BadRequest, errors);
     }
 
     private static Task HandleRepositoryActionException(HttpContext context, RepositoryActionException repositoryException)

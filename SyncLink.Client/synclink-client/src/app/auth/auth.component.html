@@ -4,8 +4,8 @@
     <div class="card-body">
       <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
         <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="email" formControlName="email" placeholder="{{ mode === 'signin' ? 'Username or Email' : 'Email' }}" required>
-          <label for="email">{{ mode === 'signin' ? 'Username or Email' : 'Email' }}</label>
+          <input [type]="mode === 'signin' ? 'text' : 'email'" class="form-control" [id]="mode === 'signin' ? 'usernameOrEmail' : 'email'" [formControlName]="mode === 'signin' ? 'usernameOrEmail' : 'email'" placeholder="{{ mode === 'signin' ? 'Username or Email' : 'Email' }}" required>
+          <label [for]="mode === 'signin' ? 'usernameOrEmail' : 'email'">{{ mode === 'signin' ? 'Username or Email' : 'Email' }}</label>
           <div class="invalid-feedback">Please enter a valid email address.</div>
         </div>
         <div class="form-floating mb-3" *ngIf="mode === 'signup'">
@@ -26,6 +26,12 @@
           <input type="password" class="form-control" id="password" formControlName="password" placeholder="Password" required>
           <label for="password">Password</label>
           <div class="invalid-feedback">Please enter a valid password.</div>
+        </div>
+        <div *ngIf="authErrors$ | async as errors" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <ul class="mb-0">
+            <li *ngFor="let error of errors">{{ error }}</li>
+          </ul>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <button type="submit" class="btn btn-primary w-100" [disabled]="!registrationForm.valid">{{ mode === 'signin' ? 'Sign In' : 'Sign Up' }}</button>
       </form>
