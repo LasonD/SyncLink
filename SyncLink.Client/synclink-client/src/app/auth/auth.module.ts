@@ -5,6 +5,8 @@ import { RouterModule, Routes } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
+import { NgxSpinnerModule } from "ngx-spinner";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 const routes: Routes = [{ path: '', component: AuthComponent, },];
 
@@ -16,6 +18,7 @@ const routes: Routes = [{ path: '', component: AuthComponent, },];
     CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
     MatIconModule,
     RouterModule.forChild(routes),
   ]

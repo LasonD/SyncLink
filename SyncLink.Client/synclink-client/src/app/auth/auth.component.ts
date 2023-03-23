@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from "@ngrx/store";
-import { LoginStart, SignupStart } from "./store/auth.actions";
+import { ClearErrors, LoginStart, SignupStart } from "./store/auth.actions";
+import { distinctUntilChanged, Observable, Subject, takeUntil } from "rxjs";
+import { map } from "rxjs/operators";
+import { AppState } from "../store/app.reducer";
 
 @Component({
   selector: 'app-auth',
@@ -12,11 +15,34 @@ export class AuthComponent implements OnInit {
   mode: 'signin' | 'signup' = 'signin';
   registrationForm: FormGroup;
 
+  public isLoading$: Observable<boolean>;
+  public authErrors$: Observable<Array<string>>;
+
+  private destroyed$: Subject<boolean> = new Subject<boolean>();
+
   constructor(private fb: FormBuilder,
-              private store: Store) {
+              private store: Store<AppState>) {
   }
 
   ngOnInit(): void {
+    this.authErrors$ = this.store.select('auth')
+      .pipe(
+        takeUntil(this.destroyed$),
+        map(state => state.authErrorMessages),
+        distinctUntilChanged(),
+      );
+
+    this.store.select('auth')
+      .subscribe(state => {
+        console.log('State changed: ', state);
+      });
+
+    this.isLoading$ = this.store.select('auth')
+      .pipe(
+        takeUntil(this.destroyed$),
+        map(state => state.isLoading),
+      );
+
     this.buildForm();
   }
 
@@ -50,5 +76,9 @@ export class AuthComponent implements OnInit {
     } else {
       this.store.dispatch(new SignupStart(this.registrationForm.value));
     }
+  }
+
+  onClearErrors() {
+    this.store.dispatch(new ClearErrors());
   }
 }

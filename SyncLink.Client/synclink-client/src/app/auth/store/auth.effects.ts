@@ -119,27 +119,27 @@ export class AuthEffects {
   }
 
   private static extractResponseErrors(errorResponse: HttpErrorResponse): string[] {
-    const errorMessages = [];
+    const errors: Array<ModelStateError> | Array<string> = errorResponse?.error?.errors;
+    let errorMessages: Array<string>;
 
-    console.log(errorResponse);
+    console.log(errors);
 
-    // for (const error of errorResponse?.error?.error?.errors?.map(e => e.message)) {
-    //   switch (error) {
-    //     case 'EMAIL_EXISTS':
-    //       errorMessages.push('This email is already registered.');
-    //       break;
-    //     case 'EMAIL_NOT_FOUND':
-    //     case 'INVALID_PASSWORD':
-    //       errorMessages.push('Invalid email or password.');
-    //       break;
-    //     case undefined:
-    //       continue;
-    //     default:
-    //       errorMessages.push(error);
-    //   }
-    // }
+    if (errors?.length) {
+      errorMessages = errors.flatMap((e: ModelStateError | string) => {
+        if (typeof e === 'string') {
+          return [e];
+        }
+
+        return [];
+      });
+    } else {
+      errorMessages = ['Something went wrong...'];
+    }
 
     return errorMessages;
   }
 }
 
+interface ModelStateError {
+  [key: string]: string[];
+}

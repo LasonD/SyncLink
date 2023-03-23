@@ -28,7 +28,7 @@ public partial class Login
             }
             catch (RepositoryActionException ex)
             {
-                throw new LoginException(ex.GetClientFacingErrors());
+                throw new LoginException(new[] { "Invalid username, email or password" });
             }
         }
 
