@@ -1,7 +1,22 @@
-import { Group } from "../group.model";
-
+import { createReducer, on } from '@ngrx/store';
+import { Group } from '../models/group.model';
+import { searchGroups, searchGroupsSuccess, searchGroupsFailure } from './groups-search.actions';
 
 export interface State {
   groups: Group[];
-  isLoading: boolean;
+  loading: boolean;
+  error: any;
 }
+
+export const initialState: State = {
+  groups: [],
+  loading: false,
+  error: null,
+};
+
+export const groupSearchReducer = createReducer(
+  initialState,
+  on(searchGroups, (state) => ({ ...state, loading: true })),
+  on(searchGroupsSuccess, (state, { groups }) => ({ ...state, loading: false, groups })),
+  on(searchGroupsFailure, (state, { error }) => ({ ...state, loading: false, error }))
+);

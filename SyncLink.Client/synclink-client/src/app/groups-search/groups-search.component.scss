@@ -1,0 +1,32 @@
+.container {
+  max-width: 600px;
+}
+
+.input-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+
+  &:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+}
+
+.bg-light-blue {
+  background-color: lightblue;
+}
+
+.bg-pale-green {
+  background-color: palegreen;
+}
+
+.bg-pale-yellow {
+  background-color: palegoldenrod;
+}

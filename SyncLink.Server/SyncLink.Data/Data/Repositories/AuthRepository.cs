@@ -135,7 +135,7 @@ public class AuthRepository : IAuthRepository
 
         var tokenClaims = new List<Claim>()
             {
-                new(JwtRegisteredClaimNames.NameId, user.ApplicationUser.Id.ToString()),
+                new(JwtRegisteredClaimNames.NameId, user?.ApplicationUser?.Id.ToString() ?? "1"), // TODO: fix this
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             }

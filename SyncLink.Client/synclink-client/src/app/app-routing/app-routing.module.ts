@@ -5,7 +5,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const appRoutes: Routes = [
   { path: '', redirectTo: '/groups', pathMatch: 'full' },
   { path: 'auth', loadChildren: () => import('../auth/auth.module').then(m => m.AuthModule) },
-  { path: 'groups', loadChildren: () => import('../auth/auth.module').then(m => m.AuthModule) },
+  { path: 'groups', loadChildren: () => import('../groups-search/groups-search.module').then(m => m.GroupsSearchModule) },
 ];
 
 @NgModule({

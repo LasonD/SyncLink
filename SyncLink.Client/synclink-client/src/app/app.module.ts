@@ -9,12 +9,11 @@ import { appReducer } from "./store/app.reducer";
 import { AuthEffects } from "./auth/store/auth.effects";
 import { EffectsModule } from "@ngrx/effects";
 import { HttpClientModule } from "@angular/common/http";
-import { GroupsSearchComponent } from './groups-search/groups-search.component';
+import { GroupSearchEffects } from "./groups-search/store/groups-search.effects";
 
 @NgModule({
   declarations: [
     AppComponent,
-    GroupsSearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,7 +22,7 @@ import { GroupsSearchComponent } from './groups-search/groups-search.component';
     HttpClientModule,
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, GroupSearchEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent]

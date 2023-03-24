@@ -6,3 +6,9 @@ export interface Group {
   membersCount: number;
 }
 
+export enum GroupSearchMode {
+  Membership = 'Membership',
+  ExplorePublic = 'ExplorePublic',
+  Owned = 'Owned',
+}
+

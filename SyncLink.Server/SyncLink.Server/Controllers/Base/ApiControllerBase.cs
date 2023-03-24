@@ -5,7 +5,7 @@ namespace SyncLink.Server.Controllers.Base;
 
 public class ApiControllerBase : ControllerBase
 {
-    public int? GetAppUserId()
+    protected int? GetAppUserId()
     {
         var value = User.FindFirst(JwtRegisteredClaimNames.NameId)?.Value;
 
@@ -17,7 +17,7 @@ public class ApiControllerBase : ControllerBase
         return null;
     }
 
-    public int GetRequiredAppUserId()
+    protected int GetRequiredAppUserId()
     {
         var userId = GetAppUserId();
 

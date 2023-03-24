@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SyncLink.Application.Contracts.Data.Enums;
 using SyncLink.Application.UseCases.Queries.GetById.Group;
 using SyncLink.Application.UseCases.Queries.SearchGroups;
 using SyncLink.Server.Controllers.Base;
@@ -30,11 +31,11 @@ public class GroupsController : ApiControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string? searchQuery = null, [FromQuery] bool onlyMembership = false, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Search([FromQuery] string? searchQuery = null, [FromQuery] GroupSearchMode groupSearchMode = GroupSearchMode.Membership, CancellationToken cancellationToken = default)
     {
         var userId = GetRequiredAppUserId();
 
-        var query = new SearchGroups.Query(userId, searchQuery, onlyMembership);
+        var query = new SearchGroups.Query(userId, searchQuery, groupSearchMode);
 
         var result = await _mediator.Send(query, cancellationToken);
 

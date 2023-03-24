@@ -23,8 +23,10 @@ public partial class SearchGroups
         {
             var searchTerms = request.SearchQuery?.Split(' ') ?? new[] { string.Empty };
 
-            var searchResult = await _groupsRepository.SearchByNameAndDescriptionAsync(request.UserId, searchTerms,
-                request.OnlyMembership,
+            var searchResult = await _groupsRepository.SearchByNameAndDescriptionAsync(
+                request.UserId, 
+                searchTerms,
+                request.SearchMode,
                 cancellationToken
             );
 

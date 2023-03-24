@@ -1,4 +1,5 @@
 ﻿using SyncLink.Application.Contracts.Data;
+using SyncLink.Application.Contracts.Data.Enums;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
@@ -13,7 +14,7 @@ public class GroupsRepository : GenericEntityRepository<Group>, IGroupsRepositor
     {
     }
 
-    public Task<PaginatedRepositoryResultSet<Group>> SearchByNameAndDescriptionAsync(int userId, string[] terms, bool onlyMembership, CancellationToken cancellationToken)
+    public Task<PaginatedRepositoryResultSet<Group>> SearchByNameAndDescriptionAsync(int userId, string[] terms, GroupSearchMode searchMode, CancellationToken cancellationToken)
     {
         var specification = new OrderedPaginationQuery<Group>()
         {
@@ -28,9 +29,13 @@ public class GroupsRepository : GenericEntityRepository<Group>, IGroupsRepositor
             }
         };
 
-        Expression<Func<Group, bool>> filteringCondition = onlyMembership
-            ? g => g.UserGroups.Any(ug => ug.UserId == userId)
-            : g => !g.IsPrivate;
+        Expression<Func<Group, bool>> filteringCondition = searchMode switch
+        {
+            GroupSearchMode.ExplorePublic => g => !g.IsPrivate && g.UserGroups.All(ug => ug.UserId != userId),
+            GroupSearchMode.Membership => g => g.UserGroups.Any(ug => ug.UserId == userId),
+            GroupSearchMode.Owned => g => g.UserGroups.Any(ug => ug.IsCreator && ug.UserId == userId),
+            _ => throw new ArgumentOutOfRangeException(nameof(searchMode), searchMode, null)
+        };
 
         specification.FilteringExpressions.Add(filteringCondition);
 
