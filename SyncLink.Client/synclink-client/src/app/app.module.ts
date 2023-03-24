@@ -9,10 +9,12 @@ import { appReducer } from "./store/app.reducer";
 import { AuthEffects } from "./auth/store/auth.effects";
 import { EffectsModule } from "@ngrx/effects";
 import { HttpClientModule } from "@angular/common/http";
+import { GroupsSearchComponent } from './groups-search/groups-search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    GroupsSearchComponent,
   ],
   imports: [
     BrowserModule,
