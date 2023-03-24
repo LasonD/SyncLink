@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.UseCases.Commands.Auth.Login;
 using SyncLink.Application.UseCases.Commands.Auth.Register;
+using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Controllers;
@@ -11,7 +12,7 @@ namespace SyncLink.Server.Controllers;
 [ApiController]
 [AllowAnonymous]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController : ApiControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;

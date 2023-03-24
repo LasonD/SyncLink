@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.UseCases.Queries.GetById.Group;
 using SyncLink.Application.UseCases.Queries.SearchGroups;
+using SyncLink.Server.Controllers.Base;
 
 namespace SyncLink.Server.Controllers;
 
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class GroupsController : ControllerBase
+public class GroupsController : ApiControllerBase
 {
     private readonly IMediator _mediator;
 
@@ -29,9 +30,11 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string? searchQuery = null, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Search([FromQuery] string? searchQuery = null, [FromQuery] bool onlyMembership = false, CancellationToken cancellationToken = default)
     {
-        var query = new SearchGroups.Query(searchQuery);
+        var userId = GetRequiredAppUserId();
+
+        var query = new SearchGroups.Query(userId, searchQuery, onlyMembership);
 
         var result = await _mediator.Send(query, cancellationToken);
 

@@ -5,5 +5,5 @@ namespace SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 
 public interface IGroupsRepository : IEntityRepository<Group>
 {
-    Task<PaginatedRepositoryResultSet<Group>> SearchByNameAndDescriptionAsync(string[] terms, CancellationToken cancellationToken);
+    Task<PaginatedRepositoryResultSet<Group>> SearchByNameAndDescriptionAsync(string[] terms, bool onlyMembership, CancellationToken cancellationToken);
 }

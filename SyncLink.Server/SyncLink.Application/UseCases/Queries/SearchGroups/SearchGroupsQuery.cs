@@ -6,5 +6,5 @@ namespace SyncLink.Application.UseCases.Queries.SearchGroups;
 
 public partial class SearchGroups
 {
-    public record Query(string? SearchQuery) : IRequest<IPaginatedEnumerable<GroupDto>>;
+    public record Query(int UserId, string? SearchQuery, bool OnlyMembership) : IRequest<IPaginatedEnumerable<GroupDto>>;
 }

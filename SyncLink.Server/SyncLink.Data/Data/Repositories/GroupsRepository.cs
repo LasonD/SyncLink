@@ -13,7 +13,7 @@ public class GroupsRepository : GenericEntityRepository<Group>, IGroupsRepositor
     {
     }
 
-    public Task<PaginatedRepositoryResultSet<Group>> SearchByNameAndDescriptionAsync(string[] terms, CancellationToken cancellationToken)
+    public Task<PaginatedRepositoryResultSet<Group>> SearchByNameAndDescriptionAsync(int userId, string[] terms, bool onlyMembership, CancellationToken cancellationToken)
     {
         var specification = new OrderedPaginationQuery<Group>()
         {
@@ -27,6 +27,12 @@ public class GroupsRepository : GenericEntityRepository<Group>, IGroupsRepositor
                 new(g => g.Description ?? string.Empty, terms),
             }
         };
+
+        Expression<Func<Group, bool>> filteringCondition = onlyMembership
+            ? g => g.UserGroups.Any(ug => ug.UserId == userId)
+            : g => !g.IsPrivate;
+
+        specification.FilteringExpressions.Add(filteringCondition);
 
         return GetBySpecificationAsync<Group>(specification, cancellationToken);
     }

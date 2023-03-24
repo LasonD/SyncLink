@@ -1,4 +1,4 @@
-﻿using SyncLink.Common.Helpers;
+﻿using SyncLink.Common.Helpers.Extensions;
 
 namespace SyncLink.Application.Contracts.Data.Result.Exceptions;
 

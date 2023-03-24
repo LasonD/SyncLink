@@ -1,4 +1,4 @@
-﻿using SyncLink.Common.Helpers;
+﻿using SyncLink.Common.Helpers.Extensions;
 using System.Text;
 
 namespace SyncLink.Application.Exceptions;

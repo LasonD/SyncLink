@@ -7,7 +7,7 @@ using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Helpers;
 using SyncLink.Application.Domain.Base;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
-using SyncLink.Common.Helpers;
+using SyncLink.Common.Helpers.Extensions;
 
 namespace SyncLink.Infrastructure.Data.Repositories;
 

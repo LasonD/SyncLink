@@ -11,13 +11,13 @@ public class OrderedPaginationQuery<TEntity>
 
     public int PageSize { get; set; } = DefaultPageSize;
 
-    public IEnumerable<OrderingCriteria<TEntity>> OrderingExpressions { get; set; } = new List<OrderingCriteria<TEntity>>();
+    public ICollection<OrderingCriteria<TEntity>> OrderingExpressions { get; set; } = new List<OrderingCriteria<TEntity>>();
 
-    public IEnumerable<Expression<Func<TEntity, bool>>> FilteringExpressions { get; set; } = new List<Expression<Func<TEntity, bool>>>();
+    public ICollection<Expression<Func<TEntity, bool>>> FilteringExpressions { get; set; } = new List<Expression<Func<TEntity, bool>>>();
 
-    public IEnumerable<Expression<Func<TEntity, object>>> IncludeExpressions { get; set; } = new List<Expression<Func<TEntity, object>>>();
+    public ICollection<Expression<Func<TEntity, object>>> IncludeExpressions { get; set; } = new List<Expression<Func<TEntity, object>>>();
 
-    public IEnumerable<SearchingCriteria<TEntity>> SearchTerms { get; set; } = new List<SearchingCriteria<TEntity>>();
+    public ICollection<SearchingCriteria<TEntity>> SearchTerms { get; set; } = new List<SearchingCriteria<TEntity>>();
 }
 
 public record SearchingCriteria<TEntity>(Expression<Func<TEntity, string>> Expression, ICollection<string> Terms);

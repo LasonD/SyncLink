@@ -1,4 +1,4 @@
-﻿namespace SyncLink.Common.Helpers;
+﻿namespace SyncLink.Common.Helpers.Extensions;
 
 public static class CollectionHelpers
 {

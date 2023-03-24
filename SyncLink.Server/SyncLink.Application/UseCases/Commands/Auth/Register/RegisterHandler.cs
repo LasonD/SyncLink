@@ -4,7 +4,7 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Exceptions;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
-using SyncLink.Common.Helpers;
+using SyncLink.Common.Helpers.Extensions;
 
 namespace SyncLink.Application.UseCases.Commands.Auth.Register;
 
