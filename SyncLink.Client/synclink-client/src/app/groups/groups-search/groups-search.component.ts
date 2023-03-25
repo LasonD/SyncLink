@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { Group, GroupSearchMode } from './models/group.model';
-import { searchGroups } from './store/groups-search.actions';
-import { selectGroups, selectLoading } from './store/groups-search.selectors';
+import { Group, GroupSearchMode } from '../models/group.model';
+import { searchGroups } from '../store/groups.actions';
+import { selectGroups, selectLoading } from '../store/groups.selectors';
 
 @Component({
   selector: 'app-group-search',

@@ -1,0 +1,19 @@
+<div class="card mx-auto shadow-lg" style="max-width: 600px;">
+  <div class="card-body">
+    <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="name" class="form-label fw-bold">Name</label>
+        <input type="text" class="form-control form-control-lg" id="name" formControlName="name" placeholder="Enter group name">
+        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="invalid-feedback d-block text-start">
+          <div *ngIf="name.errors['required']">Name is required.</div>
+          <div *ngIf="name.errors['maxlength']">Name must be less than or equal to 50 characters.</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label fw-bold">Description</label>
+        <textarea class="form-control form-control-lg" id="description" formControlName="description" placeholder="Enter group description"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="createGroupForm.invalid">Create Group</button>
+    </form>
+  </div>
+</div>

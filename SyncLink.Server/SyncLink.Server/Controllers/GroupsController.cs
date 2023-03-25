@@ -1,10 +1,13 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.Contracts.Data.Enums;
+using SyncLink.Application.UseCases.Commands.CreateGroup;
 using SyncLink.Application.UseCases.Queries.GetById.Group;
 using SyncLink.Application.UseCases.Queries.SearchGroups;
 using SyncLink.Server.Controllers.Base;
+using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Controllers;
 
@@ -14,10 +17,12 @@ namespace SyncLink.Server.Controllers;
 public class GroupsController : ApiControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public GroupsController(IMediator mediator)
+    public GroupsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpGet("{id:int}")]
@@ -28,6 +33,18 @@ public class GroupsController : ApiControllerBase
         var result = await _mediator.Send(query, cancellationToken);
 
         return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto createGroupDto, CancellationToken cancellationToken)
+    {
+        var command = _mapper.Map<CreateGroup.Command>(createGroupDto);
+
+        command.UserId = GetRequiredAppUserId();
+
+        var groupDto = await _mediator.Send(command, cancellationToken);
+
+        return CreatedAtAction("GetById", "Groups", new { id = groupDto.Id }, groupDto);
     }
 
     [HttpGet("search")]

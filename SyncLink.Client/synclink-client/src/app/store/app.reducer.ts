@@ -1,13 +1,13 @@
 import * as fromAuth from "../auth/store/auth.reducer";
-import * as fromGroupsSearch from "../groups-search/store/groups-search.reducer";
+import * as fromGroups from "../groups/store/groups.reducer";
 import { ActionReducerMap } from "@ngrx/store";
 
 export interface AppState {
   auth: fromAuth.State,
-  groupsSearch: fromGroupsSearch.State,
+  groups: fromGroups.State,
 }
 
 export const appReducer: ActionReducerMap<AppState> = {
   auth: fromAuth.authReducer,
-  groupsSearch: fromGroupsSearch.groupSearchReducer,
+  groups: fromGroups.groupsReducer,
 };

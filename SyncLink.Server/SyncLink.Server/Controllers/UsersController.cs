@@ -21,16 +21,4 @@ public class UsersController : ApiControllerBase
         _mapper = mapper;
         _mediator = mediator;
     }
-
-    [HttpPost("{id:int}/groups")]
-    public async Task<IActionResult> CreateGroup(int id, [FromBody] CreateGroupDto createGroupDto, CancellationToken cancellationToken)
-    {
-        var command = _mapper.Map<CreateGroup.Command>(createGroupDto);
-
-        command.UserId = id;
-
-        var groupDto = await _mediator.Send(command, cancellationToken);
-
-        return CreatedAtAction("GetById", "Groups", new { id = groupDto.Id }, groupDto);
-    }
 }

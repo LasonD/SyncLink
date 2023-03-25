@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { searchGroups, searchGroupsSuccess, searchGroupsFailure } from './groups-search.actions';
+import { searchGroups, searchGroupsSuccess, searchGroupsFailure } from './groups.actions';
 import { Group, GroupSearchMode } from '../models/group.model';
 import { environment } from "../../environments/environment";
 
