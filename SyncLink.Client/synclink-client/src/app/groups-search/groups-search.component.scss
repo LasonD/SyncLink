@@ -1,5 +1,6 @@
 .container {
   max-width: 600px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .input-group {
@@ -9,6 +10,22 @@
   margin-bottom: 20px;
 }
 
+.form-control,
+.form-select {
+  border-radius: 25px;
+  border: 1px solid #ced4da;
+  padding-left: 15px;
+}
+
+.form-select {
+  padding-right: 15px;
+}
+
+.btn {
+  border-radius: 25px;
+  font-weight: bold;
+}
+
 .btn-outline-secondary {
   border-color: #6c757d;
   color: #6c757d;
@@ -16,6 +33,17 @@
   &:hover {
     background-color: #6c757d;
     color: white;
+  }
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+
+  &:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
   }
 }
 

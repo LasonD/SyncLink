@@ -9,12 +9,12 @@
       (input)="search()"
       [disabled]="loading$ | async"
     />
-    <button class="btn btn-outline-secondary" type="button" (click)="search()" [disabled]="loading$ | async">
-      <i class="bi bi-search"></i>
-    </button>
     <select class="form-select" [(ngModel)]="groupSearchMode" (change)="search()" [disabled]="loading$ | async">
       <option *ngFor="let mode of GroupSearchMode | keyvalue" [value]="mode.key">{{ mode.value }}</option>
     </select>
+    <button class="btn btn-primary" type="button" (click)="navigateToCreateGroup()" [disabled]="loading$ | async">
+      Create group
+    </button>
   </div>
 
   <ul class="list-group">

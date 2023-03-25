@@ -30,4 +30,8 @@ export class GroupsSearchComponent implements OnInit {
   navigateToGroup(groupId: number): void {
     this.router.navigate([`/groups/${groupId}`]);
   }
+
+  navigateToCreateGroup(): void {
+    this.router.navigate(['/groups/create']);
+  }
 }
