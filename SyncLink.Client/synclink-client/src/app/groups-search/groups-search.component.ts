@@ -16,6 +16,7 @@ export class GroupsSearchComponent implements OnInit {
   searchQuery: string = '';
   groupSearchMode: GroupSearchMode = GroupSearchMode.Membership;
   GroupSearchMode = GroupSearchMode;
+  searchFocused: boolean = false;
 
   constructor(private store: Store, private router: Router) {}
 
