@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Dtos;
+using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Extensions;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -16,12 +17,14 @@ namespace SyncLink.Infrastructure.Data.Repositories;
 public class AuthRepository : IAuthRepository
 {
     private readonly IConfiguration _config;
+    private readonly SyncLinkDbContext _dbContext;
     private readonly UserManager<SyncLinkIdentityUser> _userManager;
 
-    public AuthRepository(UserManager<SyncLinkIdentityUser> userManager, IConfiguration config)
+    public AuthRepository(UserManager<SyncLinkIdentityUser> userManager, IConfiguration config, SyncLinkDbContext dbContext)
     {
         _userManager = userManager;
         _config = config;
+        _dbContext = dbContext;
     }
 
     public async Task<RepositoryEntityResult<AuthResult>> AuthenticateUserAsync(LoginData loginData, CancellationToken cancellationToken)
@@ -37,6 +40,10 @@ public class AuthRepository : IAuthRepository
         }
 
         var isValidPassword = await _userManager.CheckPasswordAsync(user, loginData.Password);
+
+        await _dbContext.Entry(user)
+            .Reference(u => u.ApplicationUser)
+            .LoadAsync(cancellationToken);
 
         if (!isValidPassword)
         {
@@ -135,7 +142,7 @@ public class AuthRepository : IAuthRepository
 
         var tokenClaims = new List<Claim>()
             {
-                new(JwtRegisteredClaimNames.NameId, user?.ApplicationUser?.Id.ToString() ?? "1"), // TODO: fix this
+                new(JwtRegisteredClaimNames.NameId, user.ApplicationUser.Id.ToString()),
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             }
