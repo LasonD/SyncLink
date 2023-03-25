@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { Group, GroupSearchMode } from '../models/group.model';
 import { searchGroups } from '../store/groups.actions';
-import { selectGroups, selectLoading } from '../store/groups.selectors';
+import { selectGroups, selectGroupSearchLoading } from '../store/groups.selectors';
 
 @Component({
   selector: 'app-group-search',
@@ -12,7 +12,7 @@ import { selectGroups, selectLoading } from '../store/groups.selectors';
 })
 export class GroupsSearchComponent implements OnInit {
   groups$ = this.store.select(selectGroups);
-  loading$ = this.store.select(selectLoading);
+  loading$ = this.store.select(selectGroupSearchLoading);
   searchQuery: string = '';
   groupSearchMode: GroupSearchMode = GroupSearchMode.Membership;
   GroupSearchMode = GroupSearchMode;

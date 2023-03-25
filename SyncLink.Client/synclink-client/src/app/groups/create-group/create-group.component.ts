@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { AppState } from "../../store/app.reducer";
+import { select, Store } from "@ngrx/store";
+import { createGroup } from "../store/groups.actions";
+import { selectCreatedGroup } from "../store/groups.selectors";
 
 @Component({
   selector: 'app-create-group-form',
@@ -10,9 +14,17 @@ import { HttpClient } from '@angular/common/http';
 export class CreateGroupComponent implements OnInit {
   createGroupForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) { }
+  constructor(private fb: FormBuilder,
+              private http: HttpClient,
+              private store: Store<AppState>
+  ) { }
 
   ngOnInit(): void {
+    this.store.pipe(select(selectCreatedGroup))
+      .subscribe((group) => {
+        console.log('Group created: ', group)
+      });
+
     this.createGroupForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
       description: ''
@@ -29,13 +41,6 @@ export class CreateGroupComponent implements OnInit {
       description: this.createGroupForm.value.description
     };
 
-    this.http.post('/api/groups', createGroupDto).subscribe(
-      response => {
-        console.log(response);
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    this.store.dispatch(createGroup(createGroupDto));
   }
 }

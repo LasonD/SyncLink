@@ -15,3 +15,23 @@ export const searchGroupsFailure = createAction(
   '[Group Search] Search Groups Failure',
   props<{ error: any }>()
 );
+
+export const createGroup = createAction(
+  '[Group Create] Create Group',
+  props<CreateGroupDto>()
+);
+
+export const createGroupSuccess = createAction(
+  '[Group Create] Create Group Success',
+  props<{ group: Group }>()
+);
+
+export const createGroupError = createAction(
+  '[Group Create] Create Group Error',
+  props<{ error: any }>()
+);
+
+export interface CreateGroupDto {
+  name: string,
+  description: string,
+}

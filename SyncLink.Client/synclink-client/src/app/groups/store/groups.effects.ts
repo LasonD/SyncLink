@@ -3,7 +3,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { searchGroups, searchGroupsSuccess, searchGroupsFailure } from './groups.actions';
+import {
+  searchGroups,
+  searchGroupsSuccess,
+  searchGroupsFailure,
+  createGroupSuccess, createGroupError, createGroup, CreateGroupDto
+} from './groups.actions';
 import { Group, GroupSearchMode } from '../models/group.model';
 import { environment } from "../../environments/environment";
 
@@ -13,15 +18,24 @@ export class GroupSearchEffects {
     this.actions$.pipe(
       ofType(searchGroups),
       switchMap(({ searchQuery, groupSearchMode }: { searchQuery: string, groupSearchMode: GroupSearchMode }) =>
-        this.http
-          .get<Group[]>(`${environment.apiBaseUrl}/api/search?searchQuery=${searchQuery}&groupSearchMode=${groupSearchMode}`)
-          .pipe(
+        this.http.get<Group[]>(`${environment.apiBaseUrl}/api/groups/search?searchQuery=${searchQuery}&groupSearchMode=${groupSearchMode}`).pipe(
             map((groups) => searchGroupsSuccess({ groups })),
             catchError((error) => of(searchGroupsFailure({ error })))
           )
       )
     )
   );
+
+  createGroup$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(createGroup),
+      switchMap((createGroup: CreateGroupDto) =>
+        this.http.post<Group>(`${environment.apiBaseUrl}/api/groups`, createGroup).pipe(
+          map((group) => createGroupSuccess({group})),
+          catchError((error) => of(createGroupError({error})))
+        ))
+    );
+  });
 
   constructor(private actions$: Actions, private http: HttpClient) {}
 }
