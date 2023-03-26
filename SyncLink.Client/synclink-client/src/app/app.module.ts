@@ -10,6 +10,7 @@ import { AuthEffects } from "./auth/store/auth.effects";
 import { EffectsModule } from "@ngrx/effects";
 import { HttpClientModule } from "@angular/common/http";
 import { GroupSearchEffects } from "./groups/store/groups.effects";
+import { CoreModule } from "./core/core.module";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { GroupSearchEffects } from "./groups/store/groups.effects";
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    CoreModule,
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
     EffectsModule.forRoot([AuthEffects, GroupSearchEffects]),
