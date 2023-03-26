@@ -1,25 +1,13 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using SyncLink.Common.Helpers.Jwt;
 
 namespace SyncLink.Server.Controllers.Base;
 
 public class ApiControllerBase : ControllerBase
 {
-    protected int? GetAppUserId()
-    {
-        var value = User.FindFirst(JwtRegisteredClaimNames.NameId)?.Value;
-
-        if (int.TryParse(value, out var userId))
-        {
-            return userId;
-        }
-
-        return null;
-    }
-
     protected int GetRequiredAppUserId()
     {
-        var userId = GetAppUserId();
+        var userId = AppUserIdClaimHelper.RetrieveUserId(User);
 
         if (userId == null)
         {

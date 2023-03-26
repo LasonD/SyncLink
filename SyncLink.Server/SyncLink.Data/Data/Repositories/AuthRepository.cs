@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Dtos;
+using SyncLink.Common.Helpers.Jwt;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Extensions;
@@ -139,10 +140,11 @@ public class AuthRepository : IAuthRepository
     {
         var roles = await _userManager.GetRolesAsync(user);
         var claims = await _userManager.GetClaimsAsync(user);
+        var appUserId = user.ApplicationUserId;
 
         var tokenClaims = new List<Claim>()
             {
-                new(JwtRegisteredClaimNames.NameId, user.ApplicationUser.Id.ToString()),
+                AppUserIdClaimHelper.CreateClaim(appUserId),
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             }
