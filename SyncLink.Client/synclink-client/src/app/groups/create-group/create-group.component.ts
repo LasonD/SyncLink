@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AppState } from "../../store/app.reducer";
 import { select, Store } from "@ngrx/store";
 import { createGroup } from "../store/groups.actions";
-import { selectCreatedGroup } from "../store/groups.selectors";
+import { selectCreatedGroup, selectError } from "../store/groups.selectors";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: 'app-create-group-form',
@@ -16,13 +17,19 @@ export class CreateGroupComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private http: HttpClient,
-              private store: Store<AppState>
+              private store: Store<AppState>,
+              private toastService: ToastrService,
   ) { }
 
   ngOnInit(): void {
     this.store.pipe(select(selectCreatedGroup))
       .subscribe((group) => {
-        console.log('Group created: ', group)
+        this.toastService.success('Your group was successfully created.');
+      });
+
+    this.store.pipe(select(selectError))
+      .subscribe((group) => {
+        this.toastService.success('Your group was successfully created.');
       });
 
     this.createGroupForm = this.fb.group({
@@ -35,6 +42,10 @@ export class CreateGroupComponent implements OnInit {
     return this.createGroupForm.get('name');
   }
 
+  get description() {
+    return this.createGroupForm.get('description');
+  }
+
   onSubmit() {
     const createGroupDto = {
       name: this.createGroupForm.value.name,
@@ -42,5 +53,15 @@ export class CreateGroupComponent implements OnInit {
     };
 
     this.store.dispatch(createGroup(createGroupDto));
+  }
+
+  public getErrors(control: AbstractControl) {
+    const errors = control.errors;
+
+    if (errors) {
+      return [];
+    }
+
+    return Object.keys(errors).map(key => errors[key]);
   }
 }

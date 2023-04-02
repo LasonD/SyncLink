@@ -4,7 +4,12 @@ namespace SyncLink.Application.Contracts.Data.Result.Pagination;
 
 public class PaginatedEnumerable<T> : IPaginatedEnumerable<T>
 {
-    private readonly IEnumerable<T> _entities;
+    private readonly IEnumerable<T> _entities = new List<T>();
+
+    protected PaginatedEnumerable()
+    {
+
+    }
 
     public PaginatedEnumerable(IEnumerable<T> entities, int itemCount, int page, int pageSize)
     {

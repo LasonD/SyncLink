@@ -32,7 +32,7 @@ public partial class SearchGroups
 
             var foundGroups = searchResult.GetResult();
 
-            var paginatedDto = _mapper.Map<IPaginatedEnumerable<GroupDto>>(foundGroups);
+            var paginatedDto = _mapper.Map<PaginatedEnumerable<GroupDto>>(foundGroups);
 
             return paginatedDto;
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.UseCases.Commands.Auth.Login;
@@ -15,5 +16,7 @@ public class ApplicationProfile : Profile
 
         CreateMap<Group, GroupDto>();
         CreateMap<Room, RoomDto>();
+
+        CreateMap(typeof(PaginatedEnumerable<>), typeof(PaginatedEnumerable<>));
     }
 }

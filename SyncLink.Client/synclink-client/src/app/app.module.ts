@@ -11,6 +11,7 @@ import { EffectsModule } from "@ngrx/effects";
 import { HttpClientModule } from "@angular/common/http";
 import { GroupSearchEffects } from "./groups/store/groups.effects";
 import { CoreModule } from "./core/core.module";
+import { ToastrModule } from "ngx-toastr";
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { CoreModule } from "./core/core.module";
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
     EffectsModule.forRoot([AuthEffects, GroupSearchEffects]),
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
