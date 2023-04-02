@@ -3,9 +3,9 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { HttpClient } from '@angular/common/http';
 import { AppState } from "../../store/app.reducer";
 import { select, Store } from "@ngrx/store";
-import { createGroup } from "../store/groups.actions";
-import { selectCreatedGroup, selectError } from "../store/groups.selectors";
 import { ToastrService } from "ngx-toastr";
+import { selectCreatedGroup, selectCreateGroupError } from "./store/create-group.selectors";
+import { createGroup } from "./store/create-group.actions";
 
 @Component({
   selector: 'app-create-group-form',
@@ -27,7 +27,7 @@ export class CreateGroupComponent implements OnInit {
         this.toastService.success('Your group was successfully created.');
       });
 
-    this.store.pipe(select(selectError))
+    this.store.pipe(select(selectCreateGroupError))
       .subscribe((group) => {
         this.toastService.success('Your group was successfully created.');
       });

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { Group, GroupSearchMode } from '../models/group.model';
-import { searchGroups } from '../store/groups.actions';
-import { selectGroups, selectGroupSearchLoading } from '../store/groups.selectors';
+import { GroupSearchMode } from '../models/group.model';
+import { selectGroupSearchLoading, selectGroupsSearchGroups } from "./store/groups-search.selectors";
+import { searchGroups } from "./store/groups-search.actions";
 
 @Component({
   selector: 'app-group-search',
@@ -11,7 +11,7 @@ import { selectGroups, selectGroupSearchLoading } from '../store/groups.selector
   styleUrls: ['./groups-search.component.scss'],
 })
 export class GroupsSearchComponent implements OnInit {
-  groups$ = this.store.select(selectGroups);
+  groups$ = this.store.select(selectGroupsSearchGroups);
   loading$ = this.store.select(selectGroupSearchLoading);
   searchQuery: string = '';
   groupSearchMode: GroupSearchMode = GroupSearchMode.Membership;

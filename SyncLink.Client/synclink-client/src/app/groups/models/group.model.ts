@@ -12,3 +12,9 @@ export enum GroupSearchMode {
   Owned = 'Owned',
 }
 
+export interface CreateGroupDto {
+  name: string,
+  description: string,
+}
+
+

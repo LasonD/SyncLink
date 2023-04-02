@@ -9,9 +9,10 @@ import { appReducer } from "./store/app.reducer";
 import { AuthEffects } from "./auth/store/auth.effects";
 import { EffectsModule } from "@ngrx/effects";
 import { HttpClientModule } from "@angular/common/http";
-import { GroupSearchEffects } from "./groups/store/groups.effects";
 import { CoreModule } from "./core/core.module";
 import { ToastrModule } from "ngx-toastr";
+import { GroupSearchEffects } from "./groups/groups-search/store/groups-search.effects";
+import { CreateGroupEffects } from "./groups/create-group/store/create-group.effects";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { ToastrModule } from "ngx-toastr";
     CoreModule,
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
-    EffectsModule.forRoot([AuthEffects, GroupSearchEffects]),
+    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects]),
     ToastrModule.forRoot(),
   ],
   providers: [],
