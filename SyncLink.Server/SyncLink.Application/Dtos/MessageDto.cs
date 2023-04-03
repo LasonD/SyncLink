@@ -1,6 +1,6 @@
 ﻿namespace SyncLink.Application.Dtos;
 
-public record MessageDto
+public class MessageDto
 {
     public int Id { get; set; }
     public DateTime EditedDateTime { get; private set; } = default;

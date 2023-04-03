@@ -1,8 +1,8 @@
 ﻿namespace SyncLink.Application.Dtos;
 
-public class RoomDto
+public class GroupCompleteDto : GroupDto
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = null!;
     public IReadOnlyCollection<DomainUserDto> Members { get; set; } = null!;
+
+    public IReadOnlyCollection<RoomDto> Rooms { get; set; } = null!;
 }
