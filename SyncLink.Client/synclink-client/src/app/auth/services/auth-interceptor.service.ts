@@ -1,11 +1,11 @@
 import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Observable, Subscription } from "rxjs";
 import { Injectable, OnDestroy } from "@angular/core";;
-import { AppState } from "../store/app.reducer";
+import { AppState } from "../../store/app.reducer";
 import { Store } from "@ngrx/store";
 import { map } from "rxjs/operators";
-import { User } from "./user.model";
-import { environment } from "../environments/environment";
+import { User } from "../user.model";
+import { environment } from "../../environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class AuthInterceptorService implements HttpInterceptor, OnDestroy {

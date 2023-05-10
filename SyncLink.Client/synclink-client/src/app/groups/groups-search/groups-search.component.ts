@@ -29,10 +29,11 @@ export class GroupsSearchComponent implements OnInit {
   }
 
   navigateToGroup(groupId: number): void {
-    this.router.navigate([`/groups/${groupId}`]);
+    this.router.navigate([`/groups/${groupId}/hub`]);
   }
 
   navigateToCreateGroup(): void {
+    console.log('Nvaigating to create');
     this.router.navigate(['/groups/create']);
   }
 }

@@ -27,7 +27,9 @@ export class User {
   }
 
   get token() {
+    console.log('Token is invalid: ', this.expirationDate, new Date().getTime() > this.expirationDate.getTime());
     if (!this.expirationDate || new Date().getTime() > this.expirationDate.getTime()) {
+      console.log('Token is invalid: ', this.expirationDate, new Date().getTime() > this.expirationDate.getTime());
       return null;
     }
 

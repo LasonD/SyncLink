@@ -109,7 +109,7 @@ export class AuthEffects {
       authResponse.accessToken,
       authResponse.expiresIn);
 
-    localStorage.setItem('userData', JSON.stringify(user));
+    localStorage.setItem(this.userDataKey, JSON.stringify(user));
 
     return new LoginSuccess({user, shouldRedirect: true});
   }

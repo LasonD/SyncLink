@@ -6,6 +6,8 @@ import { select, Store } from "@ngrx/store";
 import { ToastrService } from "ngx-toastr";
 import { selectCreatedGroup, selectCreateGroupError } from "./store/create-group.selectors";
 import { createGroup } from "./store/create-group.actions";
+import { Router } from "@angular/router";
+import { distinctUntilChanged, skip } from "rxjs";
 
 @Component({
   selector: 'app-create-group-form',
@@ -18,18 +20,25 @@ export class CreateGroupComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private http: HttpClient,
               private store: Store<AppState>,
+              private router: Router,
               private toastService: ToastrService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
-    this.store.pipe(select(selectCreatedGroup))
+    this.store.pipe(
+      select(selectCreatedGroup),
+      distinctUntilChanged(),
+      skip(1),
+    )
       .subscribe((group) => {
         this.toastService.success('Your group was successfully created.');
+        this.router.navigate([`/groups/${group.id}/hub`]);
       });
 
     this.store.pipe(select(selectCreateGroupError))
       .subscribe((group) => {
-        this.toastService.success('Your group was successfully created.');
+        this.toastService.success('Something went wrong while creating a group.');
       });
 
     this.createGroupForm = this.fb.group({
