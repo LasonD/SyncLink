@@ -15,6 +15,7 @@ export enum GroupSearchMode {
 export interface CreateGroupDto {
   name: string,
   description: string,
+  isPrivate: boolean,
 }
 
 

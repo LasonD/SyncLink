@@ -22,6 +22,11 @@ export class GroupsSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.search();
+
+    this.groups$
+      .subscribe(groups => {
+        console.log(groups);
+      });
   }
 
   search(): void {

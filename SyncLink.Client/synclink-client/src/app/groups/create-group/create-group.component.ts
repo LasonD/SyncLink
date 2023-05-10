@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AppState } from "../../store/app.reducer";
@@ -7,14 +7,16 @@ import { ToastrService } from "ngx-toastr";
 import { selectCreatedGroup, selectCreateGroupError } from "./store/create-group.selectors";
 import { createGroup } from "./store/create-group.actions";
 import { Router } from "@angular/router";
-import { distinctUntilChanged, skip } from "rxjs";
+import { distinctUntilChanged, filter, skip, Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: 'app-create-group-form',
   templateUrl: './create-group.component.html',
   styleUrls: ['./create-group.component.scss']
 })
-export class CreateGroupComponent implements OnInit {
+export class CreateGroupComponent implements OnInit, OnDestroy {
+  destroyed$: Subject<boolean> = new Subject<boolean>();
+
   createGroupForm: FormGroup;
 
   constructor(private fb: FormBuilder,
@@ -26,7 +28,14 @@ export class CreateGroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.createGroupForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      description: '',
+      isPrivate: [false]
+    });
+
     this.store.pipe(
+      takeUntil(this.destroyed$),
       select(selectCreatedGroup),
       distinctUntilChanged(),
       skip(1),
@@ -37,14 +46,10 @@ export class CreateGroupComponent implements OnInit {
       });
 
     this.store.pipe(select(selectCreateGroupError))
-      .subscribe((group) => {
-        this.toastService.success('Something went wrong while creating a group.');
+      .pipe(takeUntil(this.destroyed$), filter((e) => !!e))
+      .subscribe((error) => {
+        this.toastService.error(error, 'Something went wrong while creating a group.');
       });
-
-    this.createGroupForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
-      description: ''
-    });
   }
 
   get name() {
@@ -55,11 +60,13 @@ export class CreateGroupComponent implements OnInit {
     return this.createGroupForm.get('description');
   }
 
+  get isPrivate() {
+    return this.createGroupForm.get('isPrivate');
+  }
+
+
   onSubmit() {
-    const createGroupDto = {
-      name: this.createGroupForm.value.name,
-      description: this.createGroupForm.value.description
-    };
+    const createGroupDto = this.createGroupForm.value;
 
     this.store.dispatch(createGroup(createGroupDto));
   }
@@ -72,5 +79,9 @@ export class CreateGroupComponent implements OnInit {
     }
 
     return Object.keys(errors).map(key => errors[key]);
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(true);
   }
 }

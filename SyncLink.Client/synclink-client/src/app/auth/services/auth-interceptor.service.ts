@@ -18,7 +18,6 @@ export class AuthInterceptorService implements HttpInterceptor, OnDestroy {
       .select('auth')
       .pipe(map(state => state.user))
       .subscribe(user => {
-        console.log('Got a user: ', user);
         this.user = user;
       })
   }

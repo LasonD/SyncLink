@@ -59,8 +59,6 @@ export class AuthEffects {
   onAutoLogin$ = createEffect(() => this.actions$.pipe(
     ofType(AUTO_LOGIN_START),
     map(() => {
-      console.log('In auto login');
-
       const userData: UserModel = JSON.parse(localStorage.getItem(this.userDataKey)!);
 
       if (!userData || !userData._token) {
@@ -83,8 +81,6 @@ export class AuthEffects {
         localStorage.removeItem(this.userDataKey);
         return new AutoLoginFailure();
       }
-
-      console.log('Auto login success');
 
       return new LoginSuccess({user, shouldRedirect: false});
     })

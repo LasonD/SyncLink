@@ -4,5 +4,6 @@ namespace SyncLink.Server.Dtos;
 
 public record CreateGroupDto(
     [Required, MaxLength(50)] string Name,
-    string? Description
+    string? Description,
+    bool IsPrivate = false
 );
