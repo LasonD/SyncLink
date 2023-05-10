@@ -17,6 +17,6 @@ export const initialState: GroupsSearchState = {
 export const groupsSearchReducer = createReducer(
   initialState,
   on(searchGroups, (state) => ({ ...state, loading: true })),
-  on(searchGroupsSuccess, (state, { groups }) => ({ ...state, searchGroupLoading: false, groups })),
+  on(searchGroupsSuccess, (state, { groups }) => ({...state, searchGroupLoading: false, searchedGroups: groups})),
   on(searchGroupsFailure, (state, { error }) => ({ ...state, searchGroupLoading: false, error })),
 );

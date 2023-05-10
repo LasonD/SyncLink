@@ -19,23 +19,25 @@
 
   <ul class="list-group">
     <li
-      *ngFor="let group of groups$ | async"
-      class="list-group-item d-flex justify-content-between align-items-center"
-      [ngClass]="{
-        'bg-light-blue': groupSearchMode === GroupSearchMode.ExplorePublic,
-        'bg-pale-green': groupSearchMode === GroupSearchMode.Membership,
-        'bg-pale-yellow': groupSearchMode === GroupSearchMode.Owned
-      }"
-      (click)="navigateToGroup(group.id)"
+      *ngFor="let group of groups$ | async; let i = index"
+      class="list-group-item"
+      data-bs-toggle="collapse" [attr.href]="'#collapseDescription' + i" role="button" aria-expanded="false"
     >
-      {{ group.name }}
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="$event.stopPropagation(); navigateToGroup(group.id)"
-      >
-        {{ groupSearchMode === GroupSearchMode.ExplorePublic ? 'Join' : 'Enter' }}
-      </button>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          {{ group.name }}
+        </div>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="$event.stopPropagation(); navigateToGroup(group.id)"
+        >
+          {{ groupSearchMode === GroupSearchMode.ExplorePublic ? 'Join' : 'Enter' }}
+        </button>
+      </div>
+      <div class="collapse mt-2 w-100" [id]="'collapseDescription' + i">
+        <p class="text-muted">{{ group.description }}</p>
+      </div>
     </li>
   </ul>
 </div>

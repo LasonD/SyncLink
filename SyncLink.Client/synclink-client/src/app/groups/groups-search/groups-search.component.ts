@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { GroupSearchMode } from '../models/group.model';
 import { selectGroupSearchLoading, selectGroupsSearchGroups } from "./store/groups-search.selectors";
 import { searchGroups } from "./store/groups-search.actions";
+import { debounceTime, Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: 'app-group-search',
   templateUrl: './groups-search.component.html',
   styleUrls: ['./groups-search.component.scss'],
 })
-export class GroupsSearchComponent implements OnInit {
+export class GroupsSearchComponent implements OnInit, OnDestroy {
+  destroyed$: Subject<boolean> = new Subject<boolean>();
   groups$ = this.store.select(selectGroupsSearchGroups);
   loading$ = this.store.select(selectGroupSearchLoading);
   searchQuery: string = '';
@@ -18,19 +20,24 @@ export class GroupsSearchComponent implements OnInit {
   GroupSearchMode = GroupSearchMode;
   searchFocused: boolean = false;
 
+  search$: Subject<string> = new Subject<string>();
+
   constructor(private store: Store, private router: Router) {}
 
   ngOnInit(): void {
-    this.search();
+    this.search$
+      .pipe(
+        takeUntil(this.destroyed$),
+        debounceTime(300)
+      ).subscribe((query) => {
+      this.store.dispatch(searchGroups({ searchQuery: query, groupSearchMode: this.groupSearchMode }));
+    });
 
-    this.groups$
-      .subscribe(groups => {
-        console.log(groups);
-      });
+    this.search();
   }
 
   search(): void {
-    this.store.dispatch(searchGroups({ searchQuery: this.searchQuery, groupSearchMode: this.groupSearchMode }));
+    this.search$.next(this.searchQuery);
   }
 
   navigateToGroup(groupId: number): void {
@@ -39,5 +46,9 @@ export class GroupsSearchComponent implements OnInit {
 
   navigateToCreateGroup(): void {
     this.router.navigate(['/groups/create']);
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(true);
   }
 }

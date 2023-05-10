@@ -14,7 +14,9 @@ export class GroupSearchEffects {
       ofType(searchGroups),
       switchMap(({ searchQuery, groupSearchMode }: { searchQuery: string, groupSearchMode: GroupSearchMode }) =>
         this.http.get<Group[]>(`${environment.apiBaseUrl}/api/groups/search?searchQuery=${searchQuery}&groupSearchMode=${groupSearchMode}`).pipe(
-          map((groups) => searchGroupsSuccess({ groups })),
+          map((groups) => {
+            return searchGroupsSuccess({groups});
+          }),
           catchError((error) => of(searchGroupsFailure({ error })))
         )
       )
