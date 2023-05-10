@@ -14,7 +14,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { of } from "rxjs";
 import { Router } from "@angular/router";
-import { AuthResult, User } from "../user.model";
+import { AuthResult, User, UserModel } from "../user.model";
 import { environment } from "../../environments/environment";
 
 @Injectable()
@@ -59,28 +59,30 @@ export class AuthEffects {
   onAutoLogin$ = createEffect(() => this.actions$.pipe(
     ofType(AUTO_LOGIN_START),
     map(() => {
-      const authResult: AuthResult = JSON.parse(localStorage.getItem(this.userDataKey));
+      const userData: UserModel = JSON.parse(localStorage.getItem(this.userDataKey)!);
 
-      if (!authResult) {
+      if (!userData || !userData._token) {
+        localStorage.removeItem(this.userDataKey);
         return new AutoLoginFailure();
       }
 
       const user = new User(
-        authResult.identityId,
-        authResult.userId,
-        authResult.username,
-        authResult.firstName,
-        authResult.lastName,
-        authResult.email,
-        authResult.accessToken,
-        authResult.expiresIn);
+        userData.identityId,
+        userData.userId,
+        userData.username,
+        userData.firstname,
+        userData.lastname,
+        userData.email,
+        userData._token,
+        null,
+        userData.expirationDate);
 
       if (!user || !user.token) {
         localStorage.removeItem(this.userDataKey);
         return new AutoLoginFailure();
       }
 
-      return new LoginSuccess({user, shouldRedirect: false});
+      return new LoginSuccess({user, shouldRedirect: true});
     })
   ));
 

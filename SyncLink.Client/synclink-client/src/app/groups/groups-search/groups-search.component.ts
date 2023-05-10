@@ -33,7 +33,6 @@ export class GroupsSearchComponent implements OnInit {
   }
 
   navigateToCreateGroup(): void {
-    console.log('Nvaigating to create');
     this.router.navigate(['/groups/create']);
   }
 }

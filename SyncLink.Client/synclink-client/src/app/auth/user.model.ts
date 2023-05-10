@@ -20,19 +20,30 @@ export class User {
               private expiresIn: number = null,
               private readonly expirationDate: Date = null) {
     if (expiresIn) {
-      this.expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+      console.log('Expires in is null', )
+      this.expirationDate = new Date(new Date().getTime() + expiresIn);
     } else {
       this.expirationDate = new Date(expirationDate);
     }
   }
 
   get token() {
-    console.log('Token is invalid: ', this.expirationDate, new Date().getTime() > this.expirationDate.getTime());
     if (!this.expirationDate || new Date().getTime() > this.expirationDate.getTime()) {
-      console.log('Token is invalid: ', this.expirationDate, new Date().getTime() > this.expirationDate.getTime());
       return null;
     }
 
     return this._token;
   }
+}
+
+export interface UserModel {
+  expirationDate: Date | null,
+  userId: number,
+  identityId: string,
+  username: string | null,
+  firstname: string,
+  lastname: string,
+  email: string,
+  _token?: string | null,
+  expiresIn: number | null,
 }

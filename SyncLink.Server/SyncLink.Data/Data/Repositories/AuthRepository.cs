@@ -17,6 +17,8 @@ namespace SyncLink.Infrastructure.Data.Repositories;
 
 public class AuthRepository : IAuthRepository
 {
+    private const int MsInSec = 1000;
+    private const int SecInMinute = 60;
     private readonly IConfiguration _config;
     private readonly SyncLinkDbContext _dbContext;
     private readonly UserManager<SyncLinkIdentityUser> _userManager;
@@ -93,7 +95,7 @@ public class AuthRepository : IAuthRepository
         var tokenStr = GenerateToken(tokenClaims);
 
         var tokenDurationMinutes = _config.GetTokenDurationMinutes();
-        var durationMs = tokenDurationMinutes * 1000;
+        var durationMs = tokenDurationMinutes * MsInSec * SecInMinute;
 
         var authResult = new AuthResult()
         {
