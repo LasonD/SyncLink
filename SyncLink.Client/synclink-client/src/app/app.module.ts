@@ -13,10 +13,12 @@ import { CoreModule } from "./core/core.module";
 import { ToastrModule } from "ngx-toastr";
 import { GroupSearchEffects } from "./groups/groups-search/store/groups-search.effects";
 import { CreateGroupEffects } from "./groups/create-group/store/create-group.effects";
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,

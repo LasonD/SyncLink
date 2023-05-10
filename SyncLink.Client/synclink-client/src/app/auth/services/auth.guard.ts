@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map, take } from "rxjs/operators";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../store/app.reducer";
+import { AutoLoginStart } from "../store/auth.actions";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,10 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.store.select('auth').pipe(
+
+    this.store.dispatch(new AutoLoginStart());
+
+    return  this.store.select('auth').pipe(
       map(state => state.user),
       take(1),
       map(user => {

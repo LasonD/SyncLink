@@ -12,10 +12,13 @@ import { AuthGuard } from "../auth/services/auth.guard";
 
 const routes: Routes = [
   {
-    path: '', component: GroupsSearchComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)], children: [
-      { path: 'create', component: CreateGroupComponent, },
-      { path: ':id/hub', component: GroupHubComponent, },
-    ]
+    path: '', component: GroupsSearchComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)],
+  },
+  {
+    path: 'create', component: CreateGroupComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)]
+  },
+  {
+    path: ':id/hub', component: GroupHubComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)]
   },
 ];
 
