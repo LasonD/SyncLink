@@ -1,3 +1,7 @@
+export interface GroupComplete extends Group {
+  members: GroupMember[];
+}
+
 export interface Group {
   id: number;
   name: string;
@@ -17,5 +21,15 @@ export interface CreateGroupDto {
   description: string,
   isPrivate: boolean,
 }
+
+export interface GroupMember {
+  identityId: string;
+  userId: number;
+  username: string | null;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+}
+
 
 
