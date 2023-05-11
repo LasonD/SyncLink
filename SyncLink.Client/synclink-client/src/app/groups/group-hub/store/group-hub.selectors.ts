@@ -10,10 +10,15 @@ export const selectGroupHubGroup = createSelector(
 
 export const selectGroupHubLoading = createSelector(
   selectGroupHubFeature,
-  (state: GroupHubState) => state.isLoading
+  (state: GroupHubState) => state.groupLoading
 );
 
 export const selectGroupHubError = createSelector(
   selectGroupHubFeature,
-  (state: GroupHubState) => state.error
+  (state: GroupHubState) => state.groupError
+);
+
+export const selectGroupHubMembers = createSelector(
+  selectGroupHubFeature,
+  (state: GroupHubState) => state.groupMembers
 );

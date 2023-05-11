@@ -39,6 +39,6 @@ public class GroupsRepository : GenericEntityRepository<Group>, IGroupsRepositor
 
         specification.FilteringExpressions.Add(filteringCondition);
 
-        return GetBySpecificationAsync<Group>(specification, cancellationToken);
+        return GetBySpecificationAsync(specification, cancellationToken);
     }
 }

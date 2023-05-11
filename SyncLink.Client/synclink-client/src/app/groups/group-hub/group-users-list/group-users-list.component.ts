@@ -1,10 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from "rxjs";
+import { GroupHubState } from "../store/group-hub.reducer";
+import { Store } from "@ngrx/store";
+import { getGroupMembers } from "../store/group-hub.actions";
+import { Member } from "../../models/group.model";
+import { selectGroupHubMembers } from "../store/group-hub.selectors";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-group-users-list',
   templateUrl: './group-users-list.component.html',
   styleUrls: ['./group-users-list.component.scss']
 })
-export class GroupUsersListComponent {
-  members = ['Member 1', 'Member 2', 'Member 3'];
+export class GroupUsersListComponent implements OnInit, OnDestroy {
+  @Input() groupId: number;
+  @Input() pageNumber: number = 1;
+  @Input() pageSize: number = 25;
+
+  destroyed$: Subject<boolean> = new Subject<boolean>();
+  members: Member[] = [];
+
+  constructor(private store: Store<GroupHubState>,
+              private activatedRoute: ActivatedRoute) {
+  }
+
+  ngOnInit() {
+    this.groupId = +this.activatedRoute.snapshot.paramMap.get('id');
+
+    this.store.dispatch(getGroupMembers({ id: this.groupId, pageNumber: this.pageNumber, pageSize: this.pageSize  }));
+
+    this.store.select(selectGroupHubMembers)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((pages) => {
+        this.members = pages.flatMap((p) => p.entities);
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(true);
+  }
 }

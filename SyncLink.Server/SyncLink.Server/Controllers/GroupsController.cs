@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.Contracts.Data.Enums;
 using SyncLink.Application.UseCases.Commands.CreateGroup;
+using SyncLink.Application.UseCases.Queries;
 using SyncLink.Application.UseCases.Queries.GetById.Group;
 using SyncLink.Application.UseCases.Queries.SearchGroups;
 using SyncLink.Server.Controllers.Base;
@@ -60,6 +61,24 @@ public class GroupsController : ApiControllerBase
 
         var result = await _mediator.Send(query, cancellationToken);
 
+        return Ok(result);
+    }
+
+    [HttpGet("{id}/members")]
+    public async Task<IActionResult> GetGroupUsers(int id, [FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1, CancellationToken cancellationToken = default)
+    {
+        var userId = GetRequiredAppUserId();
+
+        var query = new GetGroupMembers.Query
+        {
+            GroupId = id,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            UserId = userId
+        };
+    
+        var result = await _mediator.Send(query, cancellationToken);
+    
         return Ok(result);
     }
 }

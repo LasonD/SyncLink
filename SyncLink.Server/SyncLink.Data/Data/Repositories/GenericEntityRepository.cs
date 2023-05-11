@@ -41,7 +41,7 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
         return RepositoryEntityResult<TEntity>.Ok(entity);
     }
 
-    public virtual async Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync<TQuery>(OrderedPaginationQuery<TEntity> specification, CancellationToken cancellationToken)
+    public virtual async Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync(OrderedPaginationQuery<TEntity> specification, CancellationToken cancellationToken)
     {
         var set = DbContext.Set<TEntity>();
         var query = ApplyQuerySpecification(set, specification);

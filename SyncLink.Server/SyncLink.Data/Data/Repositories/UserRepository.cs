@@ -45,28 +45,8 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
         );
     }
 
-    // private class UsersFromGroupQuery : OrderedPaginationQuery
-    // {
-    //     public int GroupId { get; set; }
-    //     public IEnumerable<int> UserIds { get; set; }
-    // }
-    //
-    // private class UsersFromGroupSpecification : Specification<User, UsersFromGroupQuery>
-    // {
-    //     public UsersFromGroupSpecification(UsersFromGroupQuery query) : base(query)
-    //     {
-    //     }
-    //
-    //     public override Expression<Func<User, bool>> GetFilteringCondition()
-    //     {
-    //         var groupId = Query.GroupId;
-    //
-    //         return u => u.UserGroups.Any(g => g.GroupId == groupId);
-    //     }
-    //
-    //     public override IEnumerable<IEnumerable<(Expression<Func<User, string>> prop, string[] terms)>> GetSearchTerms()
-    //     {
-    //         return Enumerable.Empty<IEnumerable<(Expression<Func<User, string>> prop, string[] terms)>>();
-    //     }
-    // }
+    public Task<bool> IsUserInGroupAsync(int userId, int groupId, CancellationToken cancellationToken)
+    {
+        return DbContext.UsersToGroups.AnyAsync(utg => utg.UserId == userId && utg.GroupId == groupId, cancellationToken);
+    }
 }
