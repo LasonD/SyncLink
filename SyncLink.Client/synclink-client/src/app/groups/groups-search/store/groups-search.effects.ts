@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { searchGroups, searchGroupsFailure, searchGroupsSuccess } from "./groups-search.actions";
-import { GroupOverview, GroupSearchMode } from "../../models/group.model";
+import { Group, GroupSearchMode } from "../../models/group.model";
 import { environment } from "../../../environments/environment";
 
 @Injectable()
@@ -13,7 +13,7 @@ export class GroupSearchEffects {
     this.actions$.pipe(
       ofType(searchGroups),
       switchMap(({ searchQuery, groupSearchMode }: { searchQuery: string, groupSearchMode: GroupSearchMode }) =>
-        this.http.get<GroupOverview[]>(`${environment.apiBaseUrl}/api/groups/search?searchQuery=${searchQuery}&groupSearchMode=${groupSearchMode}`).pipe(
+        this.http.get<Group[]>(`${environment.apiBaseUrl}/api/groups/search?searchQuery=${searchQuery}&groupSearchMode=${groupSearchMode}`).pipe(
           map((groups) => {
             return searchGroupsSuccess({groups});
           }),

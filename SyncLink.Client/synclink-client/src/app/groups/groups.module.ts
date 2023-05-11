@@ -10,6 +10,10 @@ import { groupsSearchReducer } from "./groups-search/store/groups-search.reducer
 import { createGroupReducer } from "./create-group/store/create-group.reducer";
 import { AuthGuard } from "../auth/services/auth.guard";
 import { groupHubReducer } from "./group-hub/store/group-hub.reducer";
+import { MatListModule } from "@angular/material/list";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatIconModule } from "@angular/material/icon";
 
 const routes: Routes = [
   {
@@ -37,6 +41,10 @@ const routes: Routes = [
     StoreModule.forFeature('createGroup', createGroupReducer),
     StoreModule.forFeature('groupHub', groupHubReducer),
     RouterModule.forChild(routes),
+    MatListModule,
+    MatExpansionModule,
+    MatSidenavModule,
+    MatIconModule,
   ]
 })
 export class GroupsModule { }

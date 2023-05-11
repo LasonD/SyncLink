@@ -1,1 +1,37 @@
-<p>group-hub works!</p>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav class="sidenav" mode="side" opened>
+    <mat-nav-list>
+      <mat-expansion-panel>
+        <!-- Members -->
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Members
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list-item *ngFor="let member of members">
+          {{member}}
+        </mat-list-item>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <!-- Features -->
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Features
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list-item *ngFor="let feature of features">
+          {{feature}}
+        </mat-list-item>
+      </mat-expansion-panel>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- Main content -->
+    <div>
+      <!-- Put your main content here -->
+      <button mat-button (click)="sidenav.toggle()">Toggle sidebar</button>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

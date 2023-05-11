@@ -6,7 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Subject, takeUntil } from "rxjs";
 import { map } from "rxjs/operators";
 import { selectGroupHubGroup } from "./store/group-hub.selectors";
-import { GroupOverview } from "../models/group.model";
+import { Group } from "../models/group.model";
 
 @Component({
   selector: 'app-group-hub',
@@ -16,7 +16,9 @@ import { GroupOverview } from "../models/group.model";
 export class GroupHubComponent implements OnInit, OnDestroy {
   destroyed$: Subject<boolean> = new Subject<boolean>();
 
-  group: GroupOverview;
+  members = ['Member 1', 'Member 2', 'Member 3'];
+  features = ['Feature 1', 'Feature 2', 'Feature 3'];
+  group: Group;
 
   constructor(private store: Store<GroupsState>,
               private activatedRoute: ActivatedRoute) {
