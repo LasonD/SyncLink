@@ -19,6 +19,7 @@ public class ApplicationProfile : Profile
             .ForAllMembers(opt => opt.MapFrom(src => src.User));
         CreateMap<UserGroup, GroupDto>()
             .ForAllMembers(opt => opt.MapFrom(src => src.Group));
+        CreateMap<Group, GroupDto>();
         CreateMap<Room, RoomDto>();
         CreateMap<User, DomainUserDto>();
 

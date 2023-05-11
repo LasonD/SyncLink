@@ -26,7 +26,7 @@ public abstract partial class GetById
 
             if (!isOperationAllowed)
             {
-                throw new AuthException(new[] { "The user has no access to the requested group." });
+                throw new AuthException(new[] { "The user has no access to the requested resource." });
             }
 
             var entity = await GetEntityAsync(request, cancellationToken);
