@@ -8,7 +8,7 @@ namespace SyncLink.Application.UseCases.Queries.SearchGroups;
 
 public partial class SearchGroups
 {
-    public class Handler : IRequestHandler<Query, IPaginatedEnumerable<GroupOverviewDto>>
+    public class Handler : IRequestHandler<Query, IPaginatedEnumerable<GroupDto>>
     {
         private readonly IMapper _mapper;
         private readonly IGroupsRepository _groupsRepository;
@@ -19,7 +19,7 @@ public partial class SearchGroups
             _mapper = mapper;
         }
 
-        public async Task<IPaginatedEnumerable<GroupOverviewDto>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<IPaginatedEnumerable<GroupDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             var searchTerms = request.SearchQuery?.Split(' ') ?? new[] { string.Empty };
 
@@ -32,7 +32,7 @@ public partial class SearchGroups
 
             var foundGroups = searchResult.GetResult();
 
-            var paginatedDto = _mapper.Map<PaginatedEnumerable<GroupOverviewDto>>(foundGroups);
+            var paginatedDto = _mapper.Map<PaginatedEnumerable<GroupDto>>(foundGroups);
 
             return paginatedDto;
         }
