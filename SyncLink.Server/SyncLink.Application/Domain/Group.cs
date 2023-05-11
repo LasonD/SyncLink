@@ -22,7 +22,7 @@ public class Group : EntityBase
     {
         room.ThrowIfNull(nameof(room));
 
-        if (room.Group != null || room.GroupId != default)
+        if ((room.Group != null && room.Group != this) || (room.GroupId != default && room.GroupId != Id))
         {
             throw new InvalidOperationException($"Room {room.Name} {room.Id} is already assigned to a group.");
         }

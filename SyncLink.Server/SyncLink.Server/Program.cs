@@ -1,6 +1,7 @@
 using SyncLink.Server.Common;
 using SyncLink.Server.Helpers;
 using SyncLink.Server.Middleware;
+using SyncLink.Server.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    await DbSeeder.SeedAsync(app.Services);
 }
 
 app.UseRouting();
