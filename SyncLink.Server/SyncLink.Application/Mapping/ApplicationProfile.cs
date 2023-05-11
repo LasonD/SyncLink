@@ -14,7 +14,7 @@ public class ApplicationProfile : Profile
         CreateMap<Login.Command, LoginData>();
         CreateMap<Register.Command, RegistrationData>();
 
-        CreateMap<Group, GroupDto>();
+        CreateMap<Group, GroupOverviewDto>();
         CreateMap<Room, RoomDto>();
 
         CreateMap(typeof(PaginatedEnumerable<>), typeof(PaginatedEnumerable<>));

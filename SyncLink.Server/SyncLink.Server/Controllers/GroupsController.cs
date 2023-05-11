@@ -26,7 +26,7 @@ public class GroupsController : ApiControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById(int id, bool isComplete = true, CancellationToken cancellationToken = default)
     {
         var query = new GetGroupById.Query { Id = id };
 

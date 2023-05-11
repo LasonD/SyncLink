@@ -6,9 +6,9 @@ namespace SyncLink.Application.UseCases.Queries.GetById.GroupComplete;
 
 public partial class GetGroupCompleteById
 {
-    public record Query : Base.GetById.Query<Domain.Group, GroupCompleteDto>;
+    public record Query : Base.GetById.Query<Domain.Group, GroupDto>;
 
-    public class Handler : Base.GetById.Handler<Domain.Group, GroupCompleteDto>
+    public class Handler : Base.GetById.Handler<Domain.Group, GroupDto>
     {
         public Handler(IEntityRepository<Domain.Group> genericRepository, IMapper mapper) : base(genericRepository, mapper)
         {

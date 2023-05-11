@@ -1,6 +1,6 @@
 ﻿namespace SyncLink.Application.Dtos;
 
-public class GroupDto
+public class GroupOverviewDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;

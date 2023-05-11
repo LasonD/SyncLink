@@ -9,7 +9,7 @@ namespace SyncLink.Application.UseCases.Commands.CreateGroup;
 
 public partial class CreateGroup
 {
-    public class Handler : IRequestHandler<Command, GroupDto>
+    public class Handler : IRequestHandler<Command, GroupOverviewDto>
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
@@ -20,7 +20,7 @@ public partial class CreateGroup
             _mapper = mapper;
         }
 
-        public async Task<GroupDto> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<GroupOverviewDto> Handle(Command request, CancellationToken cancellationToken)
         {
             var userResult = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
 
@@ -39,7 +39,7 @@ public partial class CreateGroup
 
             await _userRepository.SaveChangesAsync(cancellationToken);
 
-            var dto = _mapper.Map<GroupDto>(group);
+            var dto = _mapper.Map<GroupOverviewDto>(group);
 
             return dto;
         }

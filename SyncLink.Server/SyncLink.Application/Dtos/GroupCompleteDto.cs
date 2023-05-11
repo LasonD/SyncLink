@@ -1,6 +1,6 @@
 ﻿namespace SyncLink.Application.Dtos;
 
-public class GroupCompleteDto : GroupDto
+public class GroupDto : GroupOverviewDto
 {
     public IReadOnlyCollection<DomainUserDto> Members { get; set; } = null!;
 

@@ -29,13 +29,6 @@ public class Room : EntityBase
 
     public string? Name { get; private set; }
 
-    // public void AddMessage(Message message)
-    // {
-    //     message.ThrowIfNull(nameof(message));
-    //
-    //     _messages.Add(message);
-    // }
-
     public void AddMembers(IEnumerable<User> users)
     {
         var usersList = users.ToList();
@@ -64,7 +57,7 @@ public class Room : EntityBase
 
     public IReadOnlyCollection<Message> Messages => _messages.AsReadOnly();
 
-    public bool IsPrivate { get; private set; }
+    public bool IsPrivate { get; private set; } = false;
 
     public int GroupId { get; private set; } = 0;
     public Group Group { get; private set; } = null!;
