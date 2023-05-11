@@ -28,10 +28,11 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <!-- Main content -->
+    <button mat-icon-button class="toggle-button" (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
     <div>
-      <!-- Put your main content here -->
-      <button mat-button (click)="sidenav.toggle()">Toggle sidebar</button>
+      <h1>Hello world</h1>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
