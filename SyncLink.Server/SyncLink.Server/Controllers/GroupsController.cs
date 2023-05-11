@@ -26,9 +26,13 @@ public class GroupsController : ApiControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id, bool isComplete = true, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken = default)
     {
-        var query = new GetGroupById.Query { Id = id };
+        var query = new GetGroupById.Query
+        {
+            Id = id,
+            UserId = GetRequiredAppUserId()
+        };
 
         var result = await _mediator.Send(query, cancellationToken);
 

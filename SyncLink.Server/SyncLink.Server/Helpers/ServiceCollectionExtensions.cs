@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,8 +8,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain;
+using SyncLink.Application.Dtos;
 using SyncLink.Application.Mapping;
 using SyncLink.Application.UseCases.Commands.Auth.Register;
+using SyncLink.Application.UseCases.Queries.GetById.Group;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Data.Repositories;
@@ -139,6 +142,8 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IMessagesRepository, MessagesRepository>();
 
         services.AddTransient<IEntityRepository<Group>, GroupsRepository>();
+
+        services.AddTransient<IRequestHandler<GetGroupById.Query, GroupDto>, GetGroupById.Handler>();
 
         return services;
     }

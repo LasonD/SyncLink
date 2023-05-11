@@ -8,17 +8,19 @@ import { HttpClient } from "@angular/common/http";
 import { getGroup, getGroupFailure, getGroupSuccess } from "./group-hub.actions";
 
 @Injectable()
-export class GroupSearchEffects {
+export class GroupHubEffects {
   searchGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getGroup),
-      switchMap(({ id }: { id: number }) =>
-        this.http.get<Group>(`${environment.apiBaseUrl}/api/groups/${id}`).pipe(
-          map((group) => {
-            return getGroupSuccess({group});
-          }),
-          catchError((error) => of(getGroupFailure({ error })))
-        )
+      switchMap(({ id }: { id: number }) => {
+        console.log('Getting group ', id);
+          return this.http.get<Group>(`${environment.apiBaseUrl}/api/groups/${id}`).pipe(
+            map((group) => {
+              return getGroupSuccess({group});
+            }),
+            catchError((error) => of(getGroupFailure({error})))
+          );
+        }
       )
     )
   );

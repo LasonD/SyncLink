@@ -29,7 +29,12 @@ export class GroupHubComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$)
       ).subscribe((g) => {
         this.group = g;
+        console.log(g);
     })
+
+    const groupId = +this.activatedRoute.snapshot.paramMap.get('id');
+
+    this.store.dispatch(getGroup({ id: groupId }))
 
     this.activatedRoute.paramMap
       .pipe(
