@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SyncLink.Application.Domain;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
@@ -12,8 +13,14 @@ public static class DbSeeder
         await using var scope = servicesProvider.CreateAsyncScope();
         await using var context = scope.ServiceProvider.GetRequiredService<SyncLinkDbContext>();
 
-        await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
+
+        var hasData = await context.Users.AnyAsync();
+
+        if (hasData)
+        {
+            return;
+        }
 
         var hasher = new PasswordHasher<SyncLinkIdentityUser>();
 
