@@ -32,6 +32,7 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
     this.store.select(selectGroupHubMembers)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((pages) => {
+        console.log(pages);
         this.members = pages.flatMap((p) => p.entities);
       });
   }

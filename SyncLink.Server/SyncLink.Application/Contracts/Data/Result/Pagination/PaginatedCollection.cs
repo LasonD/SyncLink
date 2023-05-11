@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace SyncLink.Application.Contracts.Data.Result.Pagination;
+﻿namespace SyncLink.Application.Contracts.Data.Result.Pagination;
 
 public class PaginatedEnumerable<T> : IPaginatedEnumerable<T>
 {
@@ -29,8 +27,4 @@ public class PaginatedEnumerable<T> : IPaginatedEnumerable<T>
     public int PageCount { get; protected set; }
     public bool HasPreviousPage => Page > 1;
     public bool HasNextPage => Page < LastPage;
-
-    public IEnumerator<T> GetEnumerator() => Entities.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

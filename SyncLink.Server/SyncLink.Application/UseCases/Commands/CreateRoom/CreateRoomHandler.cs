@@ -31,9 +31,9 @@ public partial class CreateRoom
 
             CheckAllUsersBelongToGroup(request, users);
 
-            var room = new Room(request.Name, users);
+            var room = new Room(request.Name, users.Entities);
 
-            room.AddMembers(users);
+            room.AddMembers(users.Entities);
 
             await _roomsRepository.CreateAsync(room, cancellationToken);
 
@@ -44,7 +44,7 @@ public partial class CreateRoom
 
         private static void CheckAllUsersBelongToGroup(Command request, IPaginatedEnumerable<User> users)
         {
-            var userDifference = users
+            var userDifference = users.Entities
                 .ExceptBy(request.UserIds, u => u.Id)
                 .ToList();
 

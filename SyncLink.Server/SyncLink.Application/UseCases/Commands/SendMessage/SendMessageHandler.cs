@@ -29,7 +29,7 @@ public partial class SendMessage
         {
             var senderResult = await _userRepository.GetUsersFromGroupAsync(request.GroupId, new[] { request.SenderId }, cancellationToken);
 
-            var sender = senderResult.GetResult().Single();
+            var sender = senderResult.GetResult().Entities.Single();
 
             var room = await ResolveRoomAsync(request, sender, cancellationToken);
 

@@ -24,7 +24,7 @@ export const initialState: GroupHubState = {
   groupLoading: false,
   groupError: null,
 
-  groupMembers: null,
+  groupMembers: [],
   groupMembersLoading: false,
   groupMembersError: null,
 };
