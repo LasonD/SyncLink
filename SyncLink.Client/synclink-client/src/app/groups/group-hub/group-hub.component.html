@@ -1,29 +1,8 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav class="sidenav" mode="side" opened>
     <mat-nav-list>
-      <mat-expansion-panel>
-        <!-- Members -->
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Members
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-list-item *ngFor="let member of members">
-          {{member}}
-        </mat-list-item>
-      </mat-expansion-panel>
-
-      <mat-expansion-panel>
-        <!-- Features -->
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Features
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-list-item *ngFor="let feature of features">
-          {{feature}}
-        </mat-list-item>
-      </mat-expansion-panel>
+      <app-group-users-list></app-group-users-list>
+      <app-group-features-list></app-group-features-list>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -32,7 +11,7 @@
       <mat-icon>menu</mat-icon>
     </button>
     <div>
-      <h1>Hello world</h1>
+      <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

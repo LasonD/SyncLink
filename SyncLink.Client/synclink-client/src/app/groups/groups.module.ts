@@ -14,6 +14,8 @@ import { MatListModule } from "@angular/material/list";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatIconModule } from "@angular/material/icon";
+import { GroupUsersListComponent } from './group-hub/group-users-list/group-users-list.component';
+import { GroupFeaturesListComponent } from './group-hub/group-features-list/group-features-list.component';
 
 const routes: Routes = [
   {
@@ -32,6 +34,8 @@ const routes: Routes = [
     GroupsSearchComponent,
     CreateGroupComponent,
     GroupHubComponent,
+    GroupUsersListComponent,
+    GroupFeaturesListComponent,
   ],
   imports: [
     CommonModule,
