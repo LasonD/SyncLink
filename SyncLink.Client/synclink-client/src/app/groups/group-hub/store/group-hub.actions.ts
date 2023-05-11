@@ -3,7 +3,7 @@ import { Group } from "../../models/group.model";
 
 export const getGroup = createAction(
   '[Group Hub] Get Group Complete',
-  props<{ id: string }>()
+  props<{ id: number }>()
 );
 
 export const getGroupSuccess = createAction(

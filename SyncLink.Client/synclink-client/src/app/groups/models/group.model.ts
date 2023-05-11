@@ -1,8 +1,13 @@
-export interface GroupComplete extends Group {
+export interface GroupComplete extends GroupOverview {
   members: GroupMember[];
 }
 
-export interface Group {
+export interface Group extends GroupOverview {
+  members: GroupMember,
+  rooms: Room,
+}
+
+export interface GroupOverview {
   id: number;
   name: string;
   description?: string;
@@ -29,6 +34,10 @@ export interface GroupMember {
   firstName: string;
   lastName: string;
   email: string | null;
+}
+
+export interface Room {
+
 }
 
 

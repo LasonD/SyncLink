@@ -1,9 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
-import { Group } from "../../models/group.model";
+import { GroupOverview } from "../../models/group.model";
 import { searchGroups, searchGroupsFailure, searchGroupsSuccess } from "./groups-search.actions";
 
 export interface GroupsSearchState {
-  searchedGroups: Group[];
+  searchedGroups: GroupOverview[];
   searchGroupLoading: boolean;
   groupSearchError: any;
 }

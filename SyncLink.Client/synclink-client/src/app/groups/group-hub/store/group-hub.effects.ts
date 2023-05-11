@@ -12,7 +12,7 @@ export class GroupSearchEffects {
   searchGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getGroup),
-      switchMap(({ id }: { id: string }) =>
+      switchMap(({ id }: { id: number }) =>
         this.http.get<Group>(`${environment.apiBaseUrl}/api/groups/${id}`).pipe(
           map((group) => {
             return getGroupSuccess({group});
