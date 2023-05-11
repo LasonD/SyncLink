@@ -1,6 +1,6 @@
 import { Group } from "../../models/group.model";
 import { createReducer, on } from "@ngrx/store";
-import { getGroupComplete, getGroupCompleteFailure, getGroupCompleteSuccess } from "./group-hub.actions";
+import { getGroup, getGroupFailure, getGroupSuccess } from "./group-hub.actions";
 
 export interface GroupHubState {
   group: Group;
@@ -14,9 +14,9 @@ export const initialState: GroupHubState = {
   error: null,
 };
 
-export const groupsHubReducer = createReducer(
+export const groupHubReducer = createReducer(
   initialState,
-  on(getGroupComplete, (state) : GroupHubState => ({ ...state, isLoading: true })),
-  on(getGroupCompleteSuccess, (state, { group }) : GroupHubState => ({...state, group, isLoading: false })),
-  on(getGroupCompleteFailure, (state, { error }) : GroupHubState => ({ ...state, error, isLoading: false })),
+  on(getGroup, (state) : GroupHubState => ({ ...state, isLoading: true })),
+  on(getGroupSuccess, (state, { group }) : GroupHubState => ({...state, group, isLoading: false })),
+  on(getGroupFailure, (state, { error }) : GroupHubState => ({ ...state, error, isLoading: false })),
 );

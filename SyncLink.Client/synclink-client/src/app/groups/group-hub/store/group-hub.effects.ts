@@ -5,19 +5,19 @@ import { Group } from "../../models/group.model";
 import { environment } from "../../../environments/environment";
 import { of } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { getGroupComplete, getGroupCompleteFailure, getGroupCompleteSuccess } from "./group-hub.actions";
+import { getGroup, getGroupFailure, getGroupSuccess } from "./group-hub.actions";
 
 @Injectable()
 export class GroupSearchEffects {
   searchGroups$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(getGroupComplete),
+      ofType(getGroup),
       switchMap(({ id }: { id: string }) =>
         this.http.get<Group>(`${environment.apiBaseUrl}/api/groups/${id}`).pipe(
           map((group) => {
-            return getGroupCompleteSuccess({group});
+            return getGroupSuccess({group});
           }),
-          catchError((error) => of(getGroupCompleteFailure({ error })))
+          catchError((error) => of(getGroupFailure({ error })))
         )
       )
     )

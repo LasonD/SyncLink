@@ -9,6 +9,7 @@ import { StoreModule } from "@ngrx/store";
 import { groupsSearchReducer } from "./groups-search/store/groups-search.reducer";
 import { createGroupReducer } from "./create-group/store/create-group.reducer";
 import { AuthGuard } from "../auth/services/auth.guard";
+import { groupHubReducer } from "./group-hub/store/group-hub.reducer";
 
 const routes: Routes = [
   {
@@ -34,6 +35,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     StoreModule.forFeature('groupSearch', groupsSearchReducer),
     StoreModule.forFeature('createGroup', createGroupReducer),
+    StoreModule.forFeature('groupHub', groupHubReducer),
     RouterModule.forChild(routes),
   ]
 })
