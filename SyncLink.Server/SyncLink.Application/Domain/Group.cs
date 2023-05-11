@@ -7,7 +7,7 @@ namespace SyncLink.Application.Domain;
 public class Group : EntityBase
 {
     private readonly IList<UserGroup> _userGroups = new List<UserGroup>();
-    private readonly IList<Room> _rooms = null!;
+    private readonly IList<Room> _rooms = new List<Room>();
 
     protected Group() { }
 
@@ -16,6 +16,18 @@ public class Group : EntityBase
         Name = name.GetValueOrThrowIfNullOrWhiteSpace(nameof(name));
         Description = description;
         IsPrivate = isPrivate;
+    }
+
+    public void AddRoom(Room room)
+    {
+        room.ThrowIfNull(nameof(room));
+
+        if (room.Group != null || room.GroupId != default)
+        {
+            throw new InvalidOperationException($"Room {room.Name} {room.Id} is already assigned to a group.");
+        }
+
+        _rooms.Add(room);
     }
 
     public string Name { get; private set; } = null!;

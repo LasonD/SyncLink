@@ -23,7 +23,17 @@ internal static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddConfiguredIdentity(this IServiceCollection services, ConfigurationManager config)
     {
-        services.AddIdentityCore<SyncLinkIdentityUser>()
+        services.AddIdentityCore<SyncLinkIdentityUser>(options =>
+            {
+                options.Password = new PasswordOptions
+                {
+                    RequireDigit = false,
+                    RequiredLength = 4,
+                    RequireLowercase = false,
+                    RequireUppercase = false,
+                    RequireNonAlphanumeric = false,
+                };
+            })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<SyncLinkDbContext>();
 

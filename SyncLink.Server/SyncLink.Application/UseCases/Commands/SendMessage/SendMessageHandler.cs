@@ -15,12 +15,14 @@ public partial class SendMessage
         private readonly IMapper _mapper;
         private readonly IRoomsRepository _roomsRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMessagesRepository _messageRepository;
 
-        public Handler(IMapper mapper, IRoomsRepository roomsRepository, IUserRepository userRepository)
+        public Handler(IMapper mapper, IRoomsRepository roomsRepository, IUserRepository userRepository, IMessagesRepository messageRepository)
         {
             _mapper = mapper;
             _roomsRepository = roomsRepository;
             _userRepository = userRepository;
+            _messageRepository = messageRepository;
         }
 
         public async Task<MessageDto> Handle(Command request, CancellationToken cancellationToken)
@@ -33,7 +35,7 @@ public partial class SendMessage
 
             var message = new Message(sender, room!, request.Text);
 
-            room!.AddMessage(message);
+            await _messageRepository.CreateAsync(message, cancellationToken);
 
             await _roomsRepository.SaveChangesAsync(cancellationToken);
 

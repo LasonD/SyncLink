@@ -29,12 +29,12 @@ public class Room : EntityBase
 
     public string? Name { get; private set; }
 
-    public void AddMessage(Message message)
-    {
-        message.ThrowIfNull(nameof(message));
-
-        _messages.Add(message);
-    }
+    // public void AddMessage(Message message)
+    // {
+    //     message.ThrowIfNull(nameof(message));
+    //
+    //     _messages.Add(message);
+    // }
 
     public void AddMembers(IEnumerable<User> users)
     {
