@@ -42,7 +42,7 @@ public partial class CreateRoom
             return _mapper.Map<RoomDto>(room);
         }
 
-        private static void CheckAllUsersBelongToGroup(Command request, IPaginatedEnumerable<User> users)
+        private static void CheckAllUsersBelongToGroup(Command request, IPaginatedResult<User> users)
         {
             var userDifference = users.Entities
                 .ExceptBy(request.UserIds, u => u.Id)

@@ -1,6 +1,6 @@
 ﻿namespace SyncLink.Application.Contracts.Data.Result.Pagination;
 
-public interface IPaginatedEnumerable<out T>
+public interface IPaginatedResult<out T>
 {
     IEnumerable<T> Entities { get; }
     int Page { get; }

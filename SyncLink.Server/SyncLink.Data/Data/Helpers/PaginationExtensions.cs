@@ -5,9 +5,9 @@ namespace SyncLink.Infrastructure.Data.Helpers;
 
 public static class PaginationExtensions
 {
-    public static IPaginatedEnumerable<T> ToPaginatedEnumerable<T>(this ICollection<T> items, int page, int pageSize)
+    public static IPaginatedResult<T> ToPaginatedEnumerable<T>(this ICollection<T> items, int page, int pageSize)
     {
-        var paginatedEnumerable = new PaginatedEnumerable<T>(items, items.Count, page, pageSize);
+        var paginatedEnumerable = new PaginatedResult<T>(items, items.Count, page, pageSize);
         return paginatedEnumerable;
     }
 

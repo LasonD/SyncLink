@@ -1,13 +1,13 @@
 ﻿namespace SyncLink.Application.Contracts.Data.Result.Pagination;
 
-public class PaginatedEnumerable<T> : IPaginatedEnumerable<T>
+public class PaginatedResult<T> : IPaginatedResult<T>
 {
-    protected PaginatedEnumerable()
+    protected PaginatedResult()
     {
 
     }
 
-    public PaginatedEnumerable(IEnumerable<T> entities, int itemCount, int page, int pageSize)
+    public PaginatedResult(IEnumerable<T> entities, int itemCount, int page, int pageSize)
     {
         Entities = entities;
         ItemCount = itemCount;

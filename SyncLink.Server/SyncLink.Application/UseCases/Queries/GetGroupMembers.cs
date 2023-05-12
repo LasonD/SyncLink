@@ -11,7 +11,7 @@ namespace SyncLink.Application.UseCases.Queries;
 
 public static class GetGroupMembers
 {
-    public class Query : IRequest<IPaginatedEnumerable<GroupMemberDto>>
+    public class Query : IRequest<IPaginatedResult<GroupMemberDto>>
     {
         public int GroupId { get; init; }
         public int UserId { get; init; }
@@ -19,7 +19,7 @@ public static class GetGroupMembers
         public int PageNumber { get; init; }
     }
 
-    public class Handler : IRequestHandler<Query, IPaginatedEnumerable<GroupMemberDto>>
+    public class Handler : IRequestHandler<Query, IPaginatedResult<GroupMemberDto>>
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _usersRepository;
@@ -30,7 +30,7 @@ public static class GetGroupMembers
             _usersRepository = usersRepository;
         }
 
-        public async Task<IPaginatedEnumerable<GroupMemberDto>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<IPaginatedResult<GroupMemberDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             var isUserInGroup = await _usersRepository.IsUserInGroupAsync(request.UserId, request.GroupId, cancellationToken);
 
@@ -46,7 +46,7 @@ public static class GetGroupMembers
             }, cancellationToken);
 
             var groupMembers = membersResult.GetResult();
-            var dto = _mapper.Map<PaginatedEnumerable<GroupMemberDto>>(groupMembers);
+            var dto = _mapper.Map<PaginatedResult<GroupMemberDto>>(groupMembers);
 
             return dto;
         }
