@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { searchGroups, searchGroupsFailure, searchGroupsSuccess } from "./groups-search.actions";
-import { Group, GroupSearchMode } from "../../models/group.model";
+import { Group, GroupSearchMode } from "../../../models/group.model";
 import { environment } from "../../../environments/environment";
-import { Page } from "../../models/pagination.model";
+import { Page } from "../../../models/pagination.model";
 
 @Injectable()
 export class GroupSearchEffects {

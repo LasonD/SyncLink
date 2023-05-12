@@ -64,11 +64,11 @@ public partial class SendMessage
 
             if (request.RoomId != null)
             {
-                roomResult = await _roomsRepository.GetRoomForUserAsync(request.SenderId, request.RoomId.Value, cancellationToken);
+                roomResult = await _roomsRepository.GetRoomForUserAsync(request.GroupId, request.SenderId, request.RoomId.Value, cancellationToken);
             }
             else if (request.RecipientId != null)
             {
-                roomResult = await _roomsRepository.GetPrivateRoomAsync(request.SenderId, request.RecipientId.Value, cancellationToken);
+                roomResult = await _roomsRepository.GetPrivateRoomAsync(request.GroupId, request.SenderId, request.RecipientId.Value, cancellationToken);
             }
             else
             {

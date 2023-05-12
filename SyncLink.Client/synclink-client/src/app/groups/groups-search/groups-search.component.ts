@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { GroupSearchMode } from '../models/group.model';
+import { GroupSearchMode } from '../../models/group.model';
 import { selectGroupSearchLoading, selectGroupsSearchGroups } from "./store/groups-search.selectors";
 import { searchGroups } from "./store/groups-search.actions";
 import { debounceTime, Subject, takeUntil } from "rxjs";

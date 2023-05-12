@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import { Group } from "../../models/group.model";
+import { Group } from "../../../models/group.model";
 import { searchGroups, searchGroupsFailure, searchGroupsSuccess } from "./groups-search.actions";
-import { Page } from "../../models/pagination.model";
+import { Page } from "../../../models/pagination.model";
 
 export interface GroupsSearchState {
   searchedGroups: Page<Group>[];

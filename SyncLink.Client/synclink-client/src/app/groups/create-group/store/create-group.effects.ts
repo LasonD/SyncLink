@@ -5,7 +5,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { createGroup, createGroupError, createGroupSuccess } from "./create-group.actions";
 import { environment } from "../../../environments/environment";
-import { CreateGroupDto, Group } from "../../models/group.model";
+import { CreateGroupDto, Group } from "../../../models/group.model";
 
 @Injectable()
 export class CreateGroupEffects {

@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { CreateGroupDto, Group } from "../../models/group.model";
+import { CreateGroupDto, Group } from "../../../models/group.model";
 
 export const createGroup = createAction(
   '[Group Create] Create Group',

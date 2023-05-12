@@ -12,10 +12,10 @@ public class RoomsRepository : GenericEntityRepository<Room>, IRoomsRepository
     {
     }
 
-    public async Task<RepositoryEntityResult<Room>> GetRoomForUserAsync(int userId, int roomId, CancellationToken cancellationToken)
+    public async Task<RepositoryEntityResult<Room>> GetRoomForUserAsync(int groupId, int userId, int roomId, CancellationToken cancellationToken)
     {
         var room = await DbContext.Rooms
-            .SingleOrDefaultAsync(r => r.Id == roomId && r.RoomMembers.Any(m => m.UserId == userId), cancellationToken);
+            .SingleOrDefaultAsync(r => r.Id == roomId && r.GroupId == groupId && r.RoomMembers.Any(m => m.UserId == userId), cancellationToken);
 
         if (room == null)
         {
@@ -25,10 +25,11 @@ public class RoomsRepository : GenericEntityRepository<Room>, IRoomsRepository
         return RepositoryEntityResult<Room>.Ok(room);
     }
 
-    public async Task<RepositoryEntityResult<Room>> GetPrivateRoomAsync(int firstUserId, int secondUserId, CancellationToken cancellationToken)
+    public async Task<RepositoryEntityResult<Room>> GetPrivateRoomAsync(int groupId, int firstUserId, int secondUserId, CancellationToken cancellationToken)
     {
         var room = await DbContext.Rooms.SingleOrDefaultAsync(r =>
                 r.IsPrivate &&
+                r.GroupId == groupId &&
                 r.RoomMembers.Any(um => um.UserId == firstUserId) &&
                 r.RoomMembers.Any(um => um.UserId == secondUserId),
             cancellationToken

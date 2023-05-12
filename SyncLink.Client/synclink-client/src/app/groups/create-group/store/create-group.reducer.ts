@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Group } from "../../models/group.model";
+import { Group } from "../../../models/group.model";
 import { createGroup, createGroupError, createGroupSuccess } from "./create-group.actions";
 
 export interface CreateGroupState {

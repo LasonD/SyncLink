@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { Group, GroupSearchMode } from "../../models/group.model";
-import { Page } from "../../models/pagination.model";
+import { Group, GroupSearchMode } from "../../../models/group.model";
+import { Page } from "../../../models/pagination.model";
 
 export const searchGroups = createAction(
   '[Group Search] Search Groups',

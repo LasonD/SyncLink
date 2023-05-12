@@ -1,4 +1,4 @@
-import { Group, GroupMember } from "../../models/group.model";
+import { Group, GroupMember } from "../../../models/group.model";
 import { createReducer, on } from "@ngrx/store";
 import {
   getGroup,
@@ -7,7 +7,7 @@ import {
   getGroupMembersSuccess,
   getGroupSuccess
 } from "./group-hub.actions";
-import { Page } from "../../models/pagination.model";
+import { Page } from "../../../models/pagination.model";
 
 export interface GroupHubState {
   group: Group;

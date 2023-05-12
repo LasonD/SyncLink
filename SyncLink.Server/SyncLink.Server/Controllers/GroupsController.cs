@@ -40,6 +40,36 @@ public class GroupsController : ApiControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{groupId:int}/rooms/{roomId:int}")]
+    public async Task<IActionResult> GetRoomOfGroupById(int groupId, int roomId, CancellationToken cancellationToken = default)
+    {
+        var query = new GetRoom.Query
+        {
+            UserId = GetRequiredAppUserId(),
+            GroupId = groupId,
+            RoomId = roomId,
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpGet("{groupId:int}/members/{memberId:int}/private")]
+    public async Task<IActionResult> GePrivateRoom(int groupId, int memberId, CancellationToken cancellationToken = default)
+    {
+        var query = new GetRoom.Query
+        {
+            UserId = GetRequiredAppUserId(),
+            GroupId = groupId,
+            UserIdForPrivateRoom = memberId,
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto createGroupDto, CancellationToken cancellationToken)
     {

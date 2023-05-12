@@ -31,9 +31,4 @@ export interface GroupMember {
 }
 
 
-export interface Room {
-
-}
-
-
 

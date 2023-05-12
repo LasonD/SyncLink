@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
-import { Group, GroupMember } from "../../models/group.model";
-import { Page } from "../../models/pagination.model";
+import { Group, GroupMember } from "../../../models/group.model";
+import { Page } from "../../../models/pagination.model";
 
 export const getGroup = createAction(
   '[Group Hub] Get Group Complete',

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, switchMap } from "rxjs/operators";
-import { Group, GroupMember } from "../../models/group.model";
+import { Group, GroupMember } from "../../../models/group.model";
 import { environment } from "../../../environments/environment";
 import { of } from "rxjs";
 import { HttpClient } from "@angular/common/http";
@@ -12,7 +12,7 @@ import {
   getGroupMembersFailure, getGroupMembersSuccess,
   getGroupSuccess
 } from "./group-hub.actions";
-import { Page } from "../../models/pagination.model";
+import { Page } from "../../../models/pagination.model";
 
 @Injectable()
 export class GroupHubEffects {

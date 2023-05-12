@@ -3,7 +3,7 @@ import { Subject, takeUntil } from "rxjs";
 import { GroupHubState } from "../store/group-hub.reducer";
 import { Store } from "@ngrx/store";
 import { getGroupMembers } from "../store/group-hub.actions";
-import { GroupMember } from "../../models/group.model";
+import { GroupMember } from "../../../models/group.model";
 import { selectGroupHubMembers } from "../store/group-hub.selectors";
 import { ActivatedRoute, Router } from "@angular/router";
 

@@ -6,7 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Subject, takeUntil } from "rxjs";
 import { map } from "rxjs/operators";
 import { selectGroupHubGroup } from "./store/group-hub.selectors";
-import { Group } from "../models/group.model";
+import { Group } from "../../models/group.model";
 
 @Component({
   selector: 'app-group-hub',

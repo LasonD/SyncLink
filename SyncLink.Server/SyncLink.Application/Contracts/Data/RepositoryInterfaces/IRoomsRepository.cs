@@ -5,7 +5,7 @@ namespace SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 
 public interface IRoomsRepository : IEntityRepository<Room>
 {
-    Task<RepositoryEntityResult<Room>> GetRoomForUserAsync(int userId, int roomId, CancellationToken cancellationToken);
+    Task<RepositoryEntityResult<Room>> GetRoomForUserAsync(int groupId, int userId, int roomId, CancellationToken cancellationToken);
 
-    Task<RepositoryEntityResult<Room>> GetPrivateRoomAsync(int firstUserId, int secondUserId, CancellationToken cancellationToken);
+    Task<RepositoryEntityResult<Room>> GetPrivateRoomAsync(int groupId, int firstUserId, int secondUserId, CancellationToken cancellationToken);
 }
