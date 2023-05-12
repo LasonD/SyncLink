@@ -1,4 +1,6 @@
-﻿using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+﻿using SyncLink.Application.Contracts.Data;
+using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
 using SyncLink.Infrastructure.Data.Context;
 
@@ -8,5 +10,13 @@ public class MessagesRepository : GenericEntityRepository<Message>, IMessagesRep
 {
     public MessagesRepository(SyncLinkDbContext dbContext) : base(dbContext)
     {
+    }
+
+    public Task<PaginatedRepositoryResultSet<Message>> GetRoomMessagesAsync(int groupId, int roomId, OrderedPaginationQuery<Message> query, CancellationToken cancellationToken)
+    {
+        query.FilteringExpressions.Add(m => m.RoomId == roomId && m.Room.GroupId == groupId);
+        query.OrderingExpressions.Add(new OrderingCriteria<Message>(m => m.CreationDate, IsAscending: false));
+
+        return GetBySpecificationAsync(query, cancellationToken);
     }
 }

@@ -58,11 +58,30 @@ public class GroupsController : ApiControllerBase
     [HttpGet("{groupId:int}/rooms/{roomId:int}/messages")]
     public async Task<IActionResult> GetRoomMessages(int groupId, int roomId, [FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken = default)
     {
-        var query = new GetRoom.Query
+        var query = new GetMessages.Query
         {
             UserId = GetRequiredAppUserId(),
             GroupId = groupId,
             RoomId = roomId,
+            PageSize = pageSize,
+            PageNumber = pageNumber
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpGet("{groupId:int}/rooms/{roomId:int}/messages")]
+    public async Task<IActionResult> GetRoomMembers(int groupId, int roomId, [FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken = default)
+    {
+        var query = new GetMessages.Query
+        {
+            UserId = GetRequiredAppUserId(),
+            GroupId = groupId,
+            RoomId = roomId,
+            PageSize = pageSize,
+            PageNumber = pageNumber
         };
 
         var result = await _mediator.Send(query, cancellationToken);
