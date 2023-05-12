@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { Group, Member } from "../../models/group.model";
+import { Group, GroupMember } from "../../models/group.model";
 import { Page } from "../../models/pagination.model";
 
 export const getGroup = createAction(
@@ -24,7 +24,7 @@ export const getGroupMembers = createAction(
 
 export const getGroupMembersSuccess = createAction(
   '[Group Hub] Get Group Members Success',
-  props<{ membersPage: Page<Member> }>()
+  props<{ membersPage: Page<GroupMember> }>()
 );
 
 export const getGroupMembersFailure = createAction(

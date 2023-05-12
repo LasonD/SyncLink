@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Group, GroupSearchMode } from "../../models/group.model";
+import { Page } from "../../models/pagination.model";
 
 export const searchGroups = createAction(
   '[Group Search] Search Groups',
@@ -8,7 +9,7 @@ export const searchGroups = createAction(
 
 export const searchGroupsSuccess = createAction(
   '[Group Search] Search Groups Success',
-  props<{ groups: Group[] }>()
+  props<{ groups: Page<Group> }>()
 );
 
 export const searchGroupsFailure = createAction(

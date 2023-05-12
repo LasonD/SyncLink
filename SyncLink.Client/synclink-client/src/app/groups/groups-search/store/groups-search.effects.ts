@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { searchGroups, searchGroupsFailure, searchGroupsSuccess } from "./groups-search.actions";
 import { Group, GroupSearchMode } from "../../models/group.model";
 import { environment } from "../../../environments/environment";
+import { Page } from "../../models/pagination.model";
 
 @Injectable()
 export class GroupSearchEffects {
@@ -13,7 +14,7 @@ export class GroupSearchEffects {
     this.actions$.pipe(
       ofType(searchGroups),
       switchMap(({ searchQuery, groupSearchMode }: { searchQuery: string, groupSearchMode: GroupSearchMode }) =>
-        this.http.get<Group[]>(`${environment.apiBaseUrl}/api/groups/search?searchQuery=${searchQuery}&groupSearchMode=${groupSearchMode}`).pipe(
+        this.http.get<Page<Group>>(`${environment.apiBaseUrl}/api/groups/search?searchQuery=${searchQuery}&groupSearchMode=${groupSearchMode}`).pipe(
           map((groups) => {
             return searchGroupsSuccess({groups});
           }),

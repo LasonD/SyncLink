@@ -16,7 +16,10 @@ public class ApplicationProfile : Profile
         CreateMap<Register.Command, RegistrationData>();
 
         CreateMap<UserGroup, GroupMemberDto>()
-            .ForAllMembers(opt => opt.MapFrom(src => src.User));
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.IsCreator, opt => opt.MapFrom(src => src.IsCreator))
+            .ForMember(dest => dest.IsAdmin, opt => opt.MapFrom(src => src.IsAdmin))
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.UserName));
         CreateMap<UserGroup, GroupDto>()
             .ForAllMembers(opt => opt.MapFrom(src => src.Group));
         CreateMap<Group, GroupDto>();

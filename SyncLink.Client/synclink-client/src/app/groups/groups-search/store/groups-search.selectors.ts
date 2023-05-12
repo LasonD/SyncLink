@@ -5,7 +5,7 @@ export const selectGroupSearchFeature = createFeatureSelector<GroupsSearchState>
 
 export const selectGroupsSearchGroups = createSelector(
   selectGroupSearchFeature,
-  (state: GroupsSearchState) => state.searchedGroups
+  (state: GroupsSearchState) => state.searchedGroups.flatMap((p) => p.entities)
 );
 
 export const selectGroupSearchLoading = createSelector(

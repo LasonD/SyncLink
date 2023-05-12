@@ -46,7 +46,6 @@ public static class GetGroupMembers
             }, cancellationToken);
 
             var groupMembers = membersResult.GetResult();
-
             var dto = _mapper.Map<PaginatedEnumerable<GroupMemberDto>>(groupMembers);
 
             return dto;

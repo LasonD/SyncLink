@@ -40,6 +40,7 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
     public async Task<PaginatedRepositoryResultSet<UserGroup>> GetGroupMembersAsync(int groupId, OrderedPaginationQuery<UserGroup> query, CancellationToken cancellationToken)
     {
         query.FilteringExpressions.Add((utg) => utg.GroupId == groupId);
+        query.IncludeExpressions.Add(utg => utg.User);
 
         return await GetBySpecificationAsync(query, cancellationToken);
     }
