@@ -4,7 +4,13 @@
       Members
     </mat-panel-title>
   </mat-expansion-panel-header>
+
   <mat-list-item *ngFor="let member of members">
-    {{member.username}}
+    <div class="grid-container">
+      <span class="mat-line">{{member.username}}</span>
+      <a mat-icon-button (click)="openChat(member.id)" aria-label="Start chat with member">
+        <mat-icon>chat</mat-icon>
+      </a>
+    </div>
   </mat-list-item>
 </mat-expansion-panel>

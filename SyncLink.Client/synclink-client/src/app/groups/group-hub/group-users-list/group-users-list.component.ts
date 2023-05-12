@@ -40,4 +40,8 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed$.next(true);
   }
+
+  openChat(id: number) {
+    
+  }
 }

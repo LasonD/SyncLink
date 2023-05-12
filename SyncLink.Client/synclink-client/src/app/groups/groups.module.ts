@@ -16,6 +16,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatIconModule } from "@angular/material/icon";
 import { GroupUsersListComponent } from './group-hub/group-users-list/group-users-list.component';
 import { GroupFeaturesListComponent } from './group-hub/group-features-list/group-features-list.component';
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 const routes: Routes = [
   {
@@ -49,6 +50,7 @@ const routes: Routes = [
     MatExpansionModule,
     MatSidenavModule,
     MatIconModule,
+    FlexLayoutModule,
   ]
 })
 export class GroupsModule { }

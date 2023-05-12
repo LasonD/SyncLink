@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./group-features-list.component.scss']
 })
 export class GroupFeaturesListComponent {
-  features = ['Feature 1', 'Feature 2', 'Feature 3'];
+  features = ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 1', 'Feature 2', 'Feature 3','Feature 1', 'Feature 2', 'Feature 3', 'Feature 1', 'Feature 2', 'Feature 3','Feature 1', 'Feature 2', 'Feature 3', 'Feature 1', 'Feature 2', 'Feature 3','Feature 1', 'Feature 2', 'Feature 3', 'Feature 1', 'Feature 2', 'Feature 3','Feature 1', 'Feature 2', 'Feature 3', 'Feature 1', 'Feature 2', 'Feature 3',];
 }

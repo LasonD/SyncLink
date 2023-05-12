@@ -1,0 +1,14 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  grid-gap: 10px;
+}
+
+.grid-container .mat-line {
+  grid-column: 1;
+}
+
+.grid-container a {
+  justify-self: end;
+}
