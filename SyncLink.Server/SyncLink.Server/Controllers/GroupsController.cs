@@ -72,10 +72,10 @@ public class GroupsController : ApiControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{groupId:int}/rooms/{roomId:int}/messages")]
+    [HttpGet("{groupId:int}/rooms/{roomId:int}/members")]
     public async Task<IActionResult> GetRoomMembers(int groupId, int roomId, [FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken = default)
     {
-        var query = new GetMessages.Query
+        var query = new GetRoomMembers.Query
         {
             UserId = GetRequiredAppUserId(),
             GroupId = groupId,

@@ -45,6 +45,14 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
         return await GetBySpecificationAsync(query, cancellationToken);
     }
 
+    public async Task<PaginatedRepositoryResultSet<UserRoom>> GetRoomMembersAsync(int groupId, int roomId, OrderedPaginationQuery<UserRoom> query, CancellationToken cancellationToken)
+    {
+        query.FilteringExpressions.Add(utr => utr.RoomId == roomId && utr.Room.GroupId == groupId);
+        query.IncludeExpressions.Add(utg => utg.User);
+
+        return await GetBySpecificationAsync(query, cancellationToken);
+    }
+
     public Task<bool> UserHasGroupWithNameAsync(int userId, string groupName, CancellationToken cancellationToken)
     {
         return DbContext.UsersToGroups.AnyAsync(ug =>
