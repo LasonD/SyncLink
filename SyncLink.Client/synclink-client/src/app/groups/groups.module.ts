@@ -17,6 +17,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { GroupUsersListComponent } from './group-hub/group-users-list/group-users-list.component';
 import { GroupFeaturesListComponent } from './group-hub/group-features-list/group-features-list.component';
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { RoomComponent } from "../rooms/room/room.component";
+import { RoomsModule } from "../rooms/rooms.module";
 
 const routes: Routes = [
   {
@@ -26,7 +28,12 @@ const routes: Routes = [
     path: 'create', component: CreateGroupComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)]
   },
   {
-    path: ':id/hub', component: GroupHubComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)]
+    path: ':id/hub', component: GroupHubComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)],
+    children: [
+      {
+        path: 'rooms/:id', component: RoomComponent,
+      }
+    ]
   },
 ];
 
@@ -51,6 +58,7 @@ const routes: Routes = [
     MatSidenavModule,
     MatIconModule,
     FlexLayoutModule,
+    RoomsModule,
   ]
 })
 export class GroupsModule { }

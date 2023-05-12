@@ -5,7 +5,7 @@ import { Store } from "@ngrx/store";
 import { getGroupMembers } from "../store/group-hub.actions";
 import { GroupMember } from "../../models/group.model";
 import { selectGroupHubMembers } from "../store/group-hub.selectors";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-group-users-list',
@@ -21,7 +21,8 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
   members: GroupMember[] = [];
 
   constructor(private store: Store<GroupHubState>,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -42,6 +43,6 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
   }
 
   openRoom(id: number) {
-
+    this.router.navigate(['rooms', id], { relativeTo: this.activatedRoute });
   }
 }
