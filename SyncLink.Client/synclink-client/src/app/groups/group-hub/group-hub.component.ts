@@ -19,7 +19,6 @@ export class GroupHubComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<GroupsState>,
               private activatedRoute: ActivatedRoute) {
-
   }
 
   ngOnInit() {
@@ -31,14 +30,14 @@ export class GroupHubComponent implements OnInit, OnDestroy {
         console.log(g);
     })
 
-    const groupId = +this.activatedRoute.snapshot.paramMap.get('id');
+    const groupId = +this.activatedRoute.snapshot.paramMap.get('groupId');
 
     this.store.dispatch(getGroup({ id: groupId }))
 
     this.activatedRoute.paramMap
       .pipe(
         takeUntil(this.destroyed$),
-        map((p) => +p.get('id'))
+        map((p) => +p.get('groupId'))
       ).subscribe((id) => {
       this.store.dispatch(getGroup({ id }))
     });

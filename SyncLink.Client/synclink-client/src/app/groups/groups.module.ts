@@ -28,10 +28,10 @@ const routes: Routes = [
     path: 'create', component: CreateGroupComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)]
   },
   {
-    path: ':id/hub', component: GroupHubComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)],
+    path: ':groupId/hub', component: GroupHubComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)],
     children: [
       {
-        path: 'rooms/:id', component: RoomComponent,
+        path: 'rooms/:roomId', component: RoomComponent,
       }
     ]
   },

@@ -1,43 +1,75 @@
-import { Group, GroupMember, Room } from "../../models/group.model";
 import { Page } from "../../models/pagination.model";
+import { Room, RoomMember } from "../../models/room.model";
+import { Message } from "src/app/models/message.model";
 import { createReducer, on } from "@ngrx/store";
 import {
-  getGroup,
-  getGroupFailure, getGroupMembersFailure,
-  getGroupMembersSuccess,
-  getGroupSuccess
-} from "../../groups/group-hub/store/group-hub.actions";
+  getRoom,
+  getRoomFailure, getRoomMembers, getRoomMembersFailure, getRoomMembersSuccess,
+  getRoomMessages,
+  getRoomMessagesFailure,
+  getRoomMessagesSuccess,
+  getRoomSuccess
+} from "./rooms.actions";
 
 export interface RoomsState {
-  room: Room;
+  rooms: Room[],
   roomLoading: boolean;
   roomError: any;
 
-  groupMembers: Page<GroupMember>[];
-  groupMembersLoading: boolean,
-  groupMembersError: any,
+  roomMembers: { roomId: number, members: Page<RoomMember> }[];
+  roomMembersLoading: boolean,
+  roomMembersError: any,
+
+  roomMessages: { roomId: number, messages: Page<Message> }[];
+  roomMessagesLoading: boolean,
+  roomMessagesError: any,
 }
 
 export const initialState: RoomsState = {
-  room: null,
+  rooms: [],
+  roomMembers: [],
+  roomMembersError: null,
+  roomMembersLoading: false,
+  roomMessages: [],
+  roomMessagesError: null,
+  roomMessagesLoading: false,
   roomLoading: false,
   roomError: null,
-
-  groupMembers: [],
-  groupMembersLoading: false,
-  groupMembersError: null,
 };
 
-// export const groupHubReducer = createReducer(
-//   initialState,
-//   on(getGroup, (state) : GroupHubState => ({ ...state, groupLoading: true })),
-//   on(getGroupSuccess, (state, { group }) : GroupHubState => ({...state, group, groupLoading: false })),
-//   on(getGroupFailure, (state, { error }) : GroupHubState => ({ ...state, groupError: error, groupLoading: false })),
-//
-//   on(getGroupMembersSuccess, (state, { membersPage }) : GroupHubState => {
-//     return ({...state, groupMembersError: null, groupMembersLoading: false, groupMembers: [membersPage, ...state.groupMembers]});
-//   }),
-//   on(getGroupMembersFailure, (state, { error }) : GroupHubState => {
-//     return ({...state, groupMembersError: error, groupMembersLoading: false});
-//   }),
-// );
+export const roomsReducer = createReducer(
+  initialState,
+  on(getRoom, (state) : RoomsState => ({ ...state, roomLoading: true })),
+  on(getRoomSuccess, (state, { room }) : RoomsState => ({...state, rooms: [...state.rooms, room], roomLoading: false })),
+  on(getRoomFailure, (state, { error }) : RoomsState => ({ ...state, roomError: error })),
+
+  on(getRoomMessages, (state) : RoomsState => ({
+    ...state,
+    roomMessagesLoading: true,
+  })),
+  on(getRoomMessagesFailure, (state, { error }) : RoomsState => ({
+    ...state,
+    roomMessagesLoading: false,
+    roomMessagesError: error,
+  })),
+  on(getRoomMessagesSuccess, (state, { roomId, messages }) : RoomsState => ({
+    ...state,
+    roomMessages: [...state.roomMessages, { roomId: roomId, messages: messages }],
+    roomMessagesLoading: false,
+  })),
+
+  on(getRoomMembers, (state) : RoomsState => ({
+    ...state,
+    roomMembersLoading: true,
+  })),
+  on(getRoomMembersFailure, (state, { error }) : RoomsState => ({
+    ...state,
+    roomMembersLoading: false,
+    roomMembersError: error,
+  })),
+  on(getRoomMembersSuccess, (state, { roomId, members }) : RoomsState => ({
+    ...state,
+    roomMembers: [...state.roomMembers, { roomId: roomId, members: members }],
+    roomMembersLoading: false,
+  })),
+);

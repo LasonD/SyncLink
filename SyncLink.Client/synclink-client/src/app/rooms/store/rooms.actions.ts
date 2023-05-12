@@ -1,14 +1,46 @@
 import { createAction, props } from "@ngrx/store";
-import { Room } from "../../models/group.model";
+import { Room, RoomMember } from "../../models/room.model";
+import { Message } from "../../models/message.model";
+import { Page } from "../../models/pagination.model";
 
 export const getRoom = createAction(
   '[Rooms] Get Room',
-  props<{ id: number }>()
+  props<{ roomId: number }>()
 );
 
 export const getRoomSuccess = createAction(
   '[Rooms] Get Room Success',
   props<{ room: Room }>()
+);
+
+export const getRoomMessages = createAction(
+  '[Rooms] Get Room Messages',
+  props<{ roomId: number, pageNumber: number, pageSize: number }>()
+);
+
+export const getRoomMessagesSuccess = createAction(
+  '[Rooms] Get Room Messages Success',
+  props<{ roomId: number, messages: Page<Message> }>()
+);
+
+export const getRoomMessagesFailure = createAction(
+  '[Rooms] Get Room Messages Failure',
+  props<{ error: any }>()
+);
+
+export const getRoomMembers = createAction(
+  '[Rooms] Get Room Members',
+  props<{ roomId: number, pageNumber: number, pageSize: number }>()
+);
+
+export const getRoomMembersFailure = createAction(
+  '[Rooms] Get Room Members Failure',
+  props<{ error: any }>()
+);
+
+export const getRoomMembersSuccess = createAction(
+  '[Rooms] Get Room Members Success',
+  props<{ roomId: number, members: Page<RoomMember> }>()
 );
 
 export const getRoomFailure = createAction(

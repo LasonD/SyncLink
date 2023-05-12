@@ -4,5 +4,10 @@ import { Page } from "./pagination.model";
 export interface Room {
   id: number;
   name: string;
-  messages: Page<Message>;
+  messages: Page<Message>[];
+  members: Page<RoomMember>[];
+}
+
+export interface RoomMember {
+
 }
