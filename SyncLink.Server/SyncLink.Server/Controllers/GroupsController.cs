@@ -90,7 +90,7 @@ public class GroupsController : ApiControllerBase
     }
 
     [HttpGet("{groupId:int}/members/{memberId:int}/private")]
-    public async Task<IActionResult> GePrivateRoom(int groupId, int memberId, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetPrivateRoom(int groupId, int memberId, CancellationToken cancellationToken = default)
     {
         var query = new GetRoom.Query
         {
