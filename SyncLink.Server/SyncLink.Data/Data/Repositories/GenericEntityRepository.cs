@@ -43,11 +43,17 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
 
     public virtual async Task<PaginatedRepositoryResultSet<TLocalEntity>> GetBySpecificationAsync<TLocalEntity>(OrderedPaginationQuery<TLocalEntity> specification, CancellationToken cancellationToken) where TLocalEntity : class
     {
-        var set = DbContext.Set<TLocalEntity>();
-        var query = ApplyQuerySpecification<TLocalEntity>(set, specification);
+        var query = GetQueryWithAppliedSpecification(specification);
         var items = await query.ToListAsync(cancellationToken);
 
         return items.ToPaginatedOkResult(specification.Page, specification.PageSize);
+    }
+
+    protected IQueryable<TLocalEntity> GetQueryWithAppliedSpecification<TLocalEntity>(OrderedPaginationQuery<TLocalEntity> specification) where TLocalEntity : class
+    {
+        var set = DbContext.Set<TLocalEntity>();
+        var query = ApplyQuerySpecification<TLocalEntity>(set, specification);
+        return query;
     }
 
     public virtual Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync(OrderedPaginationQuery<TEntity> specification, CancellationToken cancellationToken)

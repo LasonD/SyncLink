@@ -27,6 +27,7 @@ export interface GroupMember {
   username: string | null;
   isCreator: boolean;
   isAdmin: boolean;
+  privateRoomId: number;
 }
 
 
