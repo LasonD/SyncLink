@@ -25,7 +25,7 @@ export interface CreateGroupDto {
 export interface Member {
   identityId: string;
   userId: number;
-  username: string | null;
+  userName: string | null;
   firstName: string;
   lastName: string;
   email: string | null;

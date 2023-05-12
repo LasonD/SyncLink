@@ -15,13 +15,13 @@ public class ApplicationProfile : Profile
         CreateMap<Login.Command, LoginData>();
         CreateMap<Register.Command, RegistrationData>();
 
-        CreateMap<UserGroup, DomainUserDto>()
+        CreateMap<UserGroup, GroupMemberDto>()
             .ForAllMembers(opt => opt.MapFrom(src => src.User));
         CreateMap<UserGroup, GroupDto>()
             .ForAllMembers(opt => opt.MapFrom(src => src.Group));
         CreateMap<Group, GroupDto>();
         CreateMap<Room, RoomDto>();
-        CreateMap<User, DomainUserDto>();
+        CreateMap<User, GroupMemberDto>();
 
         CreateMap(typeof(PaginatedEnumerable<>), typeof(PaginatedEnumerable<>));
     }

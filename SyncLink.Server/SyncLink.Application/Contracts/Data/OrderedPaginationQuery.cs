@@ -7,6 +7,16 @@ public class OrderedPaginationQuery<TEntity>
     private const int DefaultPage = 1;
     private const int DefaultPageSize = 10;
 
+    public OrderedPaginationQuery()
+    {
+
+    }
+
+    public OrderedPaginationQuery(int page, int pageSize)
+    {
+        Page = page; PageSize = pageSize;
+    }
+
     public int Page { get; set; } = DefaultPage;
 
     public int PageSize { get; set; } = DefaultPageSize;

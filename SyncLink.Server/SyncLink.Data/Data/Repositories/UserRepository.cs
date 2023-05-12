@@ -4,6 +4,7 @@ using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
+using SyncLink.Application.Domain.Associations;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Helpers;
 
@@ -34,6 +35,13 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
             .ToListAsync(cancellationToken);
 
         return users.ToPaginatedOkResult(specification.Page, specification.PageSize);
+    }
+
+    public async Task<PaginatedRepositoryResultSet<UserGroup>> GetGroupMembersAsync(int groupId, OrderedPaginationQuery<UserGroup> query, CancellationToken cancellationToken)
+    {
+        query.FilteringExpressions.Add((utg) => utg.GroupId == groupId);
+
+        return await GetBySpecificationAsync(query, cancellationToken);
     }
 
     public Task<bool> UserHasGroupWithNameAsync(int userId, string groupName, CancellationToken cancellationToken)

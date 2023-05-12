@@ -41,16 +41,26 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
         return RepositoryEntityResult<TEntity>.Ok(entity);
     }
 
-    public virtual async Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync(OrderedPaginationQuery<TEntity> specification, CancellationToken cancellationToken)
+    public virtual async Task<PaginatedRepositoryResultSet<TLocalEntity>> GetBySpecificationAsync<TLocalEntity>(OrderedPaginationQuery<TLocalEntity> specification, CancellationToken cancellationToken) where TLocalEntity : class
     {
-        var set = DbContext.Set<TEntity>();
-        var query = ApplyQuerySpecification(set, specification);
+        var set = DbContext.Set<TLocalEntity>();
+        var query = ApplyQuerySpecification<TLocalEntity>(set, specification);
         var items = await query.ToListAsync(cancellationToken);
 
         return items.ToPaginatedOkResult(specification.Page, specification.PageSize);
     }
 
+    public virtual Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync(OrderedPaginationQuery<TEntity> specification, CancellationToken cancellationToken)
+    {
+        return GetBySpecificationAsync<TEntity>(specification, cancellationToken);
+    }
+
     protected IQueryable<TEntity> ApplyQuerySpecification(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
+    {
+        return ApplyQuerySpecification<TEntity>(query, queryData);
+    }
+
+    protected IQueryable<TLocalEntity> ApplyQuerySpecification<TLocalEntity>(IQueryable<TLocalEntity> query, OrderedPaginationQuery<TLocalEntity> queryData) where TLocalEntity : class
     {
         query = ApplyFiltering(query, queryData);
         query = ApplyOrdering(query, queryData);
@@ -108,6 +118,11 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
 
     private static IQueryable<TEntity> ApplyPagination(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
     {
+        return ApplyPagination<TEntity>(query, queryData);
+    }
+
+    private static IQueryable<TLocalEntity> ApplyPagination<TLocalEntity>(IQueryable<TLocalEntity> query, OrderedPaginationQuery<TLocalEntity> queryData)
+    {
         var itemsToSkipCount = (queryData.Page - 1) * queryData.PageSize;
         var itemsToTakeCount = queryData.PageSize;
 
@@ -116,6 +131,11 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
     }
 
     private static IQueryable<TEntity> ApplySearching(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
+    {
+        return ApplySearching<TEntity>(query, queryData);
+    }
+
+    private static IQueryable<TLocalEntity> ApplySearching<TLocalEntity>(IQueryable<TLocalEntity> query, OrderedPaginationQuery<TLocalEntity> queryData)
     {
         if (!queryData.SearchTerms.IsNotNullOrEmpty()) return query;
 
@@ -129,6 +149,11 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
 
     private static IQueryable<TEntity> ApplyInclusions(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
     {
+        return ApplyInclusions<TEntity>(query, queryData);
+    }
+
+    private static IQueryable<TLocalEntity> ApplyInclusions<TLocalEntity>(IQueryable<TLocalEntity> query, OrderedPaginationQuery<TLocalEntity> queryData) where TLocalEntity : class
+    {
         if (!queryData.IncludeExpressions.IsNotNullOrEmpty()) return query;
 
         foreach (var inclusion in queryData.IncludeExpressions)
@@ -140,6 +165,11 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
     }
 
     private static IQueryable<TEntity> ApplyOrdering(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
+    {
+        return ApplyOrdering<TEntity>(query, queryData);
+    }
+
+    private static IQueryable<TLocalEntity> ApplyOrdering<TLocalEntity>(IQueryable<TLocalEntity> query, OrderedPaginationQuery<TLocalEntity> queryData)
     {
         if (!queryData.OrderingExpressions.IsNotNullOrEmpty()) return query;
 
@@ -162,6 +192,11 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
     }
 
     private static IQueryable<TEntity> ApplyFiltering(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
+    {
+        return ApplyFiltering<TEntity>(query, queryData);
+    }
+
+    private static IQueryable<TLocalEntity> ApplyFiltering<TLocalEntity>(IQueryable<TLocalEntity> query, OrderedPaginationQuery<TLocalEntity> queryData)
     {
         if (!queryData.FilteringExpressions.IsNotNullOrEmpty()) return query;
 
