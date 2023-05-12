@@ -41,7 +41,7 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
     this.destroyed$.next(true);
   }
 
-  openChat(id: number) {
-    
+  openRoom(id: number) {
+
   }
 }
