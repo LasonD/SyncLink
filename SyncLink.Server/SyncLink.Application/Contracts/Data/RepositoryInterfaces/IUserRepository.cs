@@ -13,5 +13,5 @@ public interface IUserRepository : IEntityRepository<User>
 
     Task<PaginatedRepositoryResultSet<UserGroup>> GetGroupMembersAsync(int groupId, OrderedPaginationQuery<UserGroup> query, CancellationToken cancellationToken);
 
-    Task<PaginatedRepositoryResultSet<UserRoom>> GetRoomMembersAsync(int groupId, int roomId, OrderedPaginationQuery<UserRoom> query, CancellationToken cancellationToken)
+    Task<PaginatedRepositoryResultSet<UserRoom>> GetRoomMembersAsync(int groupId, int roomId, OrderedPaginationQuery<UserRoom> query, CancellationToken cancellationToken);
 }

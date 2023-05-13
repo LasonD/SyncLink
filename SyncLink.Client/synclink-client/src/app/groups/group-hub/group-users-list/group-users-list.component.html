@@ -5,10 +5,10 @@
     </mat-panel-title>
   </mat-expansion-panel-header>
 
-  <mat-list-item *ngFor="let member of members">
+  <mat-list-item *ngFor="let member of members" (click)="openPrivateRoom(member.id)">
     <div class="grid-container">
       <span class="mat-line">{{member.username}}</span>
-      <a mat-icon-button (click)="openRoom(member.id)" aria-label="Start chat with member">
+      <a mat-icon-button aria-label="Start chat with member">
         <mat-icon>chat</mat-icon>
       </a>
     </div>

@@ -26,7 +26,7 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.groupId = +this.activatedRoute.snapshot.paramMap.get('id');
+    this.groupId = +this.activatedRoute.snapshot.paramMap.get('groupId');
 
     this.store.dispatch(getGroupMembers({ id: this.groupId, pageNumber: this.pageNumber, pageSize: this.pageSize  }));
 
@@ -42,7 +42,8 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
     this.destroyed$.next(true);
   }
 
-  openRoom(id: number) {
-    this.router.navigate(['rooms', id], { relativeTo: this.activatedRoute });
+  openPrivateRoom(userId: number) {
+    console.log('Openning room: ', userId);
+    this.router.navigate(['rooms', userId], { relativeTo: this.activatedRoute });
   }
 }
