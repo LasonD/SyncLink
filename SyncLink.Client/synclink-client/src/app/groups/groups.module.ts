@@ -32,6 +32,9 @@ const routes: Routes = [
     children: [
       {
         path: 'rooms/:roomId', component: RoomComponent,
+      },
+      {
+        path: 'members/:userId/private', component: RoomComponent,
       }
     ]
   },

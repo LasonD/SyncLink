@@ -39,7 +39,7 @@ export class RoomEffects {
       mergeMap(({ groupId, userId }) => {
           return this.http.get<Room>(`${environment.apiBaseUrl}/api/groups/${groupId}/members/${userId}/private`).pipe(
             map((room: Room) => {
-              return getRoomSuccess({ room });
+              return getRoomSuccess({ otherUserId: userId, room });
             }),
             catchError((error) => of(getRoomFailure({error})))
           );

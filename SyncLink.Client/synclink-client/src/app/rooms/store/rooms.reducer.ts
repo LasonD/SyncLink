@@ -12,7 +12,7 @@ import {
 } from "./rooms.actions";
 
 export interface RoomsState {
-  rooms: Room[],
+  rooms: { otherUserId: number, room: Room }[],
   roomLoading: boolean;
   roomError: any;
 
@@ -40,9 +40,8 @@ export const initialState: RoomsState = {
 export const roomsReducer = createReducer(
   initialState,
   on(getRoom, (state) : RoomsState => ({ ...state, roomLoading: true })),
-  on(getRoomSuccess, (state, { room }) : RoomsState => ({...state, rooms: [...state.rooms, room], roomLoading: false })),
+  on(getRoomSuccess, (state, { otherUserId, room }) : RoomsState => ({...state, rooms: [...state.rooms, { otherUserId: otherUserId, room: room }], roomLoading: false })),
   on(getRoomFailure, (state, { error }) : RoomsState => ({ ...state, roomError: error })),
-
   on(getRoomMessages, (state) : RoomsState => ({
     ...state,
     roomMessagesLoading: true,
@@ -59,26 +58,28 @@ export const roomsReducer = createReducer(
       updatedRoomMessages[roomId] = { messages: [], lastPage: null };
     }
 
-    updatedRoomMessages[roomId].messages = [
+    const newMessages = [
       ...updatedRoomMessages[roomId].messages,
       ...messages.entities
     ];
 
-    updatedRoomMessages[roomId].lastPage = messages;
-
-    updatedRoomMessages[roomId].messages.sort((a: Message, b: Message) =>
+    const sortedMessages = newMessages.sort((a: Message, b: Message) =>
       b.creationDate.getTime() - a.creationDate.getTime()
     );
 
     return ({
       ...state,
-      roomMessages: updatedRoomMessages,
+      roomMessages: {
+        ...updatedRoomMessages,
+        [roomId]: {
+          messages: sortedMessages,
+          lastPage: messages
+        }
+      },
       roomMessagesLoading: false,
     });
   }),
-
-
-  on(getRoomMembers, (state) : RoomsState => ({
+on(getRoomMembers, (state) : RoomsState => ({
     ...state,
     roomMembersLoading: true,
   })),

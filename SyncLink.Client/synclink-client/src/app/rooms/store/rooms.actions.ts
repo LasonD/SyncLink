@@ -10,7 +10,7 @@ export const getRoom = createAction(
 
 export const getRoomSuccess = createAction(
   '[Rooms] Get Room Success',
-  props<{ room: Room }>()
+  props<{ otherUserId?: number, room: Room }>()
 );
 
 export const getRoomMessages = createAction(

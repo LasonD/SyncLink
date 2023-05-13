@@ -43,7 +43,6 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
   }
 
   openPrivateRoom(userId: number) {
-    console.log('Openning room: ', userId);
-    this.router.navigate(['rooms', userId], { relativeTo: this.activatedRoute });
+    this.router.navigate(['members', userId, 'private'], { relativeTo: this.activatedRoute });
   }
 }
