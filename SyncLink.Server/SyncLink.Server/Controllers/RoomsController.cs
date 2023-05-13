@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SyncLink.Application.UseCases.Commands.CreateRoom;
 using SyncLink.Server.Controllers.Base;
+using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Controllers;
 
@@ -18,5 +20,21 @@ public class RoomsController : ApiControllerBase
     {
         _mediator = mediator;
         _mapper = mapper;
+    }
+
+    [HttpPost("")]
+    public async Task<IActionResult> CreateRoom(CreateRoomDto createRoom, CancellationToken cancellationToken)
+    {
+        var command = new CreateRoom.Command
+        {
+            GroupId = createRoom.GroupId,
+            Name = createRoom.Name,
+            UserId = GetRequiredAppUserId(),
+            UserIds = createRoom.MembersId
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+
+        return Ok(result);
     }
 }

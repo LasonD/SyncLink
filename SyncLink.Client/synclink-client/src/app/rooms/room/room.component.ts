@@ -27,6 +27,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   room$: Subject<Room> = new Subject<Room>();
 
   roomId: number;
+
+  room: Room;
   messages: Message[];
   roomMessagesError: any;
 
@@ -65,9 +67,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.groupId$,
       this.room$,
       this.store.select(selectRoomMessages),
-    ]).pipe(takeUntil(this.destroyed$), distinctUntilChanged((prev, cur) => {
-      return prev[0] !== cur[0] || prev[1] !== cur[1];
-    }))
+    ]).pipe(takeUntil(this.destroyed$))
       .subscribe(res => {
         const groupId = res[0];
         const room = res[1];
@@ -86,13 +86,14 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private resolveRoom() {
+    this.room$.pipe(takeUntil(this.destroyed$))
+      .subscribe(r => this.room = r);
+
     combineLatest([
       this.groupId$,
       this.roomId$.pipe(filter(id => !!id)),
       this.store.select(selectRooms)
-    ]).pipe(takeUntil(this.destroyed$), distinctUntilChanged((prev, cur) => {
-      return prev[0] !== cur[0] || prev[1] !== cur[1];
-    }))
+    ]).pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
         const groupId = result[0];
         const roomId = result[1];
@@ -111,9 +112,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.groupId$,
       this.otherUserId$.pipe(filter(id => !!id)),
       this.store.select(selectRooms)
-    ]).pipe(takeUntil(this.destroyed$), distinctUntilChanged((prev, cur) => {
-      return prev[0] !== cur[0] || prev[1] !== cur[1];
-    }))
+    ]).pipe(takeUntil(this.destroyed$))
       .subscribe(result => {
         const groupId = result[0];
         const otherUserId = result[1];
