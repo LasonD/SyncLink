@@ -71,7 +71,7 @@ export const createRoomFailure = createAction(
 
 export const sendMessage = createAction(
   '[Rooms] Send Message',
-  props<{ isPrivate: boolean, roomId: number, otherUserId: number, payload: SendMessageData }>()
+  props<{ senderId: number, isPrivate: boolean, roomId: number, otherUserId: number, payload: SendMessageData }>()
 );
 
 export const sendMessageSuccess = createAction(

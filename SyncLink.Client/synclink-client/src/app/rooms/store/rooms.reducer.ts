@@ -115,14 +115,14 @@ export const roomsReducer = createReducer(
     roomMembers: [...state.roomMembers, {roomId: roomId, members: members}],
     roomMembersLoading: false,
   })),
-  on(sendMessage, (state, { isPrivate, payload }): RoomsState => {
+  on(sendMessage, (state, { isPrivate, senderId, payload }): RoomsState => {
     const pendingMessage: Message = {
-      id: Date.now(), // create a temporary id for this pending message
+      id: Date.now(),
       editedDateTime: null,
       creationDate: new Date(),
       isEdited: false,
       text: payload.text,
-      senderId: payload.recipientId,  // I'm assuming that senderId is the recipientId in this case
+      senderId: senderId,
       roomId: payload.roomId,
       groupId: payload.groupId
     };

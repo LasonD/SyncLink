@@ -56,14 +56,15 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         withLatestFrom(
+          this.currentUserId$.pipe(defaultIfEmpty(undefined)),
           this.groupId$.pipe(defaultIfEmpty(undefined)),
           this.roomId$.pipe(defaultIfEmpty(undefined)),
           this.otherUserId$.pipe(defaultIfEmpty(undefined)),
           this.isPrivate$.pipe(defaultIfEmpty(undefined)),
         )
-      ).subscribe(([text, [groupId, roomId, otherUserId, isPrivate]]) => {
+      ).subscribe(([text, [senderId, groupId, roomId, otherUserId, isPrivate]]) => {
       this.store.dispatch(sendMessage({
-        roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, payload: {
+        senderId: senderId, roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, payload: {
           roomId: roomId,
           text: text,
           groupId: groupId,
