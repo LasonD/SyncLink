@@ -9,19 +9,19 @@ import {
 } from "./auth.actions";
 import { User } from "../user.model";
 
-export interface State {
+export interface AuthState {
   user: User
   isLoading: boolean,
   authErrorMessages?: string[],
 }
 
-const initialState: State = {
+const initialState: AuthState = {
   user: null,
   isLoading: false,
   authErrorMessages: null,
 }
 
-export function authReducer(state = initialState, action: AuthActions): State {
+export function authReducer(state = initialState, action: AuthActions): AuthState {
   switch (action.type) {
     case LOGIN_SUCCESS:
       return {

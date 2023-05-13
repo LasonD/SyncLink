@@ -3,7 +3,7 @@ import * as fromGroups from "../groups/store/groups.reducer";
 import { ActionReducerMap } from "@ngrx/store";
 
 export interface AppState {
-  auth: fromAuth.State,
+  auth: fromAuth.AuthState,
   groups: fromGroups.GroupsState,
 }
 
