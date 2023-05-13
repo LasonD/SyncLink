@@ -25,8 +25,8 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
                 u => userIds.Contains(u.Id),
                 u => u.UserGroups.Any(ug => ug.GroupId == groupId),
             },
-            Page = 0,
-            PageSize = int.MaxValue 
+            Page = 1,
+            PageSize = int.MaxValue
         };
 
         var query = DbContext.ApplicationUsers;

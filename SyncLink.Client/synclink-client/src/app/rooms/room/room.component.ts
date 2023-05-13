@@ -29,6 +29,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   roomId: number;
   groupId: number;
+  otherUserId: number;
   room: Room;
   messages: Message[];
   roomMessagesError: any;
@@ -71,6 +72,9 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.groupId$.pipe(takeUntil(this.destroyed$))
       .subscribe((groupId) => this.groupId = groupId);
+
+    this.otherUserId$.pipe(takeUntil(this.destroyed$))
+      .subscribe((otherUserId) => this.otherUserId = otherUserId);
 
     this.resolveMessages();
     this.resolveRoom();
@@ -191,6 +195,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.store.dispatch(sendMessage({ groupId: this.groupId, roomId: this.roomId, text: this.newMessage }))
+    this.store.dispatch(sendMessage({ groupId: this.groupId, roomId: this.roomId, recipientId: this.otherUserId, text: this.newMessage }))
   }
 }

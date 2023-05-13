@@ -12,19 +12,19 @@ public class Room : EntityBase
 
     protected Room() { }
 
-    public Room(string? name, IEnumerable<User> users)
+    public Room(string? name, int groupId, IEnumerable<User> users, bool isPrivate = false)
     {
         users.ThrowIfNull(nameof(users));
         Name = name;
         AddMembers(users);
+        IsPrivate = isPrivate;
+        GroupId = groupId;
     }
 
-    public static Room CreatePrivate(User firstMember, User secondMember)
+    public Room(int groupId, User firstMember, User secondMember) : this(null, groupId, new List<User> { firstMember, secondMember }, isPrivate: true) 
     {
         firstMember.ThrowIfNull(nameof(firstMember));
         secondMember.ThrowIfNull(nameof(secondMember));
-
-        return new Room(null, new List<User> { firstMember, secondMember });
     }
 
     public string? Name { get; private set; }

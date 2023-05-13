@@ -26,6 +26,7 @@ public class MessagesController : ApiControllerBase
     public async Task<IActionResult> SendMessage(SendMessageDto sendMessageData, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<SendMessage.Command>(sendMessageData);
+        command.SenderId = GetRequiredAppUserId();
 
         var result = await _mediator.Send(command, cancellationToken);
 

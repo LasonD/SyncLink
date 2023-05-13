@@ -25,6 +25,7 @@ public class ApplicationProfile : Profile
         CreateMap<Group, GroupDto>();
         CreateMap<Room, RoomDto>();
         CreateMap<User, GroupMemberDto>();
+        CreateMap<Message, MessageDto>();
 
         CreateMap(typeof(PaginatedResult<>), typeof(PaginatedResult<>));
     }

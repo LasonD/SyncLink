@@ -110,13 +110,14 @@ public static class DbSeeder
         applicationUsers[3].AddGroup(groups[1], false, false);
         applicationUsers[1].AddGroup(groups[0], false, false);
 
+        // TODO: fix groupId
         var rooms = new Room[]
         {
-            new Room("Room1_1", new User[] { applicationUsers[0], applicationUsers[1] }),
-            new Room("Room1_2", new User[] { applicationUsers[0], applicationUsers[1], applicationUsers[2], applicationUsers[4] }),
-            new Room("Room1_3", new User[] { applicationUsers[0], applicationUsers[1], applicationUsers[2] }),
-            new Room("Room1_4", new User[] { applicationUsers[0], applicationUsers[4] }),
-            new Room("Room2_1", new User[] { applicationUsers[1], applicationUsers[3] })
+            new Room("Room1_1", 0, new User[] { applicationUsers[0], applicationUsers[1] }),
+            new Room("Room1_2", 0,new User[] { applicationUsers[0], applicationUsers[1], applicationUsers[2], applicationUsers[4] }),
+            new Room("Room1_3", 0,new User[] { applicationUsers[0], applicationUsers[1], applicationUsers[2] }),
+            new Room("Room1_4", 0,new User[] { applicationUsers[0], applicationUsers[4] }),
+            new Room("Room2_1", 0,new User[] { applicationUsers[1], applicationUsers[3] })
         };
 
         groups[0].AddRoom(rooms[0]);

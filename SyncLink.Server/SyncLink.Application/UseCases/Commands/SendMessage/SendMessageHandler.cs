@@ -48,9 +48,9 @@ public partial class SendMessage
 
             if (room == null && request.RecipientId != null)
             {
-                var secondUser = (await _userRepository.GetByIdAsync(request.SenderId, cancellationToken)).GetResult();
+                var secondUser = (await _userRepository.GetByIdAsync(request.RecipientId.Value, cancellationToken)).GetResult();
 
-                room = Room.CreatePrivate(sender, secondUser);
+                room = new Room(request.GroupId, sender, secondUser);
 
                 await _roomsRepository.CreateAsync(room, cancellationToken);
             }

@@ -31,7 +31,7 @@ public partial class CreateRoom
 
             CheckAllUsersBelongToGroup(request, users);
 
-            var room = new Room(request.Name, users.Entities);
+            var room = new Room(request.Name, request.GroupId, users.Entities);
 
             room.AddMembers(users.Entities);
 

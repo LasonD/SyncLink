@@ -15,7 +15,10 @@ public class ApiModelsProfile : Profile
         CreateMap<RegistrationDto, Register.Command>();
 
         CreateMap<CreateGroupDto, CreateGroup.Command>();
+        CreateMap<CreateGroupDto, CreateGroup.Command>();
 
-        CreateMap<SendMessageDto, SendMessage.Command>();
+        CreateMap<SendMessageDto, SendMessage.Command>()
+            .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => src.RoomId == 0 ? null : src.RoomId))
+            .ForMember(dest => dest.RecipientId, opt => opt.MapFrom(src => src.RecipientId == 0 ? null : src.RecipientId));
     }
 }
