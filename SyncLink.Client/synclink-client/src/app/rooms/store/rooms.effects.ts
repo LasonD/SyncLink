@@ -8,7 +8,7 @@ import {
   getRoomMessagesFailure, getRoomMessagesSuccess,
   getRoomSuccess, sendMessage, sendMessageFailure, sendMessageSuccess
 } from "./rooms.actions";
-import { catchError, map, mergeMap, take } from "rxjs/operators";
+import { catchError, map, mergeMap, take, withLatestFrom } from "rxjs/operators";
 import { environment } from "../../environments/environment";
 import { Room, RoomMember } from "../../models/room.model";
 import { of } from "rxjs";
@@ -93,6 +93,22 @@ export class RoomEffects {
           );
         }
       )
+    )
+  );
+
+  fetchRoomAfterSendMessage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sendMessageSuccess),
+      withLatestFrom(this.store.select(selectRooms)),
+      mergeMap(([action, rooms]) => {
+        const roomExists = rooms.some(room => room.room?.id === action.message?.roomId);
+
+        if (!roomExists) {
+          return of(getRoom({ groupId: action.message.groupId, roomId: action.message.roomId }));
+        } else {
+          return of();
+        }
+      })
     )
   );
 

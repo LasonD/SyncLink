@@ -8,7 +8,7 @@ import {
   getRoomMessages,
   getRoomMessagesFailure,
   getRoomMessagesSuccess,
-  getRoomSuccess, sendMessageSuccess
+  getRoomSuccess, sendMessage, sendMessageSuccess
 } from "./rooms.actions";
 
 export interface RoomsState {
@@ -24,7 +24,7 @@ export interface RoomsState {
   roomMessagesLoading: boolean,
   roomMessagesError: any,
 
-  lastSentMessage: Message,
+  pendingMessages: Message[],
   sendMessageError: any,
 }
 
@@ -39,7 +39,7 @@ export const initialState: RoomsState = {
   roomLoading: false,
   roomError: null,
   sendMessageError: null,
-  lastSentMessage: null,
+  pendingMessages: [],
 };
 
 export const roomsReducer = createReducer(
@@ -102,9 +102,14 @@ export const roomsReducer = createReducer(
     roomMembers: [...state.roomMembers, {roomId: roomId, members: members}],
     roomMembersLoading: false,
   })),
-  on(sendMessageSuccess, (state, { message }): RoomsState => {
-    const roomId = message.roomId;
+  on(sendMessage, (state, sendMessageData): RoomsState => {
+    const tempId = new Date().getTime();
+    const roomId = sendMessageData.roomId;
     if (!roomId) return state;
+
+    const message: Message = ({...sendMessageData, id: tempId} as unknown) as Message;
+
+    const newPendingMessages = [...state.pendingMessages, message];
 
     let updatedRoomMessages = {...state.roomMessages};
 
@@ -119,7 +124,7 @@ export const roomsReducer = createReducer(
 
     return ({
       ...state,
-      lastSentMessage: message,
+      pendingMessages: newPendingMessages,
       roomMessages: {
         ...updatedRoomMessages,
         [roomId]: {
@@ -128,6 +133,38 @@ export const roomsReducer = createReducer(
         }
       },
       sendMessageError: null,
-    });
+    })
+  }),
+  on(sendMessageSuccess, (state, { message }): RoomsState => {
+    const roomId = message.roomId;
+    if (!roomId) return state;
+
+    let updatedRoomMessages = {...state.roomMessages};
+
+    if (!updatedRoomMessages[roomId]) {
+      updatedRoomMessages[roomId] = {messages: [], lastPage: null};
+    }
+
+    const newMessages = [
+      ...updatedRoomMessages[roomId].messages.filter(m => state.pendingMessages.some(pm => pm.id === m.id)),
+      message
+    ];
+
+    return ({
+      ...state,
+      pendingMessages: [],
+      roomMessages: {
+        ...updatedRoomMessages,
+        [roomId]: {
+          ...updatedRoomMessages[roomId],
+          messages: newMessages,
+        }
+      },
+      sendMessageError: null,
+    })
   })
 );
+
+
+
+
