@@ -27,4 +27,10 @@ export const selectRoomMessagesError = createSelector(
   (state: RoomsState) => state.roomMessagesError
 );
 
+export const selectLastSentMessage = createSelector(
+  selectRoomsFeature,
+  (state: RoomsState) => state.roomMessagesError
+);
+
+
 

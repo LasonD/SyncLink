@@ -8,7 +8,7 @@ import {
   getRoomMessages,
   getRoomMessagesFailure,
   getRoomMessagesSuccess,
-  getRoomSuccess
+  getRoomSuccess, sendMessageSuccess
 } from "./rooms.actions";
 
 export interface RoomsState {
@@ -23,6 +23,9 @@ export interface RoomsState {
   roomMessages: { [roomId: number]: { messages: Message[], lastPage: Page<Message> }};
   roomMessagesLoading: boolean,
   roomMessagesError: any,
+
+  lastSentMessage: Message,
+  sendMessageError: any,
 }
 
 export const initialState: RoomsState = {
@@ -35,27 +38,33 @@ export const initialState: RoomsState = {
   roomMessagesLoading: false,
   roomLoading: false,
   roomError: null,
+  sendMessageError: null,
+  lastSentMessage: null,
 };
 
 export const roomsReducer = createReducer(
   initialState,
-  on(getRoom, (state) : RoomsState => ({ ...state, roomLoading: true })),
-  on(getRoomSuccess, (state, { otherUserId, room }) : RoomsState => ({...state, rooms: [...state.rooms, { otherUserId: otherUserId, room: room }], roomLoading: false })),
-  on(getRoomFailure, (state, { error }) : RoomsState => ({ ...state, roomError: error })),
-  on(getRoomMessages, (state) : RoomsState => ({
+  on(getRoom, (state): RoomsState => ({...state, roomLoading: true})),
+  on(getRoomSuccess, (state, {otherUserId, room}): RoomsState => ({
+    ...state,
+    rooms: [...state.rooms, {otherUserId: otherUserId, room: room}],
+    roomLoading: false
+  })),
+  on(getRoomFailure, (state, {error}): RoomsState => ({...state, roomError: error})),
+  on(getRoomMessages, (state): RoomsState => ({
     ...state,
     roomMessagesLoading: true,
   })),
-  on(getRoomMessagesFailure, (state, { error }) : RoomsState => ({
-      ...state,
-      roomMessagesLoading: false,
-      roomMessagesError: error,
-    })),
-  on(getRoomMessagesSuccess, (state, { roomId, messages }) : RoomsState => {
-    let updatedRoomMessages = { ...state.roomMessages };
+  on(getRoomMessagesFailure, (state, {error}): RoomsState => ({
+    ...state,
+    roomMessagesLoading: false,
+    roomMessagesError: error,
+  })),
+  on(getRoomMessagesSuccess, (state, {roomId, messages}): RoomsState => {
+    let updatedRoomMessages = {...state.roomMessages};
 
     if (!updatedRoomMessages[roomId]) {
-      updatedRoomMessages[roomId] = { messages: [], lastPage: null };
+      updatedRoomMessages[roomId] = {messages: [], lastPage: null};
     }
 
     const newMessages = [
@@ -79,18 +88,46 @@ export const roomsReducer = createReducer(
       roomMessagesLoading: false,
     });
   }),
-on(getRoomMembers, (state) : RoomsState => ({
+  on(getRoomMembers, (state): RoomsState => ({
     ...state,
     roomMembersLoading: true,
   })),
-  on(getRoomMembersFailure, (state, { error }) : RoomsState => ({
+  on(getRoomMembersFailure, (state, {error}): RoomsState => ({
     ...state,
     roomMembersLoading: false,
     roomMembersError: error,
   })),
-  on(getRoomMembersSuccess, (state, { roomId, members }) : RoomsState => ({
+  on(getRoomMembersSuccess, (state, {roomId, members}): RoomsState => ({
     ...state,
-    roomMembers: [...state.roomMembers, { roomId: roomId, members: members }],
+    roomMembers: [...state.roomMembers, {roomId: roomId, members: members}],
     roomMembersLoading: false,
   })),
+  on(sendMessageSuccess, (state, { message }): RoomsState => {
+    const roomId = message.roomId;
+    if (!roomId) return state;
+
+    let updatedRoomMessages = {...state.roomMessages};
+
+    if (!updatedRoomMessages[roomId]) {
+      updatedRoomMessages[roomId] = {messages: [], lastPage: null};
+    }
+
+    const newMessages = [
+      ...updatedRoomMessages[roomId].messages,
+      message
+    ];
+
+    return ({
+      ...state,
+      lastSentMessage: message,
+      roomMessages: {
+        ...updatedRoomMessages,
+        [roomId]: {
+          ...updatedRoomMessages[roomId],
+          messages: newMessages,
+        }
+      },
+      sendMessageError: null,
+    });
+  })
 );

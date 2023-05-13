@@ -6,15 +6,18 @@ import {
   getRoomFailure, getRoomMembers, getRoomMembersSuccess,
   getRoomMessages,
   getRoomMessagesFailure, getRoomMessagesSuccess,
-  getRoomSuccess, sendMessage
+  getRoomSuccess, sendMessage, sendMessageFailure, sendMessageSuccess
 } from "./rooms.actions";
-import { catchError, map, mergeMap } from "rxjs/operators";
+import { catchError, map, mergeMap, take } from "rxjs/operators";
 import { environment } from "../../environments/environment";
 import { Room, RoomMember } from "../../models/room.model";
 import { of } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Page } from "../../models/pagination.model";
 import { Message } from "../../models/message.model";
+import { RoomsState } from "./rooms.reducer";
+import { Store } from "@ngrx/store";
+import { selectRooms } from "./rooms.selector";
 
 @Injectable()
 export class RoomEffects {
@@ -81,18 +84,26 @@ export class RoomEffects {
   sendMessage$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sendMessage),
-      mergeMap(({ groupId, roomId, text }) => {
-          return this.http.get<Page<RoomMember>>(`${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}/members?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
-            map((members: Page<RoomMember>) => {
-              return getRoomMembersSuccess({ roomId: roomId, members: members });
+      mergeMap((data) => {
+          return this.http.post<Message>(`${environment.apiBaseUrl}/api/messages`, data).pipe(
+            map((message: Message) => {
+              return sendMessageSuccess({ message: message });
             }),
-            catchError((error) => of(getRoomMessagesFailure({error})))
+            catchError((error) => of(sendMessageFailure({error})))
           );
         }
       )
     )
   );
 
-  constructor(private actions$: Actions, private http: HttpClient) {
+  constructor(private actions$: Actions, private http: HttpClient, private store: Store<RoomsState>) {
   }
 }
+
+export interface SendMessageData {
+  groupId: number;
+  text: string;
+  roomId?: number;
+  recipientId?: number;
+}
+

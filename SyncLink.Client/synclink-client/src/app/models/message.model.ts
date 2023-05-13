@@ -6,4 +6,5 @@ export interface Message {
   text: string | null;
   senderId: number;
   roomId: number;
+  groupId: number;
 }

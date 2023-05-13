@@ -2,6 +2,7 @@ import { createAction, props } from "@ngrx/store";
 import { Room, RoomMember } from "../../models/room.model";
 import { Message } from "../../models/message.model";
 import { Page } from "../../models/pagination.model";
+import { SendMessageData } from "./rooms.effects";
 
 export const getRoom = createAction(
   '[Rooms] Get Room',
@@ -70,7 +71,7 @@ export const createRoomFailure = createAction(
 
 export const sendMessage = createAction(
   '[Rooms] Send Message',
-  props<{ groupId: number, roomId?: number, recipientId?: number, text: string }>()
+  props<SendMessageData>()
 );
 
 export const sendMessageSuccess = createAction(
