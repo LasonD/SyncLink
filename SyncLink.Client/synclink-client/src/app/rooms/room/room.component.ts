@@ -7,6 +7,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Message } from "../../models/message.model";
 import { getRoomMessages } from "../store/rooms.actions";
 import { AuthState } from "../../auth/store/auth.reducer";
+import { Page } from "../../models/pagination.model";
 
 @Component({
   selector: 'app-room',
@@ -22,7 +23,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   roomId: number;
   groupId: number;
 
-  messagesByRoomId: { [roomId: number]: Message[] };
+  messagesByRoomId: { [roomId: number]: { messages: Message[], lastPage: Page<Message> }};
   messages: Message[];
   roomMessagesError: any;
 
@@ -34,7 +35,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.store.select(selectRoomMessagesError).pipe(takeUntil(this.destroyed$))
       .subscribe((error) => {
-        console.log('Error', error)
+        console.log('Error: ', error);
         this.roomMessagesError = error;
       })
 
@@ -43,23 +44,26 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.userId = state.user?.userId;
       })
 
-    this.activatedRoute.paramMap.pipe(takeUntil(this.destroyed$))
+    console.log(this.activatedRoute.snapshot.root.url);
+
+    this.activatedRoute.parent.paramMap.pipe(takeUntil(this.destroyed$))
       .subscribe((p) => {
         this.roomId = +p.get('roomId');
         this.groupId = +p.get('groupId');
-        this.getMessages();
+        setTimeout(() => this.getMessages(), 0);
       });
 
     this.store.select(selectRoomMessages)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((messagesByRoomId) => {
         this.messagesByRoomId = messagesByRoomId;
-        this.getMessages();
+        setTimeout(() => this.getMessages(), 0);
       });
   }
 
   private getMessages() {
-    this.messages = this.messagesByRoomId ? this.messagesByRoomId[this.roomId] : null;
+    this.messages = this.messagesByRoomId ? this.messagesByRoomId[this.roomId]?.messages : null;
+    console.log('Getting messages: ', this.roomMessagesError);
     if (!this.messages && !this.roomMessagesError && this.messagePageSize-- > 0) {
       this.store.dispatch(getRoomMessages({ groupId: this.groupId, roomId: this.roomId, pageNumber: 1, pageSize: this.messagePageSize }));
     }
