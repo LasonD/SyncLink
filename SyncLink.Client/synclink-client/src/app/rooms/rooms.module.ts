@@ -5,6 +5,7 @@ import { CreateRoomComponent } from './create-room/create-room.component';
 import { ActivatedRouteSnapshot, RouterModule, RouterStateSnapshot, Routes } from "@angular/router";
 import { AuthGuard } from "../auth/services/auth.guard";
 import { CreateGroupComponent } from "../groups/create-group/create-group.component";
+import { MatCardModule } from "@angular/material/card";
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    MatCardModule,
   ]
 })
 export class RoomsModule { }

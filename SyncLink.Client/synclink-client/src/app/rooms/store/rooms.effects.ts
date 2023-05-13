@@ -8,24 +8,20 @@ import {
   getRoomMessagesFailure, getRoomMessagesSuccess,
   getRoomSuccess
 } from "./rooms.actions";
-import { catchError, map, switchMap } from "rxjs/operators";
+import { catchError, map, mergeMap } from "rxjs/operators";
 import { environment } from "../../environments/environment";
 import { Room, RoomMember } from "../../models/room.model";
 import { of } from "rxjs";
-import { ActivatedRoute } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { Page } from "../../models/pagination.model";
 import { Message } from "../../models/message.model";
 
 @Injectable()
 export class RoomEffects {
-  groupId: number;
-
   getRoom$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getRoom),
-      switchMap(({ roomId }: { roomId: number }) => {
-          const groupId = this.groupId;
+      mergeMap(({ groupId, roomId }) => {
           return this.http.get<Room>(`${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}`).pipe(
             map((room: Room) => {
               return getRoomSuccess({ room });
@@ -40,8 +36,7 @@ export class RoomEffects {
   getPrivateRoom$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getPrivateRoomByUser),
-      switchMap(({ userId }: { userId: number }) => {
-          const groupId = this.groupId;
+      mergeMap(({ groupId, userId }) => {
           return this.http.get<Room>(`${environment.apiBaseUrl}/api/groups/${groupId}/members/${userId}/private`).pipe(
             map((room: Room) => {
               return getRoomSuccess({ room });
@@ -56,8 +51,7 @@ export class RoomEffects {
   getRoomMessages$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getRoomMessages),
-      switchMap(({ roomId, pageNumber, pageSize }) => {
-          const groupId = this.groupId;
+      mergeMap(({ groupId, roomId, pageNumber, pageSize }) => {
           return this.http.get<Page<Message>>(`${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}/messages?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
             map((messages: Page<Message>) => {
               return getRoomMessagesSuccess({ roomId: roomId, messages: messages });
@@ -72,8 +66,7 @@ export class RoomEffects {
   getRoomMembers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getRoomMembers),
-      switchMap(({ roomId, pageNumber, pageSize }) => {
-          const groupId = this.groupId;
+      mergeMap(({ groupId, roomId, pageNumber, pageSize }) => {
           return this.http.get<Page<RoomMember>>(`${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}/members?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
             map((members: Page<RoomMember>) => {
               return getRoomMembersSuccess({ roomId: roomId, members: members });
@@ -85,9 +78,6 @@ export class RoomEffects {
     )
   );
 
-  constructor(private actions$: Actions, private http: HttpClient, private activatedRoute: ActivatedRoute) {
-    activatedRoute.paramMap.subscribe((p) => {
-      this.groupId = +p.get('groupId');
-    });
+  constructor(private actions$: Actions, private http: HttpClient) {
   }
 }

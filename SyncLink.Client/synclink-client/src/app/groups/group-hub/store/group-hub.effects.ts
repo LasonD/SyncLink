@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, map, switchMap } from "rxjs/operators";
+import { catchError, map, mergeMap } from "rxjs/operators";
 import { Group, GroupMember } from "../../../models/group.model";
 import { environment } from "../../../environments/environment";
 import { of } from "rxjs";
@@ -19,7 +19,7 @@ export class GroupHubEffects {
   getGroup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getGroup),
-      switchMap(({ id }: { id: number }) => {
+      mergeMap(({ id }: { id: number }) => {
           return this.http.get<Group>(`${environment.apiBaseUrl}/api/groups/${id}`).pipe(
             map((group) => {
               return getGroupSuccess({group});
@@ -34,7 +34,7 @@ export class GroupHubEffects {
   getGroupMembers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getGroupMembers),
-      switchMap(({ id }: { id: number }) => {
+      mergeMap(({ id }: { id: number }) => {
           return this.http.get<Page<GroupMember>>(`${environment.apiBaseUrl}/api/groups/${id}/members`).pipe(
             map((page) => {
               return getGroupMembersSuccess({ membersPage: page});

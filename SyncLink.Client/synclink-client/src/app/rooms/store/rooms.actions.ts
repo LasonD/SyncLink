@@ -5,7 +5,7 @@ import { Page } from "../../models/pagination.model";
 
 export const getRoom = createAction(
   '[Rooms] Get Room',
-  props<{ roomId: number }>()
+  props<{ groupId: number, roomId: number }>()
 );
 
 export const getRoomSuccess = createAction(
@@ -15,7 +15,7 @@ export const getRoomSuccess = createAction(
 
 export const getRoomMessages = createAction(
   '[Rooms] Get Room Messages',
-  props<{ roomId: number, pageNumber: number, pageSize: number }>()
+  props<{ groupId: number, roomId: number, pageNumber: number, pageSize: number }>()
 );
 
 export const getRoomMessagesSuccess = createAction(
@@ -30,7 +30,7 @@ export const getRoomMessagesFailure = createAction(
 
 export const getRoomMembers = createAction(
   '[Rooms] Get Room Members',
-  props<{ roomId: number, pageNumber: number, pageSize: number }>()
+  props<{ groupId: number, roomId: number, pageNumber: number, pageSize: number }>()
 );
 
 export const getRoomMembersFailure = createAction(
@@ -50,7 +50,7 @@ export const getRoomFailure = createAction(
 
 export const getPrivateRoomByUser = createAction(
   '[Rooms] Get Private Room',
-  props<{ userId: number }>()
+  props<{ groupId: number, userId: number }>()
 );
 
 export const createRoom = createAction(

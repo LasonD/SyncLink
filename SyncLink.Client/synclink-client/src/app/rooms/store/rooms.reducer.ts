@@ -48,10 +48,10 @@ export const roomsReducer = createReducer(
     roomMessagesLoading: true,
   })),
   on(getRoomMessagesFailure, (state, { error }) : RoomsState => ({
-    ...state,
-    roomMessagesLoading: false,
-    roomMessagesError: error,
-  })),
+      ...state,
+      roomMessagesLoading: false,
+      roomMessagesError: error,
+    })),
   on(getRoomMessagesSuccess, (state, { roomId, messages }) : RoomsState => ({
     ...state,
     roomMessages: [...state.roomMessages, { roomId: roomId, messages: messages }],
