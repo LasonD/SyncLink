@@ -5,7 +5,7 @@ import { combineLatest, distinctUntilChanged, Subject, takeUntil } from "rxjs";
 import { selectRoomError, selectRoomMessages, selectRoomMessagesError, selectRooms } from "../store/rooms.selector";
 import { ActivatedRoute } from "@angular/router";
 import { Message } from "../../models/message.model";
-import { getPrivateRoomByUser, getRoom, getRoomMessages } from "../store/rooms.actions";
+import { getPrivateRoomByUser, getRoom, getRoomMessages, sendMessage } from "../store/rooms.actions";
 import { AuthState } from "../../auth/store/auth.reducer";
 import { Room } from "../../models/room.model";
 import { filter } from "rxjs/operators";
@@ -28,6 +28,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   room$: Subject<Room> = new Subject<Room>();
 
   roomId: number;
+  groupId: number;
   room: Room;
   messages: Message[];
   roomMessagesError: any;
@@ -67,6 +68,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       .subscribe((error) => {
         this.roomMessagesError = error;
       });
+
+    this.groupId$.pipe(takeUntil(this.destroyed$))
+      .subscribe((groupId) => this.groupId = groupId);
 
     this.resolveMessages();
     this.resolveRoom();
@@ -183,6 +187,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
+    if (!this.newMessage) {
+      return;
+    }
 
+    this.store.dispatch(sendMessage({ groupId: this.groupId, roomId: this.roomId, text: this.newMessage }))
   }
 }

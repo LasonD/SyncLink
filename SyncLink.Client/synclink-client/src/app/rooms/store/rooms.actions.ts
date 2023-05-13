@@ -67,3 +67,19 @@ export const createRoomFailure = createAction(
   '[Rooms] Create Room Failure',
   props<{ error: any }>()
 );
+
+export const sendMessage = createAction(
+  '[Rooms] Send Message',
+  props<{ groupId: number, roomId?: number, recipientId?: number, text: string }>()
+);
+
+export const sendMessageSuccess = createAction(
+  '[Rooms] Send Message Success',
+  props<{ message: Message }>()
+);
+
+export const sendMessageFailure = createAction(
+  '[Rooms] Send Message Failure',
+  props<{ error: any }>()
+);
+

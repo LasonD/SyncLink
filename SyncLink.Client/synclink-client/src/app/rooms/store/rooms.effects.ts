@@ -6,7 +6,7 @@ import {
   getRoomFailure, getRoomMembers, getRoomMembersSuccess,
   getRoomMessages,
   getRoomMessagesFailure, getRoomMessagesSuccess,
-  getRoomSuccess
+  getRoomSuccess, sendMessage
 } from "./rooms.actions";
 import { catchError, map, mergeMap } from "rxjs/operators";
 import { environment } from "../../environments/environment";
@@ -67,6 +67,21 @@ export class RoomEffects {
     this.actions$.pipe(
       ofType(getRoomMembers),
       mergeMap(({ groupId, roomId, pageNumber, pageSize }) => {
+          return this.http.get<Page<RoomMember>>(`${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}/members?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
+            map((members: Page<RoomMember>) => {
+              return getRoomMembersSuccess({ roomId: roomId, members: members });
+            }),
+            catchError((error) => of(getRoomMessagesFailure({error})))
+          );
+        }
+      )
+    )
+  );
+
+  sendMessage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sendMessage),
+      mergeMap(({ groupId, roomId, text }) => {
           return this.http.get<Page<RoomMember>>(`${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}/members?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
             map((members: Page<RoomMember>) => {
               return getRoomMembersSuccess({ roomId: roomId, members: members });
