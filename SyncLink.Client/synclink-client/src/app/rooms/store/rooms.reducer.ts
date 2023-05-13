@@ -5,14 +5,14 @@ import { createReducer, on } from "@ngrx/store";
 import {
   getRoom,
   getRoomFailure, getRoomMembers, getRoomMembersFailure, getRoomMembersSuccess,
-  getRoomMessages,
-  getRoomMessagesFailure,
-  getRoomMessagesSuccess,
+  getMessages,
+  getMessagesFailure,
+  getMessagesSuccess,
   getRoomSuccess, sendMessage, sendMessageSuccess
 } from "./rooms.actions";
 
 export interface RoomsState {
-  rooms: { otherUserId: number, room: Room }[],
+  rooms: Room[],
   roomLoading: boolean;
   roomError: any;
 
@@ -21,8 +21,10 @@ export interface RoomsState {
   roomMembersError: any,
 
   roomMessages: { [roomId: number]: { messages: Message[], lastPage: Page<Message> }};
-  roomMessagesLoading: boolean,
-  roomMessagesError: any,
+  privateMessages: { [otherUserId: number]: { messages: Message[], lastPage: Page<Message> }};
+
+  messagesLoading: boolean,
+  messagesError: any,
 
   pendingMessages: Message[],
   sendMessageError: any,
@@ -34,8 +36,9 @@ export const initialState: RoomsState = {
   roomMembersError: null,
   roomMembersLoading: false,
   roomMessages: [],
-  roomMessagesError: null,
-  roomMessagesLoading: false,
+  privateMessages: [],
+  messagesError: null,
+  messagesLoading: false,
   roomLoading: false,
   roomError: null,
   sendMessageError: null,
@@ -45,47 +48,57 @@ export const initialState: RoomsState = {
 export const roomsReducer = createReducer(
   initialState,
   on(getRoom, (state): RoomsState => ({...state, roomLoading: true})),
-  on(getRoomSuccess, (state, {otherUserId, room}): RoomsState => ({
+  on(getRoomSuccess, (state, {room}): RoomsState => ({
     ...state,
-    rooms: [...state.rooms, {otherUserId: otherUserId, room: room}],
+    rooms: [...state.rooms, room],
     roomLoading: false
   })),
   on(getRoomFailure, (state, {error}): RoomsState => ({...state, roomError: error})),
-  on(getRoomMessages, (state): RoomsState => ({
+  on(getMessages, (state): RoomsState => ({
     ...state,
-    roomMessagesLoading: true,
+    messagesLoading: true,
   })),
-  on(getRoomMessagesFailure, (state, {error}): RoomsState => ({
+  on(getMessagesFailure, (state, {error}): RoomsState => ({
     ...state,
-    roomMessagesLoading: false,
-    roomMessagesError: error,
+    messagesLoading: false,
+    messagesError: error,
   })),
-  on(getRoomMessagesSuccess, (state, {roomId, messages}): RoomsState => {
-    let updatedRoomMessages = {...state.roomMessages};
+  on(getMessagesSuccess, (state, { roomId, messages, otherUserId, isPrivate }): RoomsState => {
+    let updatedRoomMessages = { ...state.roomMessages };
+    let updatedPrivateMessages = { ...state.privateMessages };
 
-    if (!updatedRoomMessages[roomId]) {
-      updatedRoomMessages[roomId] = {messages: [], lastPage: null};
-    }
-
-    const newMessages = [
-      ...updatedRoomMessages[roomId].messages,
-      ...messages.entities
-    ];
+    const newMessages = messages.entities;
 
     const sortedMessages = newMessages.sort((a: Message, b: Message) =>
       b.creationDate.getTime() - a.creationDate.getTime()
     );
 
+    if (isPrivate) {
+      if (!updatedPrivateMessages[otherUserId]) {
+        updatedPrivateMessages[otherUserId] = { messages: [], lastPage: null };
+      }
+
+      updatedPrivateMessages[otherUserId] = {
+        messages: [...updatedPrivateMessages[otherUserId].messages, ...sortedMessages],
+        lastPage: messages
+      };
+
+    } else {
+      if (!updatedRoomMessages[roomId]) {
+        updatedRoomMessages[roomId] = { messages: [], lastPage: null };
+      }
+
+      updatedRoomMessages[roomId] = {
+        messages: [...updatedRoomMessages[roomId].messages, ...sortedMessages],
+        lastPage: messages
+      };
+    }
+
     return ({
       ...state,
-      roomMessages: {
-        ...updatedRoomMessages,
-        [roomId]: {
-          messages: sortedMessages,
-          lastPage: messages
-        }
-      },
-      roomMessagesLoading: false,
+      roomMessages: updatedRoomMessages,
+      privateMessages: updatedPrivateMessages,
+      messagesLoading: false,
     });
   }),
   on(getRoomMembers, (state): RoomsState => ({
@@ -102,67 +115,67 @@ export const roomsReducer = createReducer(
     roomMembers: [...state.roomMembers, {roomId: roomId, members: members}],
     roomMembersLoading: false,
   })),
-  on(sendMessage, (state, sendMessageData): RoomsState => {
-    const tempId = new Date().getTime();
-    const roomId = sendMessageData.roomId;
-    if (!roomId) return state;
+  on(sendMessage, (state, { isPrivate, payload }): RoomsState => {
+    const pendingMessage: Message = {
+      id: Date.now(), // create a temporary id for this pending message
+      editedDateTime: null,
+      creationDate: new Date(),
+      isEdited: false,
+      text: payload.text,
+      senderId: payload.recipientId,  // I'm assuming that senderId is the recipientId in this case
+      roomId: payload.roomId,
+      groupId: payload.groupId
+    };
 
-    const message: Message = ({...sendMessageData, id: tempId} as unknown) as Message;
+    let updatedRoomMessages = { ...state.roomMessages };
+    let updatedPrivateMessages = { ...state.privateMessages };
 
-    const newPendingMessages = [...state.pendingMessages, message];
-
-    let updatedRoomMessages = {...state.roomMessages};
-
-    if (!updatedRoomMessages[roomId]) {
-      updatedRoomMessages[roomId] = {messages: [], lastPage: null};
+    if (isPrivate) {
+      const userId = payload.recipientId;
+      if (!updatedPrivateMessages[userId]) {
+        updatedPrivateMessages[userId] = { messages: [], lastPage: null };
+      }
+      updatedPrivateMessages[userId].messages = [...updatedPrivateMessages[userId].messages, pendingMessage];
+    } else {
+      if (!updatedRoomMessages[payload.roomId]) {
+        updatedRoomMessages[payload.roomId] = { messages: [], lastPage: null };
+      }
+      updatedRoomMessages[payload.roomId].messages = [...updatedRoomMessages[payload.roomId].messages, pendingMessage];
     }
 
-    const newMessages = [
-      ...updatedRoomMessages[roomId].messages,
-      message
-    ];
-
-    return ({
+    return {
       ...state,
-      pendingMessages: newPendingMessages,
-      roomMessages: {
-        ...updatedRoomMessages,
-        [roomId]: {
-          ...updatedRoomMessages[roomId],
-          messages: newMessages,
-        }
-      },
-      sendMessageError: null,
-    })
+      roomMessages: updatedRoomMessages,
+      privateMessages: updatedPrivateMessages,
+      pendingMessages: [...state.pendingMessages, pendingMessage]
+    };
   }),
-  on(sendMessageSuccess, (state, { message }): RoomsState => {
-    const roomId = message.roomId;
-    if (!roomId) return state;
+  on(sendMessageSuccess, (state, { isPrivate, roomId, otherUserId, message }): RoomsState => {
+    let updatedRoomMessages = { ...state.roomMessages };
+    let updatedPrivateMessages = { ...state.privateMessages };
+    let updatedPendingMessages = state.pendingMessages.filter(m => m.id !== message.id);
 
-    let updatedRoomMessages = {...state.roomMessages};
-
-    if (!updatedRoomMessages[roomId]) {
-      updatedRoomMessages[roomId] = {messages: [], lastPage: null};
+    if (isPrivate) {
+      if (!updatedPrivateMessages[otherUserId]) {
+        updatedPrivateMessages[otherUserId] = { messages: [], lastPage: null };
+      }
+      updatedPrivateMessages[otherUserId].messages = updatedPrivateMessages[otherUserId].messages.map(m => m.id === message.id ? message : m);
+      updatedPrivateMessages[otherUserId].messages.sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime());
+    } else {
+      if (!updatedRoomMessages[roomId]) {
+        updatedRoomMessages[roomId] = { messages: [], lastPage: null };
+      }
+      updatedRoomMessages[roomId].messages = updatedRoomMessages[roomId].messages.map(m => m.id === message.id ? message : m);
+      updatedRoomMessages[roomId].messages.sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime());
     }
 
-    const newMessages = [
-      ...updatedRoomMessages[roomId].messages.filter(m => state.pendingMessages.some(pm => pm.id === m.id)),
-      message
-    ];
-
-    return ({
+    return {
       ...state,
-      pendingMessages: [],
-      roomMessages: {
-        ...updatedRoomMessages,
-        [roomId]: {
-          ...updatedRoomMessages[roomId],
-          messages: newMessages,
-        }
-      },
-      sendMessageError: null,
-    })
-  })
+      roomMessages: updatedRoomMessages,
+      privateMessages: updatedPrivateMessages,
+      pendingMessages: updatedPendingMessages
+    };
+  }),
 );
 
 

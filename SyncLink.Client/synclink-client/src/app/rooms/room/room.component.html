@@ -1,7 +1,7 @@
 <div class="container">
   <mat-card class="mt-5">
     <mat-card-header>
-      <mat-card-title *ngIf="room">Room {{ room.name ?? room.id }}</mat-card-title>
+      <mat-card-title *ngIf="(room$ | async).id">Room {{(room$ | async).name ?? (room$ | async).id }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="chat-box">
@@ -30,7 +30,7 @@
         </ng-template>
       </div>
       <mat-form-field class="message-input-full-width">
-        <input matInput [(ngModel)]="newMessage" placeholder="Type a message">
+        <input matInput [(ngModel)]="messageText" placeholder="Type a message">
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
     </mat-card-content>

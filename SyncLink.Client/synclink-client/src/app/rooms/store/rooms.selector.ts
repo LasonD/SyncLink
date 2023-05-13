@@ -12,9 +12,12 @@ export const selectRooms = createSelector(
 
 export const selectRoomMessages = createSelector(
   selectRoomsFeature,
-  (state: RoomsState): { [roomId: number]: { messages: Message[], lastPage: Page<Message> } } => {
-    return state.roomMessages;
-  }
+  (state: RoomsState): { [roomId: number]: { messages: Message[], lastPage: Page<Message> } } => state.roomMessages
+);
+
+export const selectPrivateMessages = createSelector(
+  selectRoomsFeature,
+  (state: RoomsState): { [roomId: number]: { messages: Message[], lastPage: Page<Message> } } => state.privateMessages
 );
 
 export const selectRoomError = createSelector(
@@ -24,13 +27,7 @@ export const selectRoomError = createSelector(
 
 export const selectRoomMessagesError = createSelector(
   selectRoomsFeature,
-  (state: RoomsState) => state.roomMessagesError
+  (state: RoomsState) => state.messagesError
 );
-
-export const selectLastSentMessage = createSelector(
-  selectRoomsFeature,
-  (state: RoomsState) => state.roomMessagesError
-);
-
 
 

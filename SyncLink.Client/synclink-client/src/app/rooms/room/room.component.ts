@@ -1,14 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RoomsState } from "../store/rooms.reducer";
 import { Store } from "@ngrx/store";
-import { combineLatest, distinctUntilChanged, Subject, takeUntil } from "rxjs";
-import { selectRoomError, selectRoomMessages, selectRoomMessagesError, selectRooms } from "../store/rooms.selector";
+import {
+  combineLatest,
+  defaultIfEmpty,
+  distinctUntilChanged,
+  ReplaySubject,
+  Subject,
+  takeUntil,
+  withLatestFrom
+} from "rxjs";
+import {
+  selectPrivateMessages,
+  selectRoomError,
+  selectRoomMessages,
+  selectRoomMessagesError,
+  selectRooms
+} from "../store/rooms.selector";
 import { ActivatedRoute } from "@angular/router";
 import { Message } from "../../models/message.model";
-import { getPrivateRoomByUser, getRoom, getRoomMessages, sendMessage } from "../store/rooms.actions";
+import { getRoom, getMessages, sendMessage } from "../store/rooms.actions";
 import { AuthState } from "../../auth/store/auth.reducer";
 import { Room } from "../../models/room.model";
-import { filter } from "rxjs/operators";
 import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
@@ -20,23 +33,18 @@ export class RoomComponent implements OnInit, OnDestroy {
   destroyed$: Subject<boolean> = new Subject<boolean>();
   messagePageSize = 25;
 
-  currentUserId$: Subject<number> = new Subject<number>();
-  otherUserId$: Subject<number> = new Subject<number>();
-  roomId$: Subject<number> = new Subject<number>();
-  groupId$: Subject<number> = new Subject<number>();
+  groupId$: Subject<number> = new ReplaySubject<number>(1);
+  currentUserId$: Subject<number> = new ReplaySubject<number>(1);
+  otherUserId$: Subject<number> = new ReplaySubject<number>(1);
+  roomId$: Subject<number> = new ReplaySubject<number>(1);
+  isPrivate$ = new Subject<boolean>();
+  room$: Subject<Room> = new ReplaySubject<Room>(1);
+  sendMessage$ = new ReplaySubject<string>(1);
 
-  room$: Subject<Room> = new Subject<Room>();
-
-  roomId: number;
-  groupId: number;
-  otherUserId: number;
-  room: Room;
   messages: Message[];
   roomMessagesError: any;
-
   roomErrorMessage: string = null;
-
-  newMessage: string;
+  messageText: string;
 
   constructor(private store: Store<RoomsState>,
               private authStore: Store<AuthState>,
@@ -44,9 +52,33 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.select(selectRooms)
-      .subscribe(rooms => console.log('Rooms: ', rooms));
+    this.sendMessage$
+      .pipe(
+        takeUntil(this.destroyed$),
+        withLatestFrom(
+          this.groupId$.pipe(defaultIfEmpty(undefined)),
+          this.roomId$.pipe(defaultIfEmpty(undefined)),
+          this.otherUserId$.pipe(defaultIfEmpty(undefined)),
+          this.isPrivate$.pipe(defaultIfEmpty(undefined)),
+        )
+      ).subscribe(([text, [groupId, roomId, otherUserId, isPrivate]]) => {
+      this.store.dispatch(sendMessage({
+        roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, payload: {
+          roomId: roomId,
+          text: text,
+          groupId: groupId,
+          recipientId: otherUserId
+        }
+      }))
+    });
 
+    this.subscribeToErrors();
+    this.resolveMessages();
+    this.resolveRoom();
+    this.resolveRouteAndUserIdentifiers();
+  }
+
+  private subscribeToErrors() {
     this.store.select(selectRoomError).pipe(takeUntil(this.destroyed$), distinctUntilChanged())
       .subscribe(error => {
         if (!error) {
@@ -69,97 +101,79 @@ export class RoomComponent implements OnInit, OnDestroy {
       .subscribe((error) => {
         this.roomMessagesError = error;
       });
-
-    this.groupId$.pipe(takeUntil(this.destroyed$))
-      .subscribe((groupId) => this.groupId = groupId);
-
-    this.otherUserId$.pipe(takeUntil(this.destroyed$))
-      .subscribe((otherUserId) => this.otherUserId = otherUserId);
-
-    this.resolveMessages();
-    this.resolveRoom();
-    this.resolveRouteAndUserIdentifiers();
   }
 
   private resolveMessages() {
-    this.store.select(selectRoomMessages).pipe(takeUntil(this.destroyed$), distinctUntilChanged())
-      .subscribe((messagesByRoom) => {
-        if (!this.roomId) this.messages = [];
-        this.messages = messagesByRoom[this.roomId]?.messages;
-      })
+    combineLatest([
+      this.roomId$,
+      this.otherUserId$,
+    ]).pipe(
+      takeUntil(this.destroyed$),
+      withLatestFrom(
+        this.isPrivate$,
+        this.groupId$,
+        this.store.select(selectRoomMessages),
+        this.store.select(selectPrivateMessages),
+      )
+    ).subscribe(([[roomId, otherUserId], isPrivate, groupId, roomMessages, privateMessages]) => {
+      const storeMessages = isPrivate ? privateMessages : roomMessages;
+      const messagesById = storeMessages[isPrivate ? otherUserId : roomId];
+
+      if (!messagesById?.messages) {
+        this.store.dispatch(getMessages({
+          isPrivate: isPrivate,
+          groupId: groupId,
+          otherUserId: otherUserId,
+          roomId: roomId,
+          pageNumber: 1,
+          pageSize: this.messagePageSize
+        }));
+      } else {
+        this.messages = messagesById.messages;
+      }
+    });
 
     combineLatest([
-      this.groupId$,
-      this.room$,
       this.store.select(selectRoomMessages),
-    ]).pipe(takeUntil(this.destroyed$))
-      .subscribe(res => {
-        const groupId = res[0];
-        const room = res[1];
-        const messagesByRoom = res[2];
-        this.messages = messagesByRoom ? messagesByRoom[room.id]?.messages : null;
-
-        if (!this.messages) {
-          this.store.dispatch(getRoomMessages({
-            groupId: groupId,
-            roomId: room.id,
-            pageNumber: 1,
-            pageSize: this.messagePageSize
-          }));
-        }
-      });
+      this.store.select(selectPrivateMessages),
+    ]).pipe(
+      takeUntil(this.destroyed$),
+      withLatestFrom(
+        this.isPrivate$,
+        this.roomId$.pipe(defaultIfEmpty(undefined)),
+        this.otherUserId$.pipe(defaultIfEmpty(undefined))),
+    ).subscribe(([[roomMessages, privateMessages], isPrivate, roomId, otherUserId]) => {
+      const storeMessages = isPrivate ? privateMessages : roomMessages;
+      const messagesById = storeMessages[isPrivate ? otherUserId : roomId];
+      if (messagesById?.messages) {
+        this.messages = messagesById.messages;
+      }
+    });
   }
 
   private resolveRoom() {
-    this.room$.pipe(takeUntil(this.destroyed$))
-      .subscribe(r => this.room = r);
+    this.roomId$.pipe(
+      takeUntil(this.destroyed$),
+      withLatestFrom(this.groupId$, this.store.select(selectRooms)),
+    ).subscribe(([roomId, groupId, rooms]) => {
+      const room = rooms.find(r => r?.id === roomId);
+      if (!room) {
+        this.store.dispatch(getRoom({roomId: roomId, groupId: groupId}));
+      } else {
+        this.room$.next(room);
+      }
+    });
 
-    combineLatest([
-      this.groupId$,
-      this.roomId$.pipe(filter(id => !!id)),
-      this.store.select(selectRooms)
-    ]).pipe(takeUntil(this.destroyed$))
-      .subscribe(result => {
-        const groupId = result[0];
-        const roomId = result[1];
-        const rooms = result[2];
-
-        const room = rooms.find(r => r?.room?.id === roomId);
-
-        if (!room) {
-          this.store.dispatch(getRoom({roomId: roomId, groupId: groupId}));
-        } else {
-          this.room$.next(room.room);
-        }
-      });
-
-    combineLatest([
-      this.groupId$,
-      this.otherUserId$.pipe(filter(id => !!id)),
-      this.store.select(selectRooms)
-    ]).pipe(takeUntil(this.destroyed$))
-      .subscribe(result => {
-        const groupId = result[0];
-        const otherUserId = result[1];
-        const rooms = result[2];
-
-        const room = rooms.find(r => r.otherUserId === otherUserId);
-
-        if (!room) {
-          this.store.dispatch(getPrivateRoomByUser({userId: otherUserId, groupId: groupId}));
-        } else {
-          this.room$.next(room.room);
-        }
-      });
-
-    this.store.select(selectRooms).pipe(takeUntil(this.destroyed$), distinctUntilChanged())
-      .subscribe((rooms) => {
-        if (!this.roomId) return;
-        const room = rooms.find(r => r?.room?.id === this.roomId)?.room;
-        if (room) {
-          this.room$.next(room);
-        }
-      });
+    this.store.select(selectRooms).pipe(
+      takeUntil(this.destroyed$),
+      withLatestFrom(this.roomId$),
+    ).subscribe(([rooms, roomId]) => {
+      if (!roomId) return;
+      const room = rooms.find(r => r?.id === roomId);
+      if (room) {
+        this.room$.next(room);
+      }
+    });
   }
 
   private resolveRouteAndUserIdentifiers() {
@@ -175,7 +189,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
         if (roomId) this.roomId$.next(roomId);
         if (otherUserId) this.otherUserId$.next(otherUserId);
-        this.roomId = roomId;
+        this.isPrivate$.next(!roomId);
       });
 
     this.activatedRoute.parent.paramMap.pipe(takeUntil(this.destroyed$))
@@ -191,10 +205,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    if (!this.newMessage) {
+    if (!this.messageText) {
       return;
     }
 
-    this.store.dispatch(sendMessage({ groupId: this.groupId, roomId: this.roomId, recipientId: this.otherUserId, text: this.newMessage }))
+    this.sendMessage$.next(this.messageText);
   }
 }

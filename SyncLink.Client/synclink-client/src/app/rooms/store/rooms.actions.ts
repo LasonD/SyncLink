@@ -11,21 +11,21 @@ export const getRoom = createAction(
 
 export const getRoomSuccess = createAction(
   '[Rooms] Get Room Success',
-  props<{ otherUserId?: number, room: Room }>()
+  props<{ room: Room }>()
 );
 
-export const getRoomMessages = createAction(
-  '[Rooms] Get Room Messages',
-  props<{ groupId: number, roomId: number, pageNumber: number, pageSize: number }>()
+export const getMessages = createAction(
+  '[Rooms] Get Messages',
+  props<{ isPrivate: boolean, groupId: number, roomId: number, otherUserId: number, pageNumber: number, pageSize: number }>()
 );
 
-export const getRoomMessagesSuccess = createAction(
-  '[Rooms] Get Room Messages Success',
-  props<{ roomId: number, messages: Page<Message> }>()
+export const getMessagesSuccess = createAction(
+  '[Rooms] Get Messages Success',
+  props<{ isPrivate: boolean, roomId: number, otherUserId: number, messages: Page<Message> }>()
 );
 
-export const getRoomMessagesFailure = createAction(
-  '[Rooms] Get Room Messages Failure',
+export const getMessagesFailure = createAction(
+  '[Rooms] Get Messages Failure',
   props<{ error: any }>()
 );
 
@@ -71,12 +71,12 @@ export const createRoomFailure = createAction(
 
 export const sendMessage = createAction(
   '[Rooms] Send Message',
-  props<SendMessageData>()
+  props<{ isPrivate: boolean, roomId: number, otherUserId: number, payload: SendMessageData }>()
 );
 
 export const sendMessageSuccess = createAction(
   '[Rooms] Send Message Success',
-  props<{ message: Message }>()
+  props<{ isPrivate: boolean, roomId: number, otherUserId: number, message: Message }>()
 );
 
 export const sendMessageFailure = createAction(
