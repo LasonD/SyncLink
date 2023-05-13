@@ -6,6 +6,10 @@ import { ActivatedRouteSnapshot, RouterModule, RouterStateSnapshot, Routes } fro
 import { AuthGuard } from "../auth/services/auth.guard";
 import { CreateGroupComponent } from "../groups/create-group/create-group.component";
 import { MatCardModule } from "@angular/material/card";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { FormsModule } from "@angular/forms";
 
 const routes: Routes = [
   {
@@ -22,6 +26,11 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    FormsModule,
   ]
 })
-export class RoomsModule { }
+export class RoomsModule {
+}

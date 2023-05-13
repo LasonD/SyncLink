@@ -9,6 +9,7 @@ import { getPrivateRoomByUser, getRoom, getRoomMessages } from "../store/rooms.a
 import { AuthState } from "../../auth/store/auth.reducer";
 import { Room } from "../../models/room.model";
 import { filter } from "rxjs/operators";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: 'app-room',
@@ -27,10 +28,13 @@ export class RoomComponent implements OnInit, OnDestroy {
   room$: Subject<Room> = new Subject<Room>();
 
   roomId: number;
-
   room: Room;
   messages: Message[];
   roomMessagesError: any;
+
+  roomErrorMessage: string = null;
+
+  newMessage: string;
 
   constructor(private store: Store<RoomsState>,
               private authStore: Store<AuthState>,
@@ -43,7 +47,20 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.store.select(selectRoomError).pipe(takeUntil(this.destroyed$), distinctUntilChanged())
       .subscribe(error => {
-        alert(`You don't have a private room with user`);
+        if (!error) {
+          this.roomErrorMessage = null;
+          return;
+        }
+
+        if (error instanceof HttpErrorResponse) {
+          switch (error.status) {
+            case 404:
+              this.roomErrorMessage = 'You do not have existing room. Send message to create it.';
+              break;
+            default:
+              this.roomErrorMessage = 'Something went wrong when retrieving room.';
+          }
+        }
       });
 
     this.store.select(selectRoomMessagesError).pipe(takeUntil(this.destroyed$))
@@ -163,5 +180,9 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed$.next(true);
+  }
+
+  sendMessage() {
+
   }
 }

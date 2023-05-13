@@ -17,6 +17,8 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
   @Input() pageNumber: number = 1;
   @Input() pageSize: number = 25;
 
+  selectedMemberId: number;
+
   destroyed$: Subject<boolean> = new Subject<boolean>();
   members: GroupMember[] = [];
 
@@ -43,6 +45,7 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
   }
 
   openPrivateRoom(userId: number) {
+    this.selectedMemberId = userId;
     this.router.navigate(['members', userId, 'private'], { relativeTo: this.activatedRoute });
   }
 }

@@ -5,7 +5,9 @@
     </mat-panel-title>
   </mat-expansion-panel-header>
 
-  <mat-list-item *ngFor="let member of members" (click)="openPrivateRoom(member.id)">
+  <mat-list-item *ngFor="let member of members"
+                 (click)="openPrivateRoom(member.id)"
+                 [ngClass]="{'selected': selectedMemberId === member.id}">
     <div class="grid-container">
       <span class="mat-line">{{member.username}}</span>
       <a mat-icon-button aria-label="Start chat with member">

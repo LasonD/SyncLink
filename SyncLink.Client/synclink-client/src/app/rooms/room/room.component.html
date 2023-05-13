@@ -1,25 +1,38 @@
 <div class="container">
   <mat-card class="mt-5">
     <mat-card-header>
-      <mat-card-title>Room {{ roomId }}</mat-card-title>
+      <mat-card-title *ngIf="room">Room {{ room.name ?? room.id }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="chat-box">
-        <div *ngFor="let message of messages" class="mb-3">
-          <div class="d-flex justify-content-start" *ngIf="message.senderId !== (currentUserId$ | async)">
-            <div class="bg-light rounded py-2 px-3 mb-2">
-              <p class="text-small mb-0 text-muted">{{ message.text }}</p>
-            </div>
-            <p class="small text-muted">{{ message.creationDate | date:'shortTime' }}</p>
-          </div>
-          <div class="d-flex justify-content-end" *ngIf="message.senderId === (currentUserId$ | async)">
-            <div class="bg-primary rounded py-2 px-3 mb-2">
-              <p class="text-small mb-0 text-white">{{ message.text }}</p>
-            </div>
-            <p class="small text-muted">{{ message.creationDate | date:'shortTime' }}</p>
-          </div>
+        <div *ngIf="roomErrorMessage; else chatContent" class="error-message">
+          <mat-card>
+            <mat-card-content>
+              {{ roomErrorMessage }}
+            </mat-card-content>
+          </mat-card>
         </div>
+        <ng-template #chatContent>
+          <div *ngFor="let message of messages" class="mb-3" #chatContent>
+            <div class="d-flex justify-content-start" *ngIf="message.senderId !== (currentUserId$ | async)">
+              <div class="bg-light rounded py-2 px-3 mb-2">
+                <p class="text-small mb-0 text-muted">{{ message.text }}</p>
+              </div>
+              <p class="small text-muted">{{ message.creationDate | date:'shortTime' }}</p>
+            </div>
+            <div class="d-flex justify-content-end" *ngIf="message.senderId === (currentUserId$ | async)">
+              <div class="bg-primary rounded py-2 px-3 mb-2">
+                <p class="text-small mb-0 text-white">{{ message.text }}</p>
+              </div>
+              <p class="small text-muted">{{ message.creationDate | date:'shortTime' }}</p>
+            </div>
+          </div>
+        </ng-template>
       </div>
+      <mat-form-field class="message-input-full-width">
+        <input matInput [(ngModel)]="newMessage" placeholder="Type a message">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
     </mat-card-content>
   </mat-card>
 </div>
