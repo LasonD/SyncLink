@@ -23,6 +23,7 @@ import { AuthState } from "../../auth/store/auth.reducer";
 import { Room } from "../../models/room.model";
 import { HttpErrorResponse } from "@angular/common/http";
 import { map } from "rxjs/operators";
+import { AppState } from "../../store/app.reducer";
 
 @Component({
   selector: 'app-room',
@@ -47,7 +48,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   messageText: string;
 
   constructor(private store: Store<RoomsState>,
-              private authStore: Store<AuthState>,
+              private appStore: Store<AppState>,
               private activatedRoute: ActivatedRoute) {
   }
 
@@ -64,6 +65,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe(([text, senderId, groupId, roomId, otherUserId, isPrivate]) => {
+        console.log('Sending message')
         this.store.dispatch(sendMessage({
           senderId: senderId, roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, payload: {
             roomId: roomId,
@@ -180,7 +182,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private resolveRouteAndUserIdentifiers() {
-    this.authStore.pipe(takeUntil(this.destroyed$))
+    this.appStore.select('auth').pipe(takeUntil(this.destroyed$))
       .subscribe((state) => {
         this.currentUserId$.next(state.user?.userId);
       });
