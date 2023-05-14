@@ -27,4 +27,9 @@ public class PaginatedResult<T> : IPaginatedResult<T>
     public int PageCount { get; protected set; }
     public bool HasPreviousPage => Page > 1;
     public bool HasNextPage => Page < LastPage;
+
+    public static PaginatedResult<T> Empty()
+    {
+        return new PaginatedResult<T>(Array.Empty<T>(), 0, 1, 0);
+    }
 }

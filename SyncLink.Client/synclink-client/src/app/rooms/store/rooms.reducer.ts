@@ -55,7 +55,6 @@ export const roomsReducer = createReducer(
   })),
   on(getRoomFailure, (state, {error}): RoomsState => ({...state, roomError: error})),
   on(getMessages, (state): RoomsState => {
-    console.log('Get messages: ');
     return ({
       ...state,
       messagesLoading: true,
@@ -67,14 +66,14 @@ export const roomsReducer = createReducer(
     messagesError: error,
   })),
   on(getMessagesSuccess, (state, { roomId, messages, otherUserId, isPrivate }): RoomsState => {
-    console.log('Get messages success: ', roomId, messages, otherUserId, isPrivate);
     let updatedRoomMessages = { ...state.roomMessages };
     let updatedPrivateMessages = { ...state.privateMessages };
 
-    const newMessages = messages.entities;
+    const newMessages = [...messages.entities];
 
-    const sortedMessages = newMessages.sort((a: Message, b: Message) =>
-      b.creationDate.getTime() - a.creationDate.getTime()
+    const sortedMessages = newMessages.sort((a: Message, b: Message) => {
+        return b.creationDate.getTime() - a.creationDate.getTime();
+      }
     );
 
     if (isPrivate) {

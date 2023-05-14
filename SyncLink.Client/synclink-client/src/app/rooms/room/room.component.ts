@@ -118,6 +118,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.store.select(selectPrivateMessages),
       )
     ).subscribe(([roomOrOtherUserId, isPrivate, groupId, roomMessages, privateMessages]) => {
+      console.log('Room messages: ', roomMessages, 'Private messages: ', privateMessages, 'IsPrivate: ', isPrivate);
       const storeMessages = isPrivate ? privateMessages : roomMessages;
       const messagesById = storeMessages[roomOrOtherUserId];
 

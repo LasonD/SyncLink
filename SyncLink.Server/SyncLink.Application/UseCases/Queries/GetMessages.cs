@@ -62,6 +62,11 @@ public static class GetMessages
         {
             var privateRoomResult = await _roomsRepository.GetPrivateRoomAsync(request.GroupId, request.UserId, request.OtherUserId!.Value, cancellationToken);
 
+            if (privateRoomResult.Status == Contracts.Data.Result.RepositoryActionStatus.NotFound)
+            {
+                return PaginatedResult<MessageDto>.Empty();
+            }
+
             var privateRoom = privateRoomResult.GetResult();
 
             return await RetrieveRoomMessagesAsync(request.GroupId, privateRoom.Id, request.PageNumber, request.PageSize, cancellationToken).ConfigureAwait(false);

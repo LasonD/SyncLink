@@ -57,6 +57,14 @@ export class RoomEffects {
             `${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}/messages?pageNumber=${pageNumber}&pageSize=${pageSize}`
 
           return this.http.get<Page<Message>>(url).pipe(
+            map((messages: Page<Message>) => ({
+              ...messages,
+              entities: messages?.entities.map(m => ({
+                ...m,
+                creationDate: new Date(m.creationDate),
+                editedDateTime: m.editedDateTime ? new Date(m.editedDateTime) : null,
+              }))
+            })),
             map((messages: Page<Message>) => {
               return getMessagesSuccess({
                 roomId: roomId,

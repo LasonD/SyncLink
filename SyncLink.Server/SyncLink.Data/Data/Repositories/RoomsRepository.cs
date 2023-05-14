@@ -27,7 +27,7 @@ public class RoomsRepository : GenericEntityRepository<Room>, IRoomsRepository
 
     public async Task<RepositoryEntityResult<Room>> GetPrivateRoomAsync(int groupId, int firstUserId, int secondUserId, CancellationToken cancellationToken)
     {
-        var room = await DbContext.Rooms.SingleOrDefaultAsync(r =>
+        var room = await DbContext.Rooms.FirstOrDefaultAsync(r =>
                 r.IsPrivate &&
                 r.GroupId == groupId &&
                 r.RoomMembers.Any(um => um.UserId == firstUserId) &&
