@@ -1,7 +1,8 @@
 <div class="container">
   <mat-card class="mt-5">
     <mat-card-header>
-      <mat-card-title *ngIf="(room$ | async).id">Room {{(room$ | async).name ?? (room$ | async).id }}</mat-card-title>
+      <mat-card-title *ngIf="isPrivate$ | async">Private conversation with {{ otherUserId$ | async }}</mat-card-title>
+      <mat-card-title *ngIf="(room$ | async)?.id">Room {{(room$ | async).name ?? (room$ | async).id }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="chat-box">

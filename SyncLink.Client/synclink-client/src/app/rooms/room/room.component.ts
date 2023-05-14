@@ -3,9 +3,8 @@ import { RoomsState } from "../store/rooms.reducer";
 import { Store } from "@ngrx/store";
 import {
   combineLatest,
-  defaultIfEmpty,
   distinctUntilChanged,
-  ReplaySubject,
+  ReplaySubject, startWith,
   Subject,
   takeUntil,
   withLatestFrom
@@ -56,22 +55,23 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         withLatestFrom(
-          this.currentUserId$.pipe(defaultIfEmpty(undefined)),
-          this.groupId$.pipe(defaultIfEmpty(undefined)),
-          this.roomId$.pipe(defaultIfEmpty(undefined)),
-          this.otherUserId$.pipe(defaultIfEmpty(undefined)),
-          this.isPrivate$.pipe(defaultIfEmpty(undefined)),
+          this.currentUserId$.pipe(startWith(undefined)),
+          this.groupId$.pipe(startWith(undefined)),
+          this.roomId$.pipe(startWith(undefined)),
+          this.otherUserId$.pipe(startWith(undefined)),
+          this.isPrivate$.pipe(startWith(undefined)),
         )
-      ).subscribe(([text, senderId, groupId, roomId, otherUserId, isPrivate]) => {
-      this.store.dispatch(sendMessage({
-        senderId: senderId, roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, payload: {
-          roomId: roomId,
-          text: text,
-          groupId: groupId,
-          recipientId: otherUserId
-        }
-      }))
-    });
+      )
+      .subscribe(([text, senderId, groupId, roomId, otherUserId, isPrivate]) => {
+        this.store.dispatch(sendMessage({
+          senderId: senderId, roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, payload: {
+            roomId: roomId,
+            text: text,
+            groupId: groupId,
+            recipientId: otherUserId
+          }
+        }))
+      });
 
     this.subscribeToErrors();
     this.resolveMessages();
@@ -141,8 +141,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$),
       withLatestFrom(
         this.isPrivate$,
-        this.roomId$.pipe(defaultIfEmpty(undefined)),
-        this.otherUserId$.pipe(defaultIfEmpty(undefined))),
+        this.roomId$.pipe(startWith(undefined)),
+        this.otherUserId$.pipe(startWith(undefined))),
     ).subscribe(([[roomMessages, privateMessages], isPrivate, roomId, otherUserId]) => {
       const storeMessages = isPrivate ? privateMessages : roomMessages;
       const messagesById = storeMessages[isPrivate ? otherUserId : roomId];
