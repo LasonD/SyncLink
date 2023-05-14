@@ -48,13 +48,22 @@ export class RoomEffects {
     )
   );
 
-  getRoomMessages$ = createEffect(() =>
+  getMessages$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getMessages),
-      mergeMap(({ groupId, roomId, pageNumber, pageSize, otherUserId, isPrivate }) => {
-          return this.http.get<Page<Message>>(`${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}/messages?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
+      mergeMap(({groupId, roomId, pageNumber, pageSize, otherUserId, isPrivate}) => {
+          const url = isPrivate ?
+            `${environment.apiBaseUrl}/api/groups/${groupId}/members/${otherUserId}/messages?pageNumber=${pageNumber}&pageSize=${pageSize}` :
+            `${environment.apiBaseUrl}/api/groups/${groupId}/rooms/${roomId}/messages?pageNumber=${pageNumber}&pageSize=${pageSize}`
+
+          return this.http.get<Page<Message>>(url).pipe(
             map((messages: Page<Message>) => {
-              return getMessagesSuccess({ roomId: roomId, messages: messages, otherUserId: otherUserId, isPrivate: isPrivate });
+              return getMessagesSuccess({
+                roomId: roomId,
+                messages: messages,
+                otherUserId: otherUserId,
+                isPrivate: isPrivate
+              });
             }),
             catchError((error) => of(getMessagesFailure({error})))
           );
