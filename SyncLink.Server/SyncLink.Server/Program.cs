@@ -1,5 +1,6 @@
 using SyncLink.Server.Common;
 using SyncLink.Server.Helpers;
+using SyncLink.Server.Hubs;
 using SyncLink.Server.Middleware;
 using SyncLink.Server.Seed;
 
@@ -32,5 +33,7 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 
 app.MapControllers();
+
+app.MapHub<SyncLinkHub>("hubs/general");
 
 app.Run();

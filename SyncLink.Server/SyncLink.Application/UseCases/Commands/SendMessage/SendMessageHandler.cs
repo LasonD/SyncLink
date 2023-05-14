@@ -2,6 +2,7 @@
 using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
+using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
@@ -16,13 +17,15 @@ public partial class SendMessage
         private readonly IRoomsRepository _roomsRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMessagesRepository _messageRepository;
+        private readonly INotificationsService _notificationsService;
 
-        public Handler(IMapper mapper, IRoomsRepository roomsRepository, IUserRepository userRepository, IMessagesRepository messageRepository)
+        public Handler(IMapper mapper, IRoomsRepository roomsRepository, IUserRepository userRepository, IMessagesRepository messageRepository, INotificationsService notificationsService)
         {
             _mapper = mapper;
             _roomsRepository = roomsRepository;
             _userRepository = userRepository;
             _messageRepository = messageRepository;
+            _notificationsService = notificationsService;
         }
 
         public async Task<MessageDto> Handle(Command request, CancellationToken cancellationToken)
@@ -39,7 +42,11 @@ public partial class SendMessage
 
             await _roomsRepository.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<MessageDto>(message);
+            var dto = _mapper.Map<MessageDto>(message);
+
+            await _notificationsService.NotifyMessageReceivedAsync(request.GroupId, dto, cancellationToken);
+
+            return dto;
         }
 
         private async Task<Room?> ResolveRoomAsync(Command request, User sender, CancellationToken cancellationToken)
