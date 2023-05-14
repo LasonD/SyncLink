@@ -54,16 +54,20 @@ export const roomsReducer = createReducer(
     roomLoading: false
   })),
   on(getRoomFailure, (state, {error}): RoomsState => ({...state, roomError: error})),
-  on(getMessages, (state): RoomsState => ({
-    ...state,
-    messagesLoading: true,
-  })),
+  on(getMessages, (state): RoomsState => {
+    console.log('Get messages: ');
+    return ({
+      ...state,
+      messagesLoading: true,
+    });
+  }),
   on(getMessagesFailure, (state, {error}): RoomsState => ({
     ...state,
     messagesLoading: false,
     messagesError: error,
   })),
   on(getMessagesSuccess, (state, { roomId, messages, otherUserId, isPrivate }): RoomsState => {
+    console.log('Get messages success: ', roomId, messages, otherUserId, isPrivate);
     let updatedRoomMessages = { ...state.roomMessages };
     let updatedPrivateMessages = { ...state.privateMessages };
 
@@ -159,14 +163,18 @@ export const roomsReducer = createReducer(
       if (!updatedPrivateMessages[otherUserId]) {
         updatedPrivateMessages[otherUserId] = { messages: [], lastPage: null };
       }
-      updatedPrivateMessages[otherUserId].messages = updatedPrivateMessages[otherUserId].messages.map(m => m.id === message.id ? message : m);
-      updatedPrivateMessages[otherUserId].messages.sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime());
+      updatedPrivateMessages[otherUserId] = {
+        ...updatedPrivateMessages[otherUserId],
+        messages: updatedPrivateMessages[otherUserId].messages.map(m => m.id === message.id ? message : m).sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime())
+      };
     } else {
       if (!updatedRoomMessages[roomId]) {
         updatedRoomMessages[roomId] = { messages: [], lastPage: null };
       }
-      updatedRoomMessages[roomId].messages = updatedRoomMessages[roomId].messages.map(m => m.id === message.id ? message : m);
-      updatedRoomMessages[roomId].messages.sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime());
+      updatedRoomMessages[roomId] = {
+        ...updatedRoomMessages[roomId],
+        messages: updatedRoomMessages[roomId].messages.map(m => m.id === message.id ? message : m).sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime())
+      };
     }
 
     return {

@@ -15,7 +15,8 @@ public static class GetMessages
     {
         public int GroupId { get; init; }
         public int UserId { get; init; }
-        public int RoomId { get; init; }
+        public int? RoomId { get; init; }
+        public int? OtherUserId { get; init; }
         public int PageSize { get; init; }
         public int PageNumber { get; init; }
     }
@@ -25,12 +26,14 @@ public static class GetMessages
         private readonly IMapper _mapper;
         private readonly IUserRepository _usersRepository;
         private readonly IMessagesRepository _messagesRepository;
+        private readonly IRoomsRepository _roomsRepository;
 
-        public Handler(IMapper mapper, IUserRepository usersRepository, IMessagesRepository messagesRepository)
+        public Handler(IMapper mapper, IUserRepository usersRepository, IMessagesRepository messagesRepository, IRoomsRepository roomsRepository)
         {
             _mapper = mapper;
             _usersRepository = usersRepository;
             _messagesRepository = messagesRepository;
+            _roomsRepository = roomsRepository;
         }
 
         public async Task<IPaginatedResult<MessageDto>> Handle(Query request, CancellationToken cancellationToken)
@@ -42,10 +45,34 @@ public static class GetMessages
                 throw new BusinessException($"User {request.UserId} is not a member of group {request.GroupId}.");
             }
 
+            if (request.RoomId != null)
+            {
+                return await RetrieveRoomMessagesAsync(request.GroupId, request.RoomId.Value, request.PageNumber, request.PageSize, cancellationToken);
+            }
+
+            if (request.OtherUserId != null)
+            {
+                return await RetrievePrivateMessagesAsync(request, cancellationToken);
+            }
+
+            throw new BusinessException("Messages source should be provided.");
+        }
+
+        private async Task<IPaginatedResult<MessageDto>> RetrievePrivateMessagesAsync(Query request, CancellationToken cancellationToken)
+        {
+            var privateRoomResult = await _roomsRepository.GetPrivateRoomAsync(request.GroupId, request.UserId, request.OtherUserId!.Value, cancellationToken);
+
+            var privateRoom = privateRoomResult.GetResult();
+
+            return await RetrieveRoomMessagesAsync(request.GroupId, privateRoom.Id, request.PageNumber, request.PageSize, cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task<IPaginatedResult<MessageDto>> RetrieveRoomMessagesAsync(int groupId, int roomId, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        {
             var messagesResult = await _messagesRepository.GetRoomMessagesAsync(
-                request.GroupId,
-                request.RoomId,
-                new OrderedPaginationQuery<Message>(request.PageNumber, request.PageSize),
+                groupId,
+                roomId,
+                new OrderedPaginationQuery<Message>(pageNumber, pageSize),
                 cancellationToken
             );
 

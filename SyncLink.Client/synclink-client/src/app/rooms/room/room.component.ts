@@ -3,7 +3,7 @@ import { RoomsState } from "../store/rooms.reducer";
 import { Store } from "@ngrx/store";
 import {
   combineLatest,
-  distinctUntilChanged,
+  distinctUntilChanged, race,
   ReplaySubject, startWith,
   Subject,
   takeUntil,
@@ -22,6 +22,7 @@ import { getRoom, getMessages, sendMessage } from "../store/rooms.actions";
 import { AuthState } from "../../auth/store/auth.reducer";
 import { Room } from "../../models/room.model";
 import { HttpErrorResponse } from "@angular/common/http";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: 'app-room',
@@ -105,7 +106,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private resolveMessages() {
-    combineLatest([
+    race([
       this.roomId$,
       this.otherUserId$,
     ]).pipe(
@@ -116,16 +117,16 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.store.select(selectRoomMessages),
         this.store.select(selectPrivateMessages),
       )
-    ).subscribe(([[roomId, otherUserId], isPrivate, groupId, roomMessages, privateMessages]) => {
+    ).subscribe(([roomOrOtherUserId, isPrivate, groupId, roomMessages, privateMessages]) => {
       const storeMessages = isPrivate ? privateMessages : roomMessages;
-      const messagesById = storeMessages[isPrivate ? otherUserId : roomId];
+      const messagesById = storeMessages[roomOrOtherUserId];
 
       if (!messagesById?.messages) {
         this.store.dispatch(getMessages({
           isPrivate: isPrivate,
           groupId: groupId,
-          otherUserId: otherUserId,
-          roomId: roomId,
+          otherUserId: isPrivate ? roomOrOtherUserId : null,
+          roomId: isPrivate ? null : roomOrOtherUserId,
           pageNumber: 1,
           pageSize: this.messagePageSize
         }));
