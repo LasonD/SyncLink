@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddConfiguredDbContext(builder.Configuration);
 builder.Services.AddConfiguredIdentity(builder.Configuration);
-builder.Services.AddApiWithSwagger();
+builder.Services.AddApiWithSwagger(builder.Configuration);
 builder.Services.AddInfrastructure();
 builder.Services.AddApplicationServices();
 

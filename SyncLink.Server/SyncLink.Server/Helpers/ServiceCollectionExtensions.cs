@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Mapping;
@@ -19,6 +20,7 @@ using SyncLink.Infrastructure.Extensions;
 using SyncLink.Server.Common;
 using SyncLink.Server.Filters;
 using SyncLink.Server.Middleware;
+using SyncLink.Server.SignalR;
 
 namespace SyncLink.Server.Helpers;
 
@@ -49,15 +51,31 @@ internal static class ServiceCollectionExtensions
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters()
+            .AddJwtBearer(options =>
             {
-                ValidateIssuer = true,
-                ValidIssuer = issuer,
-                ValidateAudience = true,
-                ValidAudience = audience,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
+                    ValidateAudience = true,
+                    ValidAudience = audience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        if (!accessToken.IsNullOrEmpty())
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         services.AddAuthorization(options =>
@@ -89,14 +107,15 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddApiWithSwagger(this IServiceCollection services)
+    public static IServiceCollection AddApiWithSwagger(this IServiceCollection services, ConfigurationManager config)
     {
         services.AddCors(options =>
         {
             options.AddPolicy(Constants.AllowAllCorsPolicy, builder => builder
-                .AllowAnyOrigin()
+                .WithOrigins(config["AllowedOrigin"]!)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
+                .AllowCredentials()
             );
         });
         services.AddEndpointsApiExplorer();
@@ -144,6 +163,8 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IEntityRepository<Group>, GroupsRepository>();
 
         services.AddTransient<IRequestHandler<GetGroupById.Query, GroupDto>, GetGroupById.Handler>();
+
+        services.AddTransient<INotificationsService, NotificationService>();
 
         return services;
     }

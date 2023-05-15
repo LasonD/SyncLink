@@ -44,7 +44,9 @@ public partial class SendMessage
 
             var dto = _mapper.Map<MessageDto>(message);
 
-            await _notificationsService.NotifyMessageReceivedAsync(request.GroupId, dto, cancellationToken);
+            var isPrivate = request.RecipientId.HasValue;
+
+            await _notificationsService.NotifyMessageReceivedAsync(request.GroupId, request.RoomId, request.RecipientId, isPrivate, dto, cancellationToken);
 
             return dto;
         }

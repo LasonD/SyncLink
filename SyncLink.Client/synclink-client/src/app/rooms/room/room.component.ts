@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RoomsState } from "../store/rooms.reducer";
 import { Store } from "@ngrx/store";
 import {
   combineLatest,
@@ -19,11 +18,10 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { Message } from "../../models/message.model";
 import { getRoom, getMessages, sendMessage } from "../store/rooms.actions";
-import { AuthState } from "../../auth/store/auth.reducer";
 import { Room } from "../../models/room.model";
 import { HttpErrorResponse } from "@angular/common/http";
-import { map } from "rxjs/operators";
 import { AppState } from "../../store/app.reducer";
+import { SignalRService } from "../../common/services/signalr.service";
 
 @Component({
   selector: 'app-room',
@@ -47,9 +45,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   roomErrorMessage: string = null;
   messageText: string;
 
-  constructor(private store: Store<RoomsState>,
-              private appStore: Store<AppState>,
-              private activatedRoute: ActivatedRoute) {
+  constructor(private store: Store<AppState>,
+              private activatedRoute: ActivatedRoute,
+              private signalrService: SignalRService) {
   }
 
   ngOnInit() {
@@ -182,7 +180,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private resolveRouteAndUserIdentifiers() {
-    this.appStore.select('auth').pipe(takeUntil(this.destroyed$))
+    this.store.select('auth').pipe(takeUntil(this.destroyed$))
       .subscribe((state) => {
         this.currentUserId$.next(state.user?.userId);
       });

@@ -14,11 +14,11 @@ internal class NotificationService : INotificationsService
         _hubContext = hubContext;
     }
 
-    public Task NotifyMessageReceivedAsync(int groupId, MessageDto message, CancellationToken cancellationToken)
+    public Task NotifyMessageReceivedAsync(int groupId, int? roomId, int? otherUserId, bool isPrivate, MessageDto message, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return _hubContext.Clients.Group(CreateGroupNameByGroupId(groupId)).MessageReceived(message);
+        return _hubContext.Clients.Group(CreateGroupNameByGroupId(groupId)).MessageReceived(roomId, otherUserId, isPrivate, message);
     }
 
     private static string CreateGroupNameByGroupId(int groupId)
