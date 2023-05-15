@@ -6,6 +6,7 @@ import { environment } from "../../../environments/environment";
 import { of } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import {
+  closeGroup,
   getGroup,
   getGroupFailure,
   getGroupMembers,
@@ -61,7 +62,7 @@ export class GroupHubEffects {
 
   closeGroup$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(openGroup),
+      ofType(closeGroup),
       mergeMap(({ groupId }) => {
           return this.signalrService.groupClosed(groupId)
             .then(() => of())

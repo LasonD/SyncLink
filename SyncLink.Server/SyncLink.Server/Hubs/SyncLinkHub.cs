@@ -27,7 +27,7 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
     {
         var isUserInGroup = await _userRepository.IsUserInGroupAsync(UserId, groupId, CancellationToken.None);
 
-        if (isUserInGroup)
+        if (!isUserInGroup)
         {
             throw new AuthException(new[] { $"User {UserId} has no access to group {groupId}" });
         }

@@ -14,6 +14,7 @@ import { Message } from "../../models/message.model";
 })
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
+  private readonly connectionPromise: Promise<void>;
 
   constructor(private store: Store<AppState>) {
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -25,19 +26,23 @@ export class SignalRService {
       .build();
 
     this.hubConnection.on('messageReceived', (roomId, otherUserId, isPrivate, message: Message) => {
+      console.log('Message received');
       this.store.dispatch(sendMessageSuccess({ roomId, otherUserId, isPrivate, message: new Message(message) }));
     });
 
-    this.hubConnection.start()
+    this.connectionPromise = this.hubConnection.start()
       .then(() => console.log('SignalR connection started.'))
       .catch(err => console.log('Error while starting SignalR connection: ', err));
   }
 
-  public groupOpened(groupId: number) {
+  public async groupOpened(groupId: number) {
+    await this.connectionPromise;
     return this.hubConnection.invoke('groupOpened', groupId);
   }
 
-  public groupClosed(groupId: number) {
+  public async groupClosed(groupId: number) {
+    await this.connectionPromise;
     return this.hubConnection.invoke('groupClosed', groupId);
   }
 }
+
