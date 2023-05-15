@@ -22,3 +22,8 @@ export const selectGroupHubMembers = createSelector(
   selectGroupHubFeature,
   (state: GroupHubState) => state.groupMembers
 );
+
+export const selectGroupHubRooms = createSelector(
+  selectGroupHubFeature,
+  (state: GroupHubState) => state.groupRooms
+);
