@@ -4,10 +4,11 @@ import {
   getGroup,
   getGroupFailure,
   getGroupMembersFailure,
-  getGroupMembersSuccess,
+  getGroupMembersSuccess, getGroupRoomsFailure, getGroupRoomsSuccess,
   getGroupSuccess
 } from "./group-hub.actions";
 import { Page } from "../../../models/pagination.model";
+import { Room } from "../../../models/room.model";
 
 export interface GroupHubState {
   group: Group;
@@ -15,8 +16,13 @@ export interface GroupHubState {
   groupError: any;
 
   groupMembers: Page<GroupMember>[];
+  groupRooms: Page<Room>[];
+
   groupMembersLoading: boolean,
   groupMembersError: any,
+
+  groupRoomsLoading: boolean,
+  groupRoomsError: any,
 }
 
 export const initialState: GroupHubState = {
@@ -25,8 +31,13 @@ export const initialState: GroupHubState = {
   groupError: null,
 
   groupMembers: [],
+  groupRooms: [],
+
   groupMembersLoading: false,
   groupMembersError: null,
+
+  groupRoomsLoading: false,
+  groupRoomsError: null,
 };
 
 export const groupHubReducer = createReducer(
@@ -40,5 +51,12 @@ export const groupHubReducer = createReducer(
   }),
   on(getGroupMembersFailure, (state, { error }) : GroupHubState => {
     return ({...state, groupMembersError: error, groupMembersLoading: false});
+  }),
+
+  on(getGroupRoomsSuccess, (state, { roomsPage }) : GroupHubState => {
+    return ({...state, groupRoomsError: null, groupRoomsLoading: false, groupRooms: [roomsPage, ...state.groupRooms]});
+  }),
+  on(getGroupRoomsFailure, (state, { error }) : GroupHubState => {
+    return ({...state, groupRoomsError: error, groupRoomsLoading: false});
   }),
 );

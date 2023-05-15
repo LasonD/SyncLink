@@ -19,6 +19,7 @@ import { GroupFeaturesListComponent } from './group-hub/group-features-list/grou
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { RoomComponent } from "../rooms/room/room.component";
 import { RoomsModule } from "../rooms/rooms.module";
+import { GroupRoomsListComponent } from "./group-hub/group-rooms-list/group-rooms-list.component";
 
 const routes: Routes = [
   {
@@ -46,6 +47,7 @@ const routes: Routes = [
     CreateGroupComponent,
     GroupHubComponent,
     GroupUsersListComponent,
+    GroupRoomsListComponent,
     GroupFeaturesListComponent,
   ],
   imports: [

@@ -1,6 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 import { Group, GroupMember } from "../../../models/group.model";
 import { Page } from "../../../models/pagination.model";
+import { Room } from "../../../models/room.model";
 
 export const getGroup = createAction(
   '[Group Hub] Get Group Complete',
@@ -20,6 +21,21 @@ export const getGroupFailure = createAction(
 export const getGroupMembers = createAction(
   '[Group Hub] Get Group Members',
   props<{ id: number, pageNumber: number, pageSize: number }>()
+);
+
+export const getGroupRooms = createAction(
+  '[Group Hub] Get Group Rooms',
+  props<{ id: number, pageNumber: number, pageSize: number }>()
+);
+
+export const getGroupRoomsSuccess = createAction(
+  '[Group Hub] Get Group Rooms Success',
+  props<{ roomsPage: Page<Room> }>()
+);
+
+export const getGroupRoomsFailure = createAction(
+  '[Group Hub] Get Group Rooms Failure',
+  props<{ error: any }>()
 );
 
 export const getGroupMembersSuccess = createAction(

@@ -10,11 +10,12 @@ import {
   getGroup,
   getGroupFailure,
   getGroupMembers,
-  getGroupMembersFailure, getGroupMembersSuccess,
+  getGroupMembersFailure, getGroupMembersSuccess, getGroupRooms, getGroupRoomsFailure, getGroupRoomsSuccess,
   getGroupSuccess, openGroup
 } from "./group-hub.actions";
 import { Page } from "../../../models/pagination.model";
 import { SignalRService } from "../../../common/services/signalr.service";
+import { Room } from "../../../models/room.model";
 
 @Injectable()
 export class GroupHubEffects {
@@ -36,12 +37,27 @@ export class GroupHubEffects {
   getGroupMembers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getGroupMembers),
-      mergeMap(({ id }: { id: number }) => {
+      mergeMap(({id}: { id: number }) => {
           return this.http.get<Page<GroupMember>>(`${environment.apiBaseUrl}/api/groups/${id}/members`).pipe(
             map((page) => {
-              return getGroupMembersSuccess({ membersPage: page});
+              return getGroupMembersSuccess({membersPage: page});
             }),
             catchError((error) => of(getGroupMembersFailure({error})))
+          );
+        }
+      )
+    )
+  );
+
+  getGroupRooms$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getGroupRooms),
+      mergeMap(({id}: { id: number }) => {
+          return this.http.get<Page<Room>>(`${environment.apiBaseUrl}/api/groups/${id}/rooms`).pipe(
+            map((page) => {
+              return getGroupRoomsSuccess({roomsPage: page});
+            }),
+            catchError((error) => of(getGroupRoomsFailure({error})))
           );
         }
       )
