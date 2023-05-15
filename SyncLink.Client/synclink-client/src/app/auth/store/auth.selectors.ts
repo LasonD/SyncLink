@@ -7,3 +7,9 @@ export const selectAuthToken = createSelector(
   selectAuthFeature,
   (state: AuthState) => state.user?.token
 );
+
+export const selectUserId = createSelector(
+  selectAuthFeature,
+  (state: AuthState) => state.user?.userId
+);
+
