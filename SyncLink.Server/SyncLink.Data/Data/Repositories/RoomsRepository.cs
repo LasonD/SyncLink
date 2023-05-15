@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
@@ -23,6 +24,13 @@ public class RoomsRepository : GenericEntityRepository<Room>, IRoomsRepository
         }
 
         return RepositoryEntityResult<Room>.Ok(room);
+    }
+
+    public Task<PaginatedRepositoryResultSet<Room>> GetRoomsForUserAsync(int groupId, int userId, OrderedPaginationQuery<Room> query, CancellationToken cancellationToken)
+    {
+        query.FilteringExpressions.Add(r => r.IsPrivate == false && r.GroupId == groupId && r.RoomMembers.Any(m => m.UserId == userId));
+
+        return GetBySpecificationAsync(query, cancellationToken);
     }
 
     public async Task<RepositoryEntityResult<Room>> GetPrivateRoomAsync(int groupId, int firstUserId, int secondUserId, CancellationToken cancellationToken)

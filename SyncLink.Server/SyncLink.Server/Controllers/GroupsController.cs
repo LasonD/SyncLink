@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.Contracts.Data.Enums;
+using SyncLink.Application.Domain;
 using SyncLink.Application.UseCases.Commands.CreateGroup;
 using SyncLink.Application.UseCases.Queries;
 using SyncLink.Application.UseCases.Queries.GetById.Group;
@@ -160,6 +161,23 @@ public class GroupsController : ApiControllerBase
     
         var result = await _mediator.Send(query, cancellationToken);
     
+        return Ok(result);
+    }
+
+    [HttpGet("{groupId:int}/rooms")]
+    public async Task<IActionResult> GetRooms(int groupId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, CancellationToken cancellationToken = default)
+    {
+        var query = new GetRoomMembers.Query
+        {
+            UserId = GetRequiredAppUserId(),
+            GroupId = groupId,
+            RoomId = roomId,
+            PageSize = pageSize,
+            PageNumber = pageNumber
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
         return Ok(result);
     }
 }
