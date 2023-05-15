@@ -11,6 +11,7 @@ import {
   getRoomSuccess, sendMessage, sendMessageSuccess
 } from "./rooms.actions";
 import lodash from 'lodash';
+import { SendMessageData } from "./rooms.effects";
 
 export interface RoomsState {
   rooms: Room[],
@@ -67,43 +68,23 @@ export const roomsReducer = createReducer(
     messagesError: error,
   })),
   on(getMessagesSuccess, (state, { roomId, messages, otherUserId, isPrivate }): RoomsState => {
-    let updatedRoomMessages = { ...state.roomMessages };
-    let updatedPrivateMessages = { ...state.privateMessages };
+    const updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
+    const updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
 
-    const newMessages = [...messages.entities];
-
-    const sortedMessages = newMessages.sort((a: Message, b: Message) => {
-        return b.creationDate.getTime() - a.creationDate.getTime();
-      }
-    );
+    const sortedMessages = lodash.sortBy(messages.entities, message => -message.creationDate.getTime());
 
     if (isPrivate) {
-      if (!updatedPrivateMessages[otherUserId]) {
-        updatedPrivateMessages[otherUserId] = { messages: [], lastPage: null };
-      }
-
-      updatedPrivateMessages[otherUserId] = {
-        messages: [...updatedPrivateMessages[otherUserId].messages, ...sortedMessages],
-        lastPage: messages
-      };
-
+      updatedPrivateMessages[otherUserId] = addNewMessages(updatedPrivateMessages[otherUserId], sortedMessages, messages);
     } else {
-      if (!updatedRoomMessages[roomId]) {
-        updatedRoomMessages[roomId] = { messages: [], lastPage: null };
-      }
-
-      updatedRoomMessages[roomId] = {
-        messages: [...updatedRoomMessages[roomId].messages, ...sortedMessages],
-        lastPage: messages
-      };
+      updatedRoomMessages[roomId] = addNewMessages(updatedRoomMessages[roomId], sortedMessages, messages);
     }
 
-    return ({
+    return {
       ...state,
       roomMessages: updatedRoomMessages,
       privateMessages: updatedPrivateMessages,
       messagesLoading: false,
-    });
+    };
   }),
   on(getRoomMembers, (state): RoomsState => ({
     ...state,
@@ -120,31 +101,16 @@ export const roomsReducer = createReducer(
     roomMembersLoading: false,
   })),
   on(sendMessage, (state, { isPrivate, senderId, payload }): RoomsState => {
-    const pendingMessage: Message = {
-      id: Date.now(),
-      editedDateTime: null,
-      creationDate: new Date(),
-      isEdited: false,
-      text: payload.text,
-      senderId: senderId,
-      roomId: payload.roomId,
-      groupId: payload.groupId
-    };
+    const pendingMessage = createPendingMessage(senderId, payload);
 
-    let updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
-    let updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
+    const updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
+    const updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
 
     if (isPrivate) {
       const userId = payload.recipientId;
-      if (!updatedPrivateMessages[userId]) {
-        updatedPrivateMessages[userId] = { messages: [], lastPage: null };
-      }
-      updatedPrivateMessages[userId].messages = [...updatedPrivateMessages[userId].messages, pendingMessage];
+      updatedPrivateMessages[userId] = updateMessages(updatedPrivateMessages[userId], pendingMessage);
     } else {
-      if (!updatedRoomMessages[payload.roomId]) {
-        updatedRoomMessages[payload.roomId] = { messages: [], lastPage: null };
-      }
-      updatedRoomMessages[payload.roomId].messages = [...updatedRoomMessages[payload.roomId].messages, pendingMessage];
+      updatedRoomMessages[payload.roomId] = updateMessages(updatedRoomMessages[payload.roomId], pendingMessage);
     }
 
     return {
@@ -155,36 +121,62 @@ export const roomsReducer = createReducer(
     };
   }),
   on(sendMessageSuccess, (state, { isPrivate, roomId, otherUserId, message }): RoomsState => {
-    let updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
-    let updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
-    let updatedPendingMessages = [...state.pendingMessages.filter(m => m.id !== message.id)];
+    const updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
+    const updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
 
     if (isPrivate) {
-      if (!updatedPrivateMessages[otherUserId]) {
-        updatedPrivateMessages[otherUserId] = { messages: [], lastPage: null };
-      }
-      updatedPrivateMessages[otherUserId] = {
-        ...updatedPrivateMessages[otherUserId],
-        messages: updatedPrivateMessages[otherUserId].messages.map(m => m.id === message.id ? message : m).sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime())
-      };
+      updatedPrivateMessages[otherUserId] = updateMessages(updatedPrivateMessages[otherUserId], message);
     } else {
-      if (!updatedRoomMessages[roomId]) {
-        updatedRoomMessages[roomId] = { messages: [], lastPage: null };
-      }
-      updatedRoomMessages[roomId] = {
-        ...updatedRoomMessages[roomId],
-        messages: updatedRoomMessages[roomId].messages.map(m => m.id === message.id ? message : m).sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime())
-      };
+      updatedRoomMessages[roomId] = updateMessages(updatedRoomMessages[roomId], message);
     }
 
     return {
       ...state,
       roomMessages: updatedRoomMessages,
       privateMessages: updatedPrivateMessages,
-      pendingMessages: updatedPendingMessages
+      pendingMessages: removePendingMessage(state.pendingMessages, message)
     };
   }),
 );
+
+const updateMessages = (messages, newMessage) => {
+  if (!messages) {
+    return { messages: [newMessage], lastPage: null };
+  }
+  return {
+    ...messages,
+    messages: messages.messages.map(m => m.id === newMessage.id ? newMessage : m)
+      .sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime())
+  };
+}
+
+const removePendingMessage = (pendingMessages, message) => {
+  return pendingMessages.filter(m => m.id !== message.id);
+}
+
+const addNewMessages = (currentMessages, newMessages, lastPage) => {
+  if (!currentMessages) {
+    return { messages: [...newMessages], lastPage };
+  }
+  return {
+    messages: [...currentMessages.messages, ...newMessages],
+    lastPage
+  };
+}
+
+const createPendingMessage = (senderId: number, payload: SendMessageData) => {
+  return {
+    id: Date.now(),
+    editedDateTime: null,
+    creationDate: new Date(),
+    isEdited: false,
+    text: payload.text,
+    senderId: senderId,
+    roomId: payload.roomId,
+    groupId: payload.groupId
+  };
+}
+
 
 
 
