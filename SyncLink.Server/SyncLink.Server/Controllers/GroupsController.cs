@@ -167,11 +167,10 @@ public class GroupsController : ApiControllerBase
     [HttpGet("{groupId:int}/rooms")]
     public async Task<IActionResult> GetRooms(int groupId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25, CancellationToken cancellationToken = default)
     {
-        var query = new GetRoomMembers.Query
+        var query = new GetGroupRooms.Query
         {
             UserId = GetRequiredAppUserId(),
             GroupId = groupId,
-            RoomId = roomId,
             PageSize = pageSize,
             PageNumber = pageNumber
         };
