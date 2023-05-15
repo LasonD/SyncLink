@@ -43,17 +43,17 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
 
     public virtual async Task<PaginatedRepositoryResultSet<TLocalEntity>> GetBySpecificationAsync<TLocalEntity>(OrderedPaginationQuery<TLocalEntity> specification, CancellationToken cancellationToken) where TLocalEntity : class
     {
-        var query = GetQueryWithAppliedSpecification(specification);
+        var (query, totalCount) = await GetQueryWithAppliedSpecificationAsync(specification, cancellationToken);
         var items = await query.ToListAsync(cancellationToken);
 
-        return items.ToPaginatedOkResult(specification.Page, specification.PageSize);
+        return items.ToPaginatedOkResult(specification.Page, specification.PageSize, totalCount);
     }
 
-    protected IQueryable<TLocalEntity> GetQueryWithAppliedSpecification<TLocalEntity>(OrderedPaginationQuery<TLocalEntity> specification) where TLocalEntity : class
+    protected async Task<(IQueryable<TLocalEntity> query, int totalCount)> GetQueryWithAppliedSpecificationAsync<TLocalEntity>(OrderedPaginationQuery<TLocalEntity> specification, CancellationToken cancellationToken) where TLocalEntity : class
     {
         var set = DbContext.Set<TLocalEntity>();
-        var query = ApplyQuerySpecification<TLocalEntity>(set, specification);
-        return query;
+        var queryWithCount = await ApplyQuerySpecificationAsync<TLocalEntity>(set, specification, cancellationToken);
+        return queryWithCount;
     }
 
     public virtual Task<PaginatedRepositoryResultSet<TEntity>> GetBySpecificationAsync(OrderedPaginationQuery<TEntity> specification, CancellationToken cancellationToken)
@@ -61,20 +61,21 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
         return GetBySpecificationAsync<TEntity>(specification, cancellationToken);
     }
 
-    protected IQueryable<TEntity> ApplyQuerySpecification(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData)
+    protected async Task<(IQueryable<TEntity> query, int totalCount)> ApplyQuerySpecificationAsync(IQueryable<TEntity> query, OrderedPaginationQuery<TEntity> queryData, CancellationToken cancellationToken)
     {
-        return ApplyQuerySpecification<TEntity>(query, queryData);
+        return await ApplyQuerySpecificationAsync<TEntity>(query, queryData, cancellationToken);
     }
 
-    protected IQueryable<TLocalEntity> ApplyQuerySpecification<TLocalEntity>(IQueryable<TLocalEntity> query, OrderedPaginationQuery<TLocalEntity> queryData) where TLocalEntity : class
+    protected async Task<(IQueryable<TLocalEntity> query, int totalCount)> ApplyQuerySpecificationAsync<TLocalEntity>(IQueryable<TLocalEntity> query, OrderedPaginationQuery<TLocalEntity> queryData, CancellationToken cancellationToken) where TLocalEntity : class
     {
         query = ApplyFiltering(query, queryData);
         query = ApplyOrdering(query, queryData);
         query = ApplyInclusions(query, queryData);
         query = ApplySearching(query, queryData);
+        var totalCount = await query.CountAsync(cancellationToken);
         query = ApplyPagination(query, queryData);
-
-        return query;
+        
+        return (query, totalCount);
     }
 
     public async Task<RepositoryEntityResult<TEntity>> UpdateAsync(int id, TEntity entity, CancellationToken cancellationToken)

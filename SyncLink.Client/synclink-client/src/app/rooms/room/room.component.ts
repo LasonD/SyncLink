@@ -36,6 +36,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   currentUserId$: Subject<number> = new ReplaySubject<number>(1);
   otherUserId$: Subject<number> = new ReplaySubject<number>(1);
   roomId$: Subject<number> = new ReplaySubject<number>(1);
+  scrolledToTop$: Subject<boolean> = new ReplaySubject<boolean>(1);
   isPrivate$ = new ReplaySubject<boolean>(1);
   room$: Subject<Room> = new ReplaySubject<Room>(1);
   sendMessage$ = new ReplaySubject<string>(1);
@@ -106,6 +107,39 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private resolveMessages() {
+    this.scrolledToTop$
+      .pipe(
+        takeUntil(this.destroyed$),
+        withLatestFrom(
+          this.groupId$,
+          this.isPrivate$,
+          this.roomId$.pipe(startWith(undefined)),
+          this.otherUserId$.pipe(startWith(undefined)),
+          this.store.select(selectRoomMessages),
+          this.store.select(selectPrivateMessages),
+        )
+      )
+      .subscribe(([_, groupId, isPrivate, roomId, otherUserId, roomMessages, privateMessages]) => {
+        const roomOrOtherUserId = isPrivate ? otherUserId : roomId;
+        const storeMessages = isPrivate ? privateMessages : roomMessages;
+        const messagesById = storeMessages[roomOrOtherUserId];
+
+        const nextPage = messagesById?.lastPage?.nextPage;
+        console.log('In other page', nextPage, messagesById);
+        if (!nextPage) {
+          return;
+        }
+
+        this.store.dispatch(getMessages({
+          isPrivate: isPrivate,
+          groupId: groupId,
+          otherUserId: isPrivate ? roomOrOtherUserId : null,
+          roomId: isPrivate ? null : roomOrOtherUserId,
+          pageNumber: nextPage,
+          pageSize: this.messagePageSize
+        }));
+      });
+
     race(
       this.roomId$,
       this.otherUserId$,
@@ -213,5 +247,16 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     this.sendMessage$.next(this.messageText);
+  }
+
+  onScroll(event: Event) {
+    const chatBox = event.target as HTMLElement;
+    const scrollTop = chatBox.scrollTop;
+    const scrollHeight = chatBox.scrollHeight;
+    const offsetHeight = chatBox.offsetHeight;
+
+    if (-Math.ceil(scrollTop) === scrollHeight - offsetHeight) {
+      this.scrolledToTop$.next(true);
+    }
   }
 }

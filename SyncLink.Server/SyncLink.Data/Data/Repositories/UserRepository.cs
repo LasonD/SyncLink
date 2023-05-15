@@ -30,11 +30,10 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
         };
 
         var query = DbContext.ApplicationUsers;
+        var (specifiedQuery, totalCount) = await ApplyQuerySpecificationAsync(query, specification, cancellationToken);
+        var users = await specifiedQuery.ToListAsync(cancellationToken);
 
-        var users = await ApplyQuerySpecification(query, specification)
-            .ToListAsync(cancellationToken);
-
-        return users.ToPaginatedOkResult(specification.Page, specification.PageSize);
+        return users.ToPaginatedOkResult(specification.Page, specification.PageSize, totalCount);
     }
 
     public async Task<PaginatedRepositoryResultSet<UserGroup>> GetGroupMembersAsync(int groupId, OrderedPaginationQuery<UserGroup> query, CancellationToken cancellationToken)
