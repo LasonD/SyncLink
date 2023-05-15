@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Dtos;
+using SyncLink.Server.Helpers;
 using SyncLink.Server.Hubs;
 
 namespace SyncLink.Server.SignalR;
@@ -18,11 +19,8 @@ internal class NotificationService : INotificationsService
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        return _hubContext.Clients.Group(CreateGroupNameByGroupId(groupId)).MessageReceived(roomId, otherUserId, isPrivate, message);
-    }
+        var groupName = HubHelper.GetGroupNameForGroupId(groupId);
 
-    private static string CreateGroupNameByGroupId(int groupId)
-    {
-        return $"GROUP_{groupId}";
+        return _hubContext.Clients.All.MessageReceived(roomId, otherUserId, isPrivate, message);
     }
 }

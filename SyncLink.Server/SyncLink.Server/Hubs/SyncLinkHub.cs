@@ -12,6 +12,16 @@ public interface ISyncLinkHub
 [Authorize]
 public class SyncLinkHub : Hub<ISyncLinkHub>
 {
+    public Task GroupOpened(int groupId)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task GroupClosed(int groupId)
+    {
+        return Task.CompletedTask;
+    }
+
     public override Task OnConnectedAsync()
     {
         return base.OnConnectedAsync();

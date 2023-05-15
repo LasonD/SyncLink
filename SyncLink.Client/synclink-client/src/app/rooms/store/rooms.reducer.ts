@@ -10,7 +10,7 @@ import {
   getMessagesSuccess,
   getRoomSuccess, sendMessage, sendMessageSuccess
 } from "./rooms.actions";
-import _ from 'lodash';
+import lodash from 'lodash';
 
 export interface RoomsState {
   rooms: Room[],
@@ -131,8 +131,8 @@ export const roomsReducer = createReducer(
       groupId: payload.groupId
     };
 
-    let updatedRoomMessages = _.cloneDeep(state.roomMessages);
-    let updatedPrivateMessages = _.cloneDeep(state.privateMessages);
+    let updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
+    let updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
 
     if (isPrivate) {
       const userId = payload.recipientId;
@@ -155,8 +155,8 @@ export const roomsReducer = createReducer(
     };
   }),
   on(sendMessageSuccess, (state, { isPrivate, roomId, otherUserId, message }): RoomsState => {
-    let updatedRoomMessages = _.cloneDeep(state.roomMessages);
-    let updatedPrivateMessages = _.cloneDeep(state.privateMessages);
+    let updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
+    let updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
     let updatedPendingMessages = [...state.pendingMessages.filter(m => m.id !== message.id)];
 
     if (isPrivate) {
