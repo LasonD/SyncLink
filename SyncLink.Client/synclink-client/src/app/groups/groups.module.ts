@@ -20,6 +20,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { RoomComponent } from "../rooms/room/room.component";
 import { RoomsModule } from "../rooms/rooms.module";
 import { GroupRoomsListComponent } from "./group-hub/group-rooms-list/group-rooms-list.component";
+import { CreateRoomComponent } from "../rooms/create-room/create-room.component";
 
 const routes: Routes = [
   {
@@ -36,7 +37,10 @@ const routes: Routes = [
       },
       {
         path: 'members/:userId/private', component: RoomComponent,
-      }
+      },
+      {
+        path: 'rooms/create', component: CreateRoomComponent,
+      },
     ]
   },
 ];

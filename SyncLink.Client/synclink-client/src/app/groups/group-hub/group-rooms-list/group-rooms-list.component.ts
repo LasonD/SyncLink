@@ -48,4 +48,8 @@ export class GroupRoomsListComponent implements OnInit, OnDestroy {
     this.selectedRoomId = roomId;
     this.router.navigate(['rooms', roomId], { relativeTo: this.activatedRoute });
   }
+
+  createRoom() {
+    this.router.navigate(['rooms', 'create'], { relativeTo: this.activatedRoute });
+  }
 }
