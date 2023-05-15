@@ -17,10 +17,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { GroupUsersListComponent } from './group-hub/group-users-list/group-users-list.component';
 import { GroupFeaturesListComponent } from './group-hub/group-features-list/group-features-list.component';
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { RoomComponent } from "../rooms/room/room.component";
-import { RoomsModule } from "../rooms/rooms.module";
+import { RoomsModule, roomsRoutes } from "../rooms/rooms.module";
 import { GroupRoomsListComponent } from "./group-hub/group-rooms-list/group-rooms-list.component";
-import { CreateRoomComponent } from "../rooms/create-room/create-room.component";
 
 const routes: Routes = [
   {
@@ -31,17 +29,7 @@ const routes: Routes = [
   },
   {
     path: ':groupId/hub', component: GroupHubComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)],
-    children: [
-      {
-        path: 'rooms/:roomId', component: RoomComponent,
-      },
-      {
-        path: 'members/:userId/private', component: RoomComponent,
-      },
-      {
-        path: 'rooms/create', component: CreateRoomComponent,
-      },
-    ]
+    children: roomsRoutes
   },
 ];
 

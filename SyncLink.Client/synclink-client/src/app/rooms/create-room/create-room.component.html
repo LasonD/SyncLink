@@ -1,1 +1,22 @@
-<p>create-room works!</p>
+<form [formGroup]="createRoomForm" (ngSubmit)="onSubmit()">
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Room Name</mat-label>
+    <input matInput formControlName="roomName">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Users</mat-label>
+    <mat-select formControlName="users" multiple>
+      <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary">Create Room</button>
+
+</form>
