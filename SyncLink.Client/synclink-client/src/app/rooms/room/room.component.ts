@@ -125,7 +125,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         const messagesById = storeMessages[roomOrOtherUserId];
 
         const nextPage = messagesById?.lastPage?.nextPage;
-        console.log('In other page', nextPage, messagesById);
         if (!nextPage) {
           return;
         }
