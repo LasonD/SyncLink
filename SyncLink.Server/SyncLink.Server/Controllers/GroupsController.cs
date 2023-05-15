@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.Contracts.Data.Enums;
-using SyncLink.Application.Domain;
 using SyncLink.Application.UseCases.Commands.CreateGroup;
 using SyncLink.Application.UseCases.Queries;
 using SyncLink.Application.UseCases.Queries.GetById.Group;
