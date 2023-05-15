@@ -21,6 +21,6 @@ internal class NotificationService : INotificationsService
 
         var groupName = HubHelper.GetGroupNameForGroupId(groupId);
 
-        return _hubContext.Clients.All.MessageReceived(roomId, otherUserId, isPrivate, message);
+        return _hubContext.Clients.Group(groupName).MessageReceived(roomId, otherUserId, isPrivate, message);
     }
 }

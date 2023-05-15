@@ -10,9 +10,10 @@ import {
   getGroupFailure,
   getGroupMembers,
   getGroupMembersFailure, getGroupMembersSuccess,
-  getGroupSuccess
+  getGroupSuccess, openGroup
 } from "./group-hub.actions";
 import { Page } from "../../../models/pagination.model";
+import { SignalRService } from "../../../common/services/signalr.service";
 
 @Injectable()
 export class GroupHubEffects {
@@ -46,5 +47,29 @@ export class GroupHubEffects {
     )
   );
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  openGroup$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(openGroup),
+      mergeMap(({ groupId }) => {
+          return this.signalrService.groupOpened(groupId)
+            .then(() => of())
+            .catch(err => of()) // todo: ADD NOTIFICATION SERVICE
+        }
+      )
+    ), { dispatch: false }
+  );
+
+  closeGroup$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(openGroup),
+      mergeMap(({ groupId }) => {
+          return this.signalrService.groupClosed(groupId)
+            .then(() => of())
+            .catch(err => of()) // todo: ADD NOTIFICATION SERVICE
+        }
+      )
+    ), { dispatch: false }
+  );
+
+  constructor(private actions$: Actions, private http: HttpClient, private signalrService: SignalRService) {}
 }

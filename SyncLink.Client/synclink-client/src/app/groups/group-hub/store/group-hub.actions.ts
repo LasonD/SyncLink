@@ -32,3 +32,13 @@ export const getGroupMembersFailure = createAction(
   props<{ error: any }>()
 );
 
+export const openGroup = createAction(
+  '[Group Hub] Open Group',
+  props<{ groupId: number }>()
+);
+
+export const closeGroup = createAction(
+  '[Group Hub] Close Group',
+  props<{ groupId: number }>()
+);
+
