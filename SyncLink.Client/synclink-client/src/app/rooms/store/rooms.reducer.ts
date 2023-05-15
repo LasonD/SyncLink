@@ -12,6 +12,7 @@ import {
 } from "./rooms.actions";
 import lodash from 'lodash';
 import { SendMessageData } from "./rooms.effects";
+import { core } from "@angular/compiler";
 
 export interface RoomsState {
   rooms: Room[],
@@ -100,8 +101,8 @@ export const roomsReducer = createReducer(
     roomMembers: [...state.roomMembers, {roomId: roomId, members: members}],
     roomMembersLoading: false,
   })),
-  on(sendMessage, (state, { isPrivate, senderId, payload }): RoomsState => {
-    const pendingMessage = createPendingMessage(senderId, payload);
+  on(sendMessage, (state, { isPrivate, senderId, correlationId, payload }): RoomsState => {
+    const pendingMessage = createPendingMessage(senderId, correlationId, payload);
 
     const updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
     const updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
@@ -120,13 +121,12 @@ export const roomsReducer = createReducer(
       pendingMessages: [...state.pendingMessages, pendingMessage]
     };
   }),
-  on(sendMessageSuccess, (state, { isPrivate, roomId, otherUserId, message }): RoomsState => {
+  on(sendMessageSuccess, (state, { isPrivate, roomId, otherUserId, correlationId, message }): RoomsState => {
     const updatedMessages = isPrivate ? lodash.cloneDeep(state.privateMessages) : lodash.cloneDeep(state.roomMessages);
     const messagesKeyId = determineMessagesKeyId(updatedMessages, isPrivate, roomId, message.senderId, otherUserId);
 
     const messages = updatedMessages[messagesKeyId];
-    messages.messages = messages.messages.filter(m => state.pendingMessages.every(pm => pm.id !== m.id));
-    messages.messages = lodash.uniqBy(messages.messages, 'id');
+    messages.messages = messages.messages.filter(m => m.correlationId !== correlationId);
     updatedMessages[messagesKeyId] = updateMessages(messages, message);
 
     return {
@@ -151,11 +151,13 @@ const updateMessages = (messages, newMessage) => {
     return { messages: [newMessage], lastPage: null };
   }
 
+  const updatedMessages = [...messages.messages, newMessage]
+    .filter(m => !!m.id)
+    .sort((a, b) => b.creationDate?.getTime() - a.creationDate?.getTime());
+
   return {
     ...messages,
-    messages: [...messages.messages, newMessage]
-      .filter(m => !!m.id)
-      .sort((a, b) => b.creationDate?.getTime() - a.creationDate?.getTime())
+    messages: lodash.uniqBy(updatedMessages, 'id')
   };
 }
 
@@ -173,8 +175,9 @@ const addNewMessages = (currentMessages, newMessages, lastPage) => {
   };
 }
 
-const createPendingMessage = (senderId: number, payload: SendMessageData) => {
+const createPendingMessage = (senderId: number, correlationId: string, payload: SendMessageData) => {
   return {
+    correlationId: correlationId,
     id: Date.now(),
     editedDateTime: null,
     creationDate: new Date(),

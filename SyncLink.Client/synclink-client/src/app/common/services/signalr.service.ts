@@ -26,8 +26,7 @@ export class SignalRService {
       .build();
 
     this.hubConnection.on('messageReceived', (roomId, otherUserId, isPrivate, message: Message) => {
-      console.log('Message received');
-      this.store.dispatch(sendMessageSuccess({ roomId, otherUserId, isPrivate, message: new Message(message) }));
+      this.store.dispatch(sendMessageSuccess({ roomId, otherUserId, isPrivate, correlationId: null, message: new Message(message) }));
     });
 
     this.connectionPromise = this.hubConnection.start()

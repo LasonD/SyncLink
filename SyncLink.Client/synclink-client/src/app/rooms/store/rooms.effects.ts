@@ -94,10 +94,10 @@ export class RoomEffects {
   sendMessage$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sendMessage),
-      mergeMap(({ roomId, otherUserId, isPrivate, payload }) => {
+      mergeMap(({ roomId, otherUserId, isPrivate, correlationId, payload }) => {
           return this.http.post<Message>(`${environment.apiBaseUrl}/api/messages`, payload).pipe(
             map((message: Message) => {
-              return sendMessageSuccess({ roomId: roomId, otherUserId: otherUserId, isPrivate: isPrivate, message: new Message(message) });
+              return sendMessageSuccess({ correlationId: correlationId, roomId: roomId, otherUserId: otherUserId, isPrivate: isPrivate, message: new Message(message) });
             }),
             catchError((error) => of(sendMessageFailure({error})))
           );

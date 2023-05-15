@@ -71,12 +71,12 @@ export const createRoomFailure = createAction(
 
 export const sendMessage = createAction(
   '[Rooms] Send Message',
-  props<{ senderId: number, isPrivate: boolean, roomId: number, otherUserId: number, payload: SendMessageData }>()
+  props<{ senderId: number, isPrivate: boolean, roomId: number, otherUserId: number, payload: SendMessageData, correlationId: string }>()
 );
 
 export const sendMessageSuccess = createAction(
   '[Rooms] Send Message Success',
-  props<{ isPrivate: boolean, roomId: number, otherUserId: number, message: Message }>()
+  props<{ isPrivate: boolean, roomId: number, otherUserId: number, message: Message, correlationId: string }>()
 );
 
 export const sendMessageFailure = createAction(

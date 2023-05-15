@@ -22,6 +22,7 @@ import { Room } from "../../models/room.model";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AppState } from "../../store/app.reducer";
 import { SignalRService } from "../../common/services/signalr.service";
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-room',
@@ -65,11 +66,11 @@ export class RoomComponent implements OnInit, OnDestroy {
       )
       .subscribe(([text, senderId, groupId, roomId, otherUserId, isPrivate]) => {
         this.store.dispatch(sendMessage({
-          senderId: senderId, roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, payload: {
+          senderId: senderId, roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, correlationId: uuidv4(), payload: {
             roomId: roomId,
             text: text,
             groupId: groupId,
-            recipientId: otherUserId
+            recipientId: otherUserId,
           }
         }));
         this.messageText = null;
