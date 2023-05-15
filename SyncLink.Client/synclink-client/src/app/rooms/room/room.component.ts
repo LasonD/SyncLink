@@ -36,7 +36,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   currentUserId$: Subject<number> = new ReplaySubject<number>(1);
   otherUserId$: Subject<number> = new ReplaySubject<number>(1);
   roomId$: Subject<number> = new ReplaySubject<number>(1);
-  isPrivate$ = new Subject<boolean>();
+  isPrivate$ = new ReplaySubject<boolean>(1);
   room$: Subject<Room> = new ReplaySubject<Room>(1);
   sendMessage$ = new ReplaySubject<string>(1);
 
@@ -63,7 +63,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe(([text, senderId, groupId, roomId, otherUserId, isPrivate]) => {
-        console.log('Sending message')
         this.store.dispatch(sendMessage({
           senderId: senderId, roomId: roomId, isPrivate: isPrivate, otherUserId: otherUserId, payload: {
             roomId: roomId,
@@ -71,13 +70,14 @@ export class RoomComponent implements OnInit, OnDestroy {
             groupId: groupId,
             recipientId: otherUserId
           }
-        }))
+        }));
+        this.messageText = null;
       });
 
+    this.resolveRouteAndUserIdentifiers();
     this.subscribeToErrors();
     this.resolveMessages();
     this.resolveRoom();
-    this.resolveRouteAndUserIdentifiers();
   }
 
   private subscribeToErrors() {
@@ -106,10 +106,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private resolveMessages() {
-    race([
+    race(
       this.roomId$,
       this.otherUserId$,
-    ]).pipe(
+    ).pipe(
       takeUntil(this.destroyed$),
       withLatestFrom(
         this.isPrivate$,

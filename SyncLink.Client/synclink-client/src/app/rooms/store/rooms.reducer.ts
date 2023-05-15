@@ -121,32 +121,41 @@ export const roomsReducer = createReducer(
     };
   }),
   on(sendMessageSuccess, (state, { isPrivate, roomId, otherUserId, message }): RoomsState => {
-    const updatedRoomMessages = lodash.cloneDeep(state.roomMessages);
-    const updatedPrivateMessages = lodash.cloneDeep(state.privateMessages);
+    const updatedMessages = isPrivate ? lodash.cloneDeep(state.privateMessages) : lodash.cloneDeep(state.roomMessages);
+    const messagesKeyId = determineMessagesKeyId(updatedMessages, isPrivate, roomId, message.senderId, otherUserId);
 
-    if (isPrivate) {
-      updatedPrivateMessages[otherUserId] = updateMessages(updatedPrivateMessages[otherUserId], message);
-    } else {
-      updatedRoomMessages[roomId] = updateMessages(updatedRoomMessages[roomId], message);
-    }
+    const messages = updatedMessages[messagesKeyId];
+    messages.messages = messages.messages.filter(m => state.pendingMessages.every(pm => pm.id !== m.id));
+    messages.messages = lodash.uniqBy(messages.messages, 'id');
+    updatedMessages[messagesKeyId] = updateMessages(messages, message);
 
     return {
       ...state,
-      roomMessages: updatedRoomMessages,
-      privateMessages: updatedPrivateMessages,
+      roomMessages: isPrivate ? state.roomMessages : updatedMessages,
+      privateMessages: !isPrivate ? state.privateMessages : updatedMessages,
       pendingMessages: removePendingMessage(state.pendingMessages, message)
     };
   }),
 );
 
+const determineMessagesKeyId = (updatedMessages, isPrivate: boolean, roomId: number, senderId: number, otherUserId: number) => {
+  if (isPrivate) {
+    return updatedMessages[senderId] ? senderId : otherUserId;
+  }
+
+  return roomId;
+}
+
 const updateMessages = (messages, newMessage) => {
   if (!messages) {
     return { messages: [newMessage], lastPage: null };
   }
+
   return {
     ...messages,
-    messages: messages.messages.map(m => m.id === newMessage.id ? newMessage : m)
-      .sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime())
+    messages: [...messages.messages, newMessage]
+      .filter(m => !!m.id)
+      .sort((a, b) => b.creationDate?.getTime() - a.creationDate?.getTime())
   };
 }
 

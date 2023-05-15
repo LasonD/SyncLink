@@ -59,11 +59,7 @@ export class RoomEffects {
           return this.http.get<Page<Message>>(url).pipe(
             map((messages: Page<Message>) => ({
               ...messages,
-              entities: messages?.entities.map(m => ({
-                ...m,
-                creationDate: new Date(m.creationDate),
-                editedDateTime: m.editedDateTime ? new Date(m.editedDateTime) : null,
-              }))
+              entities: messages?.entities.map(m => new Message(m))
             })),
             map((messages: Page<Message>) => {
               return getMessagesSuccess({
@@ -101,7 +97,7 @@ export class RoomEffects {
       mergeMap(({ roomId, otherUserId, isPrivate, payload }) => {
           return this.http.post<Message>(`${environment.apiBaseUrl}/api/messages`, payload).pipe(
             map((message: Message) => {
-              return sendMessageSuccess({ roomId: roomId, otherUserId: otherUserId, isPrivate: isPrivate, message: message });
+              return sendMessageSuccess({ roomId: roomId, otherUserId: otherUserId, isPrivate: isPrivate, message: new Message(message) });
             }),
             catchError((error) => of(sendMessageFailure({error})))
           );

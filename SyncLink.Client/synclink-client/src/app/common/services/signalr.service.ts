@@ -7,6 +7,7 @@ import { AppState } from "../../store/app.reducer";
 import { selectAuthToken } from "../../auth/store/auth.selectors";
 import { firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
+import { Message } from "../../models/message.model";
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,8 @@ export class SignalRService {
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection.on('messageReceived', (roomId, otherUserId, isPrivate, message) => {
-      this.store.dispatch(sendMessageSuccess({ roomId, otherUserId, isPrivate, message }));
+    this.hubConnection.on('messageReceived', (roomId, otherUserId, isPrivate, message: Message) => {
+      this.store.dispatch(sendMessageSuccess({ roomId, otherUserId, isPrivate, message: new Message(message) }));
     });
 
     this.hubConnection.start()
