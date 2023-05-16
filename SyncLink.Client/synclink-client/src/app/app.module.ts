@@ -16,6 +16,7 @@ import { CreateGroupEffects } from "./groups/create-group/store/create-group.eff
 import { HeaderComponent } from './header/header.component';
 import { GroupHubEffects } from "./groups/group-hub/store/group-hub.effects";
 import { RoomEffects } from "./rooms/store/rooms.effects";
+import { NotificationEffects } from "./common/store/notifications.effects";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import { RoomEffects } from "./rooms/store/rooms.effects";
     CoreModule,
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
-    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects]),
+    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, NotificationEffects]),
     ToastrModule.forRoot(),
   ],
   providers: [],
