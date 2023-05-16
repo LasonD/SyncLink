@@ -13,7 +13,7 @@ import {
   getGroupMembersFailure,
   getGroupRoomsFailure
 } from "../../groups/group-hub/store/group-hub.actions";
-import { LOGIN_FAILURE, LoginFailure } from "../../auth/store/auth.actions";
+import { LOGIN_FAILURE } from "../../auth/store/auth.actions";
 
 @Injectable()
 export class NotificationEffects {
