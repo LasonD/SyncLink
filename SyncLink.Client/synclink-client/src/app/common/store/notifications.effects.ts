@@ -13,6 +13,7 @@ import {
   getGroupMembersFailure,
   getGroupRoomsFailure
 } from "../../groups/group-hub/store/group-hub.actions";
+import { LOGIN_FAILURE, LoginFailure } from "../../auth/store/auth.actions";
 
 @Injectable()
 export class NotificationEffects {
@@ -121,6 +122,16 @@ export class NotificationEffects {
       ofType(sendMessageFailure),
       tap(({error}) => {
           this.notificationsService.error(error, 'Failed to send message');
+        }
+      )
+    ), {dispatch: false}
+  );
+
+  loginFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(LOGIN_FAILURE),
+      tap(({error}) => {
+          this.notificationsService.error(error, 'Login has failed');
         }
       )
     ), {dispatch: false}
