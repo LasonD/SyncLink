@@ -10,6 +10,7 @@ public partial class CreateRoom
         public int UserId { get; set; }
         public int GroupId { get; set; }
         public string? Name { get; set; }
+        public string? Description { get; set; }
         public IEnumerable<int> UserIds { get; set; } = Enumerable.Empty<int>();
     }
 }

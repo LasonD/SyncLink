@@ -1,22 +1,35 @@
-<form [formGroup]="createRoomForm" (ngSubmit)="onSubmit()">
+<mat-card class="form-card">
+  <mat-card-title class="m-4">Create Room</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="createRoomForm" (ngSubmit)="onSubmit()">
 
-  <mat-form-field class="example-full-width">
-    <mat-label>Room Name</mat-label>
-    <input matInput formControlName="roomName">
-  </mat-form-field>
+      <div class="form-field">
+        <mat-form-field class="example-full-width">
+          <mat-label>Room Name</mat-label>
+          <input matInput formControlName="roomName">
+        </mat-form-field>
+      </div>
 
-  <mat-form-field class="example-full-width">
-    <mat-label>Description</mat-label>
-    <textarea matInput formControlName="description"></textarea>
-  </mat-form-field>
+      <div class="form-field">
+        <mat-form-field class="example-full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+      </div>
 
-  <mat-form-field class="example-full-width">
-    <mat-label>Users</mat-label>
-    <mat-select formControlName="users" multiple>
-      <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
-    </mat-select>
-  </mat-form-field>
+      <div class="form-field">
+        <mat-form-field class="example-full-width">
+          <mat-label>Users</mat-label>
+          <mat-select formControlName="users" multiple>
+            <mat-option *ngFor="let member of (members$ | async)" [value]="member">{{member.username}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-  <button mat-raised-button color="primary">Create Room</button>
+      <div class="form-field">
+        <button mat-raised-button color="primary" [disabled]="createRoomForm.invalid">Create Room</button>
+      </div>
 
-</form>
+    </form>
+  </mat-card-content>
+</mat-card>

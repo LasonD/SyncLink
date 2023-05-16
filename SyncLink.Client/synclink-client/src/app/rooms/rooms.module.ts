@@ -9,6 +9,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatSelectModule } from "@angular/material/select";
+import { MatDividerModule } from "@angular/material/divider";
 
 export const roomsRoutes: Routes = [
   {
@@ -36,6 +37,7 @@ export const roomsRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
+    MatDividerModule,
   ]
 })
 export class RoomsModule {

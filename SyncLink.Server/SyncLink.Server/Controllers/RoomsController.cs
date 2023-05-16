@@ -25,13 +25,8 @@ public class RoomsController : ApiControllerBase
     [HttpPost("")]
     public async Task<IActionResult> CreateRoom(CreateRoomDto createRoom, CancellationToken cancellationToken)
     {
-        var command = new CreateRoom.Command
-        {
-            GroupId = createRoom.GroupId,
-            Name = createRoom.Name,
-            UserId = GetRequiredAppUserId(),
-            UserIds = createRoom.MembersId
-        };
+        var command = _mapper.Map<CreateRoom.Command>(createRoom);
+        command.UserId = GetRequiredAppUserId();
 
         var result = await _mediator.Send(command, cancellationToken);
 

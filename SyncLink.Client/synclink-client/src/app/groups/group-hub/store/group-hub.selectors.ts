@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { GroupHubState } from "./group-hub.reducer";
+import lodash from "lodash";
 
 export const selectGroupHubFeature = createFeatureSelector<GroupHubState>('groupHub');
 
@@ -18,9 +19,14 @@ export const selectGroupHubError = createSelector(
   (state: GroupHubState) => state.groupError
 );
 
-export const selectGroupHubMembers = createSelector(
+export const selectGroupMemberPages = createSelector(
   selectGroupHubFeature,
   (state: GroupHubState) => state.groupMembers
+);
+
+export const selectGroupMembers = createSelector(
+  selectGroupHubFeature,
+  (state: GroupHubState) => lodash.uniqBy(state.groupMembers.flatMap(p => p.entities), 'id')
 );
 
 export const selectGroupHubRooms = createSelector(

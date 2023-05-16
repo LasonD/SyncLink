@@ -4,7 +4,7 @@ import { GroupHubState } from "../store/group-hub.reducer";
 import { Store } from "@ngrx/store";
 import { getGroupMembers } from "../store/group-hub.actions";
 import { GroupMember } from "../../../models/group.model";
-import { selectGroupHubMembers } from "../store/group-hub.selectors";
+import { selectGroupMemberPages } from "../store/group-hub.selectors";
 import { ActivatedRoute, Router } from "@angular/router";
 import { selectUserId } from "../../../auth/store/auth.selectors";
 
@@ -33,7 +33,7 @@ export class GroupUsersListComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(getGroupMembers({ id: this.groupId, pageNumber: this.pageNumber, pageSize: this.pageSize  }));
 
-    this.store.select(selectGroupHubMembers)
+    this.store.select(selectGroupMemberPages)
       .pipe(takeUntil(this.destroyed$), withLatestFrom(this.store.select(selectUserId)))
       .subscribe(([pages, userId]) => {
         this.members = pages.flatMap((p) => p.entities).filter(m => m.id !== userId);

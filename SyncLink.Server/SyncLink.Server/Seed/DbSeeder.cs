@@ -111,37 +111,37 @@ public static class DbSeeder
         applicationUsers[1].AddGroup(groups[0], false, false);
 
         // TODO: fix groupId
-        var rooms = new Room[]
-        {
-            new Room("Room1_1", 0, new User[] { applicationUsers[0], applicationUsers[1] }),
-            new Room("Room1_2", 0,new User[] { applicationUsers[0], applicationUsers[1], applicationUsers[2], applicationUsers[4] }),
-            new Room("Room1_3", 0,new User[] { applicationUsers[0], applicationUsers[1], applicationUsers[2] }),
-            new Room("Room1_4", 0,new User[] { applicationUsers[0], applicationUsers[4] }),
-            new Room("Room2_1", 0,new User[] { applicationUsers[1], applicationUsers[3] })
-        };
+        // var rooms = new Room[]
+        // {
+        //     new Room("Room1_1", 0, new User[] { applicationUsers[0], applicationUsers[1] }),
+        //     new Room("Room1_2", 0,new User[] { applicationUsers[0], applicationUsers[1], applicationUsers[2], applicationUsers[4] }),
+        //     new Room("Room1_3", 0,new User[] { applicationUsers[0], applicationUsers[1], applicationUsers[2] }),
+        //     new Room("Room1_4", 0,new User[] { applicationUsers[0], applicationUsers[4] }),
+        //     new Room("Room2_1", 0,new User[] { applicationUsers[1], applicationUsers[3] })
+        // };
 
-        groups[0].AddRoom(rooms[0]);
-        groups[0].AddRoom(rooms[1]);
-        groups[0].AddRoom(rooms[2]);
-        groups[0].AddRoom(rooms[3]);
-        groups[1].AddRoom(rooms[4]);
-
-        var messages = new Message[]
-        {
-            new Message(applicationUsers[0],  rooms[0], "Message 1 to room 1"),
-            new Message(applicationUsers[1],  rooms[0], "Message 2 to room 1"),
-            new Message(applicationUsers[1],  rooms[1], "Message 1 to room 2"),
-            new Message(applicationUsers[1],  rooms[1], "Message 2 to room 2"),
-            new Message(applicationUsers[2],  rooms[1], "Message 3 to room 2"),
-            new Message(applicationUsers[1],  rooms[1], "Message 4 to room 2"),
-            new Message(applicationUsers[4],  rooms[3], "Message 4 to room 2"),
-            new Message(applicationUsers[4],  rooms[1], "Message 4 to room 2"),
-        };
+        // groups[0].AddRoom(rooms[0]);
+        // groups[0].AddRoom(rooms[1]);
+        // groups[0].AddRoom(rooms[2]);
+        // groups[0].AddRoom(rooms[3]);
+        // groups[1].AddRoom(rooms[4]);
+        //
+        // var messages = new Message[]
+        // {
+        //     new Message(applicationUsers[0],  rooms[0], "Message 1 to room 1"),
+        //     new Message(applicationUsers[1],  rooms[0], "Message 2 to room 1"),
+        //     new Message(applicationUsers[1],  rooms[1], "Message 1 to room 2"),
+        //     new Message(applicationUsers[1],  rooms[1], "Message 2 to room 2"),
+        //     new Message(applicationUsers[2],  rooms[1], "Message 3 to room 2"),
+        //     new Message(applicationUsers[1],  rooms[1], "Message 4 to room 2"),
+        //     new Message(applicationUsers[4],  rooms[3], "Message 4 to room 2"),
+        //     new Message(applicationUsers[4],  rooms[1], "Message 4 to room 2"),
+        // };
 
         await context.Users.AddRangeAsync(users);
         await context.Groups.AddRangeAsync(groups);
-        await context.Rooms.AddRangeAsync(rooms);
-        await context.Messages.AddRangeAsync(messages);
+        // await context.Rooms.AddRangeAsync(rooms);
+        // await context.Messages.AddRangeAsync(messages);
 
         await context.SaveChangesAsync();
     }

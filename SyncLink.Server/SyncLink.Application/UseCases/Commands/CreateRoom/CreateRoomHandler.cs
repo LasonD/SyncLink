@@ -25,15 +25,18 @@ public partial class CreateRoom
 
         public async Task<RoomDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var usersResult = await _usersRepository.GetUsersFromGroupAsync(request.GroupId, request.UserIds, cancellationToken);
+            var completeUserIds = request.UserIds.Append(request.UserId).Distinct().ToList();
+
+            var usersResult = await _usersRepository.GetUsersFromGroupAsync(request.GroupId, completeUserIds, cancellationToken);
 
             var users = usersResult.GetResult();
 
+            var creator = users.Entities.Single(u => u.Id == request.UserId);
+            var others = users.Entities.Where(u => u != creator).ToList();
+
             CheckAllUsersBelongToGroup(request, users);
 
-            var room = new Room(request.Name, request.GroupId, users.Entities);
-
-            room.AddMembers(users.Entities);
+            var room = new Room(request.Name, request.Description, request.GroupId, creator, others);
 
             await _roomsRepository.CreateAsync(room, cancellationToken);
 

@@ -3,10 +3,19 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import {
   getPrivateRoomByUser,
   getRoom,
-  getRoomFailure, getRoomMembers, getRoomMembersSuccess,
+  getRoomFailure,
+  getRoomMembers,
+  getRoomMembersSuccess,
   getMessages,
-  getMessagesFailure, getMessagesSuccess,
-  getRoomSuccess, sendMessage, sendMessageFailure, sendMessageSuccess, getRoomMembersFailure
+  getMessagesFailure,
+  getMessagesSuccess,
+  getRoomSuccess,
+  sendMessage,
+  sendMessageFailure,
+  sendMessageSuccess,
+  getRoomMembersFailure,
+  createRoom,
+  createRoomSuccess, createRoomFailure
 } from "./rooms.actions";
 import { catchError, map, mergeMap } from "rxjs/operators";
 import { environment } from "../../environments/environment";
@@ -27,6 +36,21 @@ export class RoomEffects {
               return getRoomSuccess({ room });
             }),
             catchError((error) => of(getRoomFailure({error})))
+          );
+        }
+      )
+    )
+  );
+
+  createRoom$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createRoom),
+      mergeMap((payload) => {
+          return this.http.post<Room>(`${environment.apiBaseUrl}/api/rooms`, payload).pipe(
+            map((room: Room) => {
+              return createRoomSuccess({ room });
+            }),
+            catchError((error) => of(createRoomFailure({error})))
           );
         }
       )

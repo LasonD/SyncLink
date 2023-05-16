@@ -12,22 +12,29 @@ public class Room : EntityBase
 
     protected Room() { }
 
-    public Room(string? name, int groupId, IEnumerable<User> users, bool isPrivate = false)
+    public Room(string? name, string? description, int groupId, User creator, IEnumerable<User> members)
     {
-        users.ThrowIfNull(nameof(users));
+        members.ThrowIfNull(nameof(members));
         Name = name;
-        AddMembers(users);
-        IsPrivate = isPrivate;
+        Description = description;
+        AddMembers(members);
+        AddMember(creator, isAdmin: true);
+        IsPrivate = false;
         GroupId = groupId;
     }
 
-    public Room(int groupId, User firstMember, User secondMember) : this(null, groupId, new List<User> { firstMember, secondMember }, isPrivate: true) 
+    public Room(int groupId, User firstMember, User secondMember)
     {
         firstMember.ThrowIfNull(nameof(firstMember));
         secondMember.ThrowIfNull(nameof(secondMember));
+        Name = null;
+        AddMembers(new List<User> { firstMember, secondMember });
+        IsPrivate = true;
+        GroupId = groupId;
     }
 
     public string? Name { get; private set; }
+    public string? Description { get; private set; }
 
     public void AddMembers(IEnumerable<User> users)
     {
@@ -44,11 +51,11 @@ public class Room : EntityBase
         }
     }
 
-    public void AddMember(User user)
+    public void AddMember(User user, bool isAdmin = false)
     {
         user.ThrowIfNull(nameof(user));
 
-        var userRoom = new UserRoom(user, this);
+        var userRoom = new UserRoom(user, this, isAdmin);
 
         _roomMembers.Add(userRoom);
     }
