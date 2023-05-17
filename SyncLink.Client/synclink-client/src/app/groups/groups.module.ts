@@ -19,6 +19,7 @@ import { GroupFeaturesListComponent } from './group-hub/group-features-list/grou
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { RoomsModule, roomsRoutes } from "../rooms/rooms.module";
 import { GroupRoomsListComponent } from "./group-hub/group-rooms-list/group-rooms-list.component";
+import { featureRoutes } from "../features/features.module";
 
 const routes: Routes = [
   {
@@ -29,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: ':groupId/hub', component: GroupHubComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)],
-    children: roomsRoutes
+    children: [...roomsRoutes, ...featureRoutes]
   },
 ];
 

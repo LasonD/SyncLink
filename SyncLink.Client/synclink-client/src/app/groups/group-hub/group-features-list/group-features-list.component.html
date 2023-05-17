@@ -4,7 +4,7 @@
       Features
     </mat-panel-title>
   </mat-expansion-panel-header>
-  <mat-list-item *ngFor="let feature of features">
+  <mat-list-item *ngFor="let feature of features" (click)="navigateFeature(feature)">
     {{feature.name}}
   </mat-list-item>
 </mat-expansion-panel>
