@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ElementTypeEnum, FormatType, NgWhiteboardService, ToolsEnum, WhiteboardElement } from 'ng-whiteboard';
 
 @Component({
@@ -15,6 +15,7 @@ export class WhiteboardComponent {
   elementTypeEnum = ElementTypeEnum;
   selectedTool: ToolsEnum = ToolsEnum.BRUSH;
   selectedElement!: WhiteboardElement;
+  data: WhiteboardElement[] = [];
 
   options = {
     strokeColor: '#ff0',
@@ -274,5 +275,12 @@ export class WhiteboardComponent {
 
   updateOptions() {
     this.options = Object.assign({}, this.options);
+  }
+
+  onDataChange(data: WhiteboardElement[]) {
+    const change = data.filter(e => !this.data.includes(e));
+    this.data = data;
+    console.log(change);
+    console.log(data);
   }
 }
