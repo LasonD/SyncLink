@@ -45,6 +45,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   room$: Subject<Room> = new ReplaySubject<Room>(1);
   sendMessage$ = new ReplaySubject<string>(1);
 
+  messagesWithSeparators$: Subject<MessageOrSeparator[]> = new ReplaySubject<MessageOrSeparator[]>(1);
   messages$: Subject<Message[]> = new ReplaySubject<Message[]>(1);
   members$: Subject<RoomMember[]> = new ReplaySubject<RoomMember[]>(1);
   roomMessagesError: any;
@@ -57,6 +58,16 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.resolveSendingMessage();
+    this.resolveMessagesWithSeparators();
+    this.resolveRouteAndUserIdentifiers();
+    this.subscribeToErrors();
+    this.resolveMessages();
+    this.resolveMembers();
+    this.resolveRoom();
+  }
+
+  private resolveSendingMessage() {
     this.sendMessage$
       .pipe(
         takeUntil(this.destroyed$),
@@ -79,12 +90,26 @@ export class RoomComponent implements OnInit, OnDestroy {
         }));
         this.messageText = null;
       });
+  }
 
-    this.resolveRouteAndUserIdentifiers();
-    this.subscribeToErrors();
-    this.resolveMessages();
-    this.resolveMembers();
-    this.resolveRoom();
+  private resolveMessagesWithSeparators() {
+    this.messages$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(messages => {
+      const messagesWithSeparators: MessageOrSeparator[] = [];
+
+      let currentDate: string = null;
+      for (const message of messages) {
+        const messageDate = new Date(message.creationDate).toDateString();
+        if (messageDate !== currentDate) {
+          messagesWithSeparators.push({ isDateSeparator: true, date: messageDate });
+          currentDate = messageDate;
+        }
+        messagesWithSeparators.push({ message });
+      }
+
+      this.messagesWithSeparators$.next(messagesWithSeparators);
+    });
   }
 
   private subscribeToErrors() {
@@ -312,4 +337,10 @@ export class RoomComponent implements OnInit, OnDestroy {
       return member?.username;
     }));
   }
+}
+
+interface MessageOrSeparator {
+  isDateSeparator?: boolean;
+  date?: string;
+  message?: Message;
 }
