@@ -5,9 +5,10 @@ import { Store } from "@ngrx/store";
 import { sendMessageSuccess } from "../../rooms/store/rooms.actions";
 import { AppState } from "../../store/app.reducer";
 import { selectAuthToken } from "../../auth/store/auth.selectors";
-import { firstValueFrom } from "rxjs";
+import { firstValueFrom, Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { Message } from "../../models/message.model";
+import { WhiteboardElement } from "ng-whiteboard";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ import { Message } from "../../models/message.model";
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   private readonly connectionPromise: Promise<void>;
+
+  public boardChange$: Subject<WhiteboardElement[]> = new Subject<WhiteboardElement[]>();
 
   constructor(private store: Store<AppState>) {
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -27,6 +30,10 @@ export class SignalRService {
 
     this.hubConnection.on('messageReceived', (roomId, otherUserId, isPrivate, message: Message) => {
       this.store.dispatch(sendMessageSuccess({ roomId, otherUserId, isPrivate, correlationId: null, message: new Message(message) }));
+    });
+
+    this.hubConnection.on('boardUpdated', (changes) => {
+      this.boardChange$.next(JSON.parse(changes) as WhiteboardElement[]);
     });
 
     this.connectionPromise = this.hubConnection.start()
@@ -42,6 +49,11 @@ export class SignalRService {
   public async groupClosed(groupId: number) {
     await this.connectionPromise;
     return this.hubConnection.invoke('groupClosed', groupId);
+  }
+
+  public async whiteboardChanged(change: WhiteboardElement[]) {
+    await this.connectionPromise;
+    return this.hubConnection.invoke('boardUpdated', JSON.stringify(change));
   }
 }
 
