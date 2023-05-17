@@ -20,6 +20,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { RoomsModule, roomsRoutes } from "../rooms/rooms.module";
 import { GroupRoomsListComponent } from "./group-hub/group-rooms-list/group-rooms-list.component";
 import { featureRoutes } from "../features/features.module";
+import { NgxColorsModule } from "ngx-colors";
 
 const routes: Routes = [
   {
@@ -57,6 +58,7 @@ const routes: Routes = [
     MatIconModule,
     FlexLayoutModule,
     RoomsModule,
+    NgxColorsModule,
   ]
 })
 export class GroupsModule { }
