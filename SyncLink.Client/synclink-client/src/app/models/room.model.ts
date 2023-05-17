@@ -9,5 +9,7 @@ export interface Room {
 }
 
 export interface RoomMember {
-
+  id: number;
+  username: string | null;
+  isAdmin: boolean;
 }

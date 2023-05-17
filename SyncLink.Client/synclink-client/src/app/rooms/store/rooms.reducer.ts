@@ -12,19 +12,18 @@ import {
 } from "./rooms.actions";
 import lodash from 'lodash';
 import { SendMessageData } from "./rooms.effects";
-import { core } from "@angular/compiler";
 
 export interface RoomsState {
   rooms: Room[],
   roomLoading: boolean;
   roomError: any;
 
-  roomMembers: { roomId: number, members: Page<RoomMember> }[];
+  roomMembers: { [roomId: number]: { members: Page<RoomMember>[] } };
   roomMembersLoading: boolean,
   roomMembersError: any,
 
-  roomMessages: { [roomId: number]: { messages: Message[], lastPage: Page<Message> }};
-  privateMessages: { [otherUserId: number]: { messages: Message[], lastPage: Page<Message> }};
+  roomMessages: { [roomId: number]: { messages: Message[], lastPage: Page<Message> } };
+  privateMessages: { [otherUserId: number]: { messages: Message[], lastPage: Page<Message> } };
 
   messagesLoading: boolean,
   messagesError: any,
@@ -35,11 +34,11 @@ export interface RoomsState {
 
 export const initialState: RoomsState = {
   rooms: [],
-  roomMembers: [],
+  roomMembers: {},
   roomMembersError: null,
   roomMembersLoading: false,
-  roomMessages: [],
-  privateMessages: [],
+  roomMessages: {},
+  privateMessages: {},
   messagesError: null,
   messagesLoading: false,
   roomLoading: false,
@@ -96,11 +95,16 @@ export const roomsReducer = createReducer(
     roomMembersLoading: false,
     roomMembersError: error,
   })),
-  on(getRoomMembersSuccess, (state, {roomId, members}): RoomsState => ({
-    ...state,
-    roomMembers: [...state.roomMembers, {roomId: roomId, members: members}],
-    roomMembersLoading: false,
-  })),
+  on(getRoomMembersSuccess, (state, {roomId, members}): RoomsState => {
+    return ({
+      ...state,
+      roomMembers: {
+        ...state.roomMembers,
+        [roomId]: {members: [...state.roomMembers[roomId]?.members || [], members]}
+      },
+      roomMembersLoading: false,
+    });
+  }),
   on(sendMessage, (state, { isPrivate, senderId, correlationId, payload }): RoomsState => {
     const pendingMessage = createPendingMessage(senderId, correlationId, payload);
 

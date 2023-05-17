@@ -25,6 +25,11 @@ export const selectRoomError = createSelector(
   (state: RoomsState) => state.roomError
 );
 
+export const selectRoomMembers = createSelector(
+  selectRoomsFeature,
+  (state: RoomsState) => state.roomMembers
+);
+
 export const selectRoomMessagesError = createSelector(
   selectRoomsFeature,
   (state: RoomsState) => state.messagesError

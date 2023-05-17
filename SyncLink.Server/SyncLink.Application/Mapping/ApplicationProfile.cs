@@ -22,10 +22,16 @@ public class ApplicationProfile : Profile
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.UserName));
         CreateMap<UserGroup, GroupDto>()
             .ForAllMembers(opt => opt.MapFrom(src => src.Group));
+        CreateMap<UserRoom, RoomMemberDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.IsAdmin, opt => opt.MapFrom(src => src.IsAdmin))
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.UserName));
+
         CreateMap<Group, GroupDto>();
         CreateMap<Room, RoomDto>();
         CreateMap<User, GroupMemberDto>();
         CreateMap<Message, MessageDto>();
+        
 
         CreateMap(typeof(PaginatedResult<>), typeof(PaginatedResult<>));
     }

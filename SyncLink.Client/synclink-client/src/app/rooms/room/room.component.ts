@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from "@ngrx/store";
 import {
   combineLatest,
-  distinctUntilChanged, race,
+  distinctUntilChanged, Observable, race,
   ReplaySubject, startWith,
   Subject,
   takeUntil,
@@ -10,19 +10,22 @@ import {
 } from "rxjs";
 import {
   selectPrivateMessages,
-  selectRoomError,
+  selectRoomError, selectRoomMembers,
   selectRoomMessages,
   selectRoomMessagesError,
   selectRooms
 } from "../store/rooms.selector";
 import { ActivatedRoute } from "@angular/router";
 import { Message } from "../../models/message.model";
-import { getRoom, getMessages, sendMessage } from "../store/rooms.actions";
-import { Room } from "../../models/room.model";
+import { getRoom, getMessages, sendMessage, getRoomMembers } from "../store/rooms.actions";
+import { Room, RoomMember } from "../../models/room.model";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AppState } from "../../store/app.reducer";
 import { SignalRService } from "../../common/services/signalr.service";
 import { v4 as uuidv4 } from 'uuid';
+import { selectGroupMembers } from "../../groups/group-hub/store/group-hub.selectors";
+import { map, take } from "rxjs/operators";
+import lodash from 'lodash';
 
 @Component({
   selector: 'app-room',
@@ -43,6 +46,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   sendMessage$ = new ReplaySubject<string>(1);
 
   messages: Message[];
+  members: RoomMember[];
   roomMessagesError: any;
   roomErrorMessage: string = null;
   messageText: string;
@@ -79,6 +83,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.resolveRouteAndUserIdentifiers();
     this.subscribeToErrors();
     this.resolveMessages();
+    this.resolveMembers();
     this.resolveRoom();
   }
 
@@ -213,6 +218,47 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
   }
 
+  private resolveMembers() {
+    race(
+      this.roomId$,
+      this.otherUserId$,
+    ).pipe(
+      takeUntil(this.destroyed$),
+      withLatestFrom(
+        this.isPrivate$,
+        this.groupId$,
+        this.currentUserId$,
+        this.store.select(selectRoomMembers),
+      )
+    ).subscribe(([roomOrOtherUserId, isPrivate, groupId, currentUserId, roomMembersIndex]) => {
+
+      if (isPrivate) {
+        this.store.select(selectGroupMembers)
+          .pipe(take(1), map(members => members.filter(m => m.id === roomOrOtherUserId || m.id === currentUserId)))
+          .subscribe(members => {
+            this.members = members;
+          });
+        return;
+      }
+
+      const roomMembers = roomMembersIndex[roomOrOtherUserId];
+
+      if (!roomMembers) {
+        this.store.dispatch(getRoomMembers({ roomId: roomOrOtherUserId, groupId, pageNumber: 1, pageSize: 100 }));
+      }
+    });
+
+    this.store.select(selectRoomMembers)
+      .pipe(takeUntil(this.destroyed$), withLatestFrom(this.roomId$))
+      .subscribe(([membersIndex, roomId]) => {
+        const roomMembers = membersIndex[roomId];
+
+        if (!roomMembers?.members) return;
+
+        this.members = lodash.uniqBy(roomMembers.members.flatMap(m => m.entities), 'id') as RoomMember[];
+      });
+  }
+
   private resolveRouteAndUserIdentifiers() {
     this.store.select('auth').pipe(takeUntil(this.destroyed$))
       .subscribe((state) => {
@@ -258,5 +304,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (-Math.ceil(scrollTop) === scrollHeight - offsetHeight) {
       this.scrolledToTop$.next(true);
     }
+  }
+
+  getUserName(userId: number): string {
+    const member = this.members?.find(m => m.id === userId);
+
+    return member?.username;
   }
 }
