@@ -45,8 +45,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   room$: Subject<Room> = new ReplaySubject<Room>(1);
   sendMessage$ = new ReplaySubject<string>(1);
 
-  messages: Message[];
-  members: RoomMember[];
+  messages$: Subject<Message[]> = new ReplaySubject<Message[]>(1);
+  members$: Subject<RoomMember[]> = new ReplaySubject<RoomMember[]>(1);
   roomMessagesError: any;
   roomErrorMessage: string = null;
   messageText: string;
@@ -171,7 +171,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           pageSize: this.messagePageSize
         }));
       } else {
-        this.messages = messagesById.messages;
+        this.messages$.next(messagesById.messages);
       }
     });
 
@@ -188,7 +188,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       const storeMessages = isPrivate ? privateMessages : roomMessages;
       const messagesById = storeMessages[isPrivate ? otherUserId : roomId];
       if (messagesById?.messages) {
-        this.messages = messagesById.messages;
+        this.messages$.next(messagesById.messages);
       }
     });
   }
@@ -236,7 +236,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.store.select(selectGroupMembers)
           .pipe(take(1), map(members => members.filter(m => m.id === roomOrOtherUserId || m.id === currentUserId)))
           .subscribe(members => {
-            this.members = members;
+            this.members$.next(members);
           });
         return;
       }
@@ -255,7 +255,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
         if (!roomMembers?.members) return;
 
-        this.members = lodash.uniqBy(roomMembers.members.flatMap(m => m.entities), 'id') as RoomMember[];
+        this.members$.next(lodash.uniqBy(roomMembers.members.flatMap(m => m.entities), 'id') as RoomMember[]);
       });
   }
 
@@ -306,9 +306,10 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUserName(userId: number): string {
-    const member = this.members?.find(m => m.id === userId);
-
-    return member?.username;
+  getUserName(userId: number): Observable<string> {
+    return this.members$.pipe(map(members => {
+      const member = members?.find(m => m.id === userId);
+      return member?.username;
+    }));
   }
 }
