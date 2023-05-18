@@ -11,6 +11,8 @@ namespace SyncLink.Server.Hubs;
 public interface ISyncLinkHub
 {
     Task MessageReceived(int? roomId, int? otherUserId, bool isPrivate, MessageDto message);
+
+    Task BoardUpdated(string change);
 }
 
 [Authorize]
@@ -22,6 +24,8 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
     {
         _userRepository = userRepository;
     }
+
+    #region General
 
     public async Task GroupOpened(int groupId)
     {
@@ -57,4 +61,15 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
     {
         return base.OnDisconnectedAsync(exception);
     }
+
+    #endregion
+
+    #region Whiteboard
+
+    public async Task BoardUpdated(string update)
+    {
+        await Clients.All.BoardUpdated(update);
+    }
+
+    #endregion
 }

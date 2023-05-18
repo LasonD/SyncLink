@@ -23,8 +23,8 @@ export class WhiteboardComponent {
     strokeWidth: 5,
     fill: '#000',
     backgroundColor: '#fff',
-    canvasHeight: 600,
-    canvasWidth: 800,
+    canvasHeight: 1000,
+    canvasWidth: 1500,
     dasharray: ''
   };
 
