@@ -5,7 +5,7 @@ using SyncLink.Application.Dtos;
 
 namespace SyncLink.Application.UseCases.Commands.Features.Whiteboard;
 
-internal class CreateWhiteboard
+public class CreateWhiteboard
 {
     public record Command : IRequest<WhiteboardDto>
     {
