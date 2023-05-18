@@ -1,8 +1,10 @@
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
+using SyncLink.Application.UseCases.Commands.Features.Whiteboard;
 using SyncLink.Common.Helpers.Jwt;
 using SyncLink.Server.Helpers;
 
@@ -12,17 +14,19 @@ public interface ISyncLinkHub
 {
     Task MessageReceived(int? roomId, int? otherUserId, bool isPrivate, MessageDto message);
 
-    Task BoardUpdated(string change);
+    Task BoardUpdated(WhiteboardElementDto change);
 }
 
 [Authorize]
 public class SyncLinkHub : Hub<ISyncLinkHub>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IMediator _mediator;
 
-    public SyncLinkHub(IUserRepository userRepository)
+    public SyncLinkHub(IUserRepository userRepository, IMediator mediator)
     {
         _userRepository = userRepository;
+        _mediator = mediator;
     }
 
     #region General
@@ -48,10 +52,6 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
         return Groups.RemoveFromGroupAsync(ConnectionId, groupName);
     }
 
-    protected string ConnectionId => Context.ConnectionId;
-
-    protected int UserId => AppUserIdClaimHelper.RetrieveUserId(Context.User!) ?? throw new AuthException(new[] { "User id should be present in a hub." });
-
     public override Task OnConnectedAsync()
     {
         return base.OnConnectedAsync();
@@ -66,10 +66,30 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
 
     #region Whiteboard
 
-    public async Task BoardUpdated(string update)
+    public async Task BoardUpdated(int groupId, int whiteboardId, WhiteboardElementDto update)
     {
-        await Clients.All.BoardUpdated(update);
+        var command = new UpdateWhiteboard.Command
+        {
+            GroupId = groupId,
+            Update = update,
+            UserId = UserId,
+            WhiteboardId = whiteboardId
+        };
+
+        var result = await _mediator.Send(command);
+
+        await Clients.GroupExcept(GetGroupNameByGroupId(groupId), new[] { ConnectionId }).BoardUpdated(result);
     }
+
+    #endregion
+
+    #region Utils
+
+    protected string GetGroupNameByGroupId(int groupId) => HubHelper.GetGroupNameForGroupId(groupId);
+
+    protected string ConnectionId => Context.ConnectionId;
+
+    protected int UserId => AppUserIdClaimHelper.RetrieveUserId(Context.User!) ?? throw new AuthException(new[] { "User id should be present in a hub." });
 
     #endregion
 }

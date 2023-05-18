@@ -1,40 +1,34 @@
 ﻿using SyncLink.Application.Domain.Base;
+using SyncLink.Application.Domain;
 
-namespace SyncLink.Application.Domain.Features;
+namespace SyncLink.Application.Dtos;
 
-public class Whiteboard : EntityBase
+public class WhiteboardDto : EntityBase
 {
     public string Name { get; set; } = null!;
 
-    public List<WhiteboardElement> WhiteboardElements { get; set; } = new();
+    public List<WhiteboardElementDto> WhiteboardElements { get; set; } = null!;
 
     public int OwnerId { get; set; }
 
     public User Owner { get; set; } = null!;
-
-    public int GroupId { get; set; }
-
-    public Group Group { get; set; } = null!;
 }
 
-public class WhiteboardElement
+public class WhiteboardElementDto
 {
     public int WhiteboardElementId { get; set; }
 
-    public ElementTypeEnum Type { get; set; }
+    public ElementTypeEnumDto Type { get; set; }
     public string Value { get; set; } = null!;
     public string Id { get; set; } = null!;
     public int X { get; set; }
     public int Y { get; set; }
     public int Rotation { get; set; }
     public int Opacity { get; set; }
-    public WhiteboardElementOptions Options { get; set; } = null!;
-
-    public User Author { get; set; } = null!;
-    public int AuthorId { get; set; }
+    public WhiteboardElementOptionsDto Options { get; set; } = null!;
 }
 
-public enum ElementTypeEnum
+public enum ElementTypeEnumDto
 {
     BRUSH,
     LINE,
@@ -45,15 +39,15 @@ public enum ElementTypeEnum
     SHAPE
 }
 
-public class WhiteboardElementOptions
+public class WhiteboardElementOptionsDto
 {
     public int? Width { get; set; }
     public int? Height { get; set; }
     public int? StrokeWidth { get; set; }
     public string StrokeColor { get; set; }
     public string Fill { get; set; }
-    public LineJoinEnum LineJoin { get; set; }
-    public LineCapEnum LineCap { get; set; }
+    public LineJoinEnumDto LineJoin { get; set; }
+    public LineCapEnumDto LineCap { get; set; }
     public int? Left { get; set; }
     public int? Top { get; set; }
     public int? FontSize { get; set; }
@@ -73,18 +67,17 @@ public class WhiteboardElementOptions
     public int? Cy { get; set; }
 }
 
-public enum LineCapEnum
+public enum LineCapEnumDto
 {
     BUTT,
     SQUARE,
     ROUND
 }
 
-public enum LineJoinEnum
+public enum LineJoinEnumDto
 {
     MITER,
     ROUND,
     BEVEL,
     MITER_CLIP
 }
-
