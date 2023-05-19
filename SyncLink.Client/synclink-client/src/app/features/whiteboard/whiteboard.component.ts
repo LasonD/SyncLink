@@ -1,6 +1,5 @@
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ElementTypeEnum, FormatType, NgWhiteboardService, ToolsEnum, WhiteboardElement } from 'ng-whiteboard';
-import { SignalRService } from "../../common/services/signalr.service";
 
 @Component({
   selector: 'app-whiteboard',
@@ -37,7 +36,7 @@ export class WhiteboardComponent {
 
   isExternalChange = false;
 
-  constructor(private _whiteboardService: NgWhiteboardService, private signalrService: SignalRService) {
+  constructor(private _whiteboardService: NgWhiteboardService) {
   }
 
   ngAfterViewInit(): void {
@@ -45,10 +44,10 @@ export class WhiteboardComponent {
       this.calculateSize();
     }, 0);
 
-    this.signalrService.boardChange$.subscribe(change => {
-      this.data = change;
-      this.isExternalChange = true;
-    })
+    // this.signalrService.boardChange$.subscribe(change => {
+    //   this.data = change;
+    //   this.isExternalChange = true;
+    // })
   }
 
   calculateSize() {

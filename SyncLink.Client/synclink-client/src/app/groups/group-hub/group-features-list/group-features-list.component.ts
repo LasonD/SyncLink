@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
   styleUrls: ['./group-features-list.component.scss']
 })
 export class GroupFeaturesListComponent {
-  features: Feature[] = [ { name: 'Whiteboard', path: ['features', 'whiteboards-list'] } ];
+  features: Feature[] = [ { name: 'Whiteboard', path: ['features', 'whiteboards'] } ];
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router) {

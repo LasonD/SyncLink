@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { Whiteboard, WhiteboardOverview } from "./whiteboard.reducer";
+import { Whiteboard } from "./whiteboard.reducer";
 import { WhiteboardElement } from "ng-whiteboard";
 
 export const getWhiteboard = createAction(

@@ -18,6 +18,7 @@ import { GroupHubEffects } from "./groups/group-hub/store/group-hub.effects";
 import { RoomEffects } from "./rooms/store/rooms.effects";
 import { NotificationEffects } from "./common/store/notifications.effects";
 import { WhiteboardsListComponent } from './features/whiteboard/whiteboards-list/whiteboards-list.component';
+import { MatCardModule } from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { WhiteboardsListComponent } from './features/whiteboard/whiteboards-list
     StoreModule.forRoot(appReducer),
     EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, NotificationEffects]),
     ToastrModule.forRoot(),
+    MatCardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
