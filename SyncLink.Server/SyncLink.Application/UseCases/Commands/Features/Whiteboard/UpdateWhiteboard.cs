@@ -46,6 +46,10 @@ public static class UpdateWhiteboard
 
             whiteboard.WhiteboardElements.Add(update);
 
+            whiteboard.LastUpdatedTime = DateTime.UtcNow;
+
+            await _whiteboardRepository.SaveChangesAsync(cancellationToken);
+
             var dto = _mapper.Map<WhiteboardElementDto>(update);
 
             return dto;

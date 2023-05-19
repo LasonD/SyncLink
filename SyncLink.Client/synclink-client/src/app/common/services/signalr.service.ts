@@ -51,9 +51,9 @@ export class SignalRService {
     return this.hubConnection.invoke('groupClosed', groupId);
   }
 
-  public async whiteboardChanged(change: WhiteboardElement[]) {
+  public async whiteboardUpdated(groupId: number, id: number, change: WhiteboardElement[]) {
     await this.connectionPromise;
-    return this.hubConnection.invoke('boardUpdated', JSON.stringify(change));
+    return this.hubConnection.invoke('boardUpdated', groupId, id,  change);
   }
 }
 

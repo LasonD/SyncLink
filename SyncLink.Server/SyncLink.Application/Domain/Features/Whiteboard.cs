@@ -15,6 +15,8 @@ public class Whiteboard : EntityBase
     public int GroupId { get; set; }
 
     public Group Group { get; set; } = null!;
+
+    public DateTime LastUpdatedTime { get; set; }
 }
 
 public class WhiteboardElement

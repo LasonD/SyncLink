@@ -1,9 +1,6 @@
-﻿using SyncLink.Application.Domain.Base;
-using SyncLink.Application.Domain;
+﻿namespace SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.Dtos;
-
-public class WhiteboardDto : EntityBase
+public class WhiteboardDto
 {
     public string Name { get; set; } = null!;
 
@@ -11,13 +8,13 @@ public class WhiteboardDto : EntityBase
 
     public int OwnerId { get; set; }
 
-    public User Owner { get; set; } = null!;
+    public int GroupId { get; set; }
+
+    public DateTime LastUpdatedTime { get; set; }
 }
 
 public class WhiteboardElementDto
 {
-    public int WhiteboardElementId { get; set; }
-
     public ElementTypeEnumDto Type { get; set; }
     public string Value { get; set; } = null!;
     public string Id { get; set; } = null!;

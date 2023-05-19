@@ -4,7 +4,7 @@ using SyncLink.Application.Dtos;
 
 namespace SyncLink.Application.UseCases.Queries.GetById.Group;
 
-public partial class GetGroupById
+public class GetGroupById
 {
     public record Query : Base.GetById.Query<Domain.Group, GroupDto>;
 

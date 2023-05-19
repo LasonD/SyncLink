@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SyncLink.Application.UseCases.Commands.CreateRoom;
+using SyncLink.Application.UseCases.Commands.Features.Whiteboard;
+using SyncLink.Application.UseCases.Queries;
+using SyncLink.Application.UseCases.Queries.GetById.Whiteboard;
 using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
 
@@ -23,9 +25,40 @@ public class WhiteboardsController : ApiControllerBase
     }
 
     [HttpPost("")]
-    public async Task<IActionResult> CreateWhiteboard(int groupId, CreateRoomDto createRoom, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetWhiteboard(int groupId, int whiteboardId, CancellationToken cancellationToken)
     {
-        var command = _mapper.Map<CreateRoom.Command>(createRoom);
+        var query = new GetWhiteboardById.Query
+        {
+            GroupId = groupId,
+            Id = whiteboardId,
+            UserId = GetRequiredAppUserId(),
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpPost("")]
+    public async Task<IActionResult> GetWhiteboards(int groupId, int pageNumber = 1, int pageSize = int.MaxValue, CancellationToken cancellationToken = default)
+    {
+        var query = new GetWhiteboards.Query
+        {
+            GroupId = groupId,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            UserId = GetRequiredAppUserId(),
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpPost("")]
+    public async Task<IActionResult> CreateWhiteboard(int groupId, CreateWhiteboardDto createWhiteboard, CancellationToken cancellationToken)
+    {
+        var command = _mapper.Map<CreateWhiteboard.Command>(createWhiteboard);
         command.UserId = GetRequiredAppUserId();
         command.GroupId = groupId;
 

@@ -295,6 +295,6 @@ export class WhiteboardComponent {
       return;
     }
 
-    this.signalrService.whiteboardChanged(this.data);
+    //this.signalrService.whiteboardUpdated(this.data);
   }
 }

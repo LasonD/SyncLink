@@ -17,11 +17,13 @@ import { HeaderComponent } from './header/header.component';
 import { GroupHubEffects } from "./groups/group-hub/store/group-hub.effects";
 import { RoomEffects } from "./rooms/store/rooms.effects";
 import { NotificationEffects } from "./common/store/notifications.effects";
+import { WhiteboardsListComponent } from './features/whiteboard/whiteboards-list/whiteboards-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
+    WhiteboardsListComponent,
   ],
   imports: [
     BrowserModule,

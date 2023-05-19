@@ -1,5 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { getWhiteboard, getWhiteboardFailure, getWhiteboardSuccess } from "./whiteboard.actions";
+import { WhiteboardElement } from "ng-whiteboard";
 
 export interface WhiteboardState {
   whiteboard: Whiteboard;
@@ -21,5 +22,9 @@ export const whiteboardReducer = createReducer(
 );
 
 export interface Whiteboard {
-  base64state: string,
+  id: number,
+  name: string,
+  whiteboardElements: WhiteboardElement[],
+  creatorId: number,
+  groupId: number,
 }
