@@ -1,1 +1,19 @@
-<p>create-whiteboard works!</p>
+<mat-card class="form-card">
+  <mat-card-title class="m-4">Create Room</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="createWhiteboardForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-field">
+        <mat-form-field class="example-full-width">
+          <mat-label>Room Name</mat-label>
+          <input matInput formControlName="roomName">
+        </mat-form-field>
+      </div>
+
+      <div class="form-field">
+        <button mat-raised-button color="primary" [disabled]="createWhiteboardForm.invalid">Create Room</button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>

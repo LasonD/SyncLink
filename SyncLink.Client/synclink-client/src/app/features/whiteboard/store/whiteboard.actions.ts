@@ -46,3 +46,20 @@ export const whiteboardUpdatedFailure = createAction(
   '[Whiteboard] Whiteboard Updated Failure',
   props<{ error: any }>()
 );
+
+export const createWhiteboard = createAction(
+  '[Whiteboard] Create Whiteboard',
+  props<{ groupId: number, name: string }>()
+);
+
+export const createWhiteboardSuccess = createAction(
+  '[Whiteboard] Create Whiteboard Success',
+  props<{ whiteboard: Whiteboard }>()
+);
+
+export const createWhiteboardFailure = createAction(
+  '[Whiteboard] Create Whiteboard Failure',
+  props<{ error: any }>()
+);
+
+

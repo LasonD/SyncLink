@@ -56,7 +56,7 @@ export const getPrivateRoomByUser = createAction(
 
 export const createRoom = createAction(
   '[Rooms] Create Room',
-  props<{ name: string, memberIds: number[], description?: string }>()
+  props<{ groupId: number, name: string, memberIds: number[], description?: string }>()
 );
 
 export const createRoomSuccess = createAction(

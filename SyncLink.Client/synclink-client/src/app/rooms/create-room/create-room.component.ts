@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { RoomsState } from "../store/rooms.reducer";
 import { Store } from "@ngrx/store";
-import { selectGroupMembers } from "../../groups/group-hub/store/group-hub.selectors";
+import { selectCurrentGroupId, selectGroupMembers } from "../../groups/group-hub/store/group-hub.selectors";
 import { Observable, Subject, takeUntil, withLatestFrom } from "rxjs";
 import { GroupMember } from "../../models/group.model";
 import { selectUserId } from "../../auth/store/auth.selectors";
-import { map } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 import { createRoom } from "../store/rooms.actions";
 
 @Component({
@@ -47,11 +47,14 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
 
     const value = this.createRoomForm.value;
 
-    const name = value.name;
+    const name = value.roomName;
     const description = value.description;
     const memberIds = value.users.map(u => u.id);
 
-    this.store.dispatch(createRoom({ name, memberIds, description }));
+    this.store.select(selectCurrentGroupId).pipe(take(1))
+      .subscribe(groupId => {
+        this.store.dispatch(createRoom({ name, memberIds, description, groupId }));
+      });
   }
 
   ngOnDestroy() {

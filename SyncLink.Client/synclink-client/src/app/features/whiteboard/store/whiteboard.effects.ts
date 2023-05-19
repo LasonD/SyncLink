@@ -7,6 +7,7 @@ import { HttpClient } from "@angular/common/http";
 import { SignalRService } from "../../../common/services/signalr.service";
 import { Whiteboard } from "./whiteboard.reducer";
 import {
+  createWhiteboard, createWhiteboardFailure, createWhiteboardSuccess,
   getWhiteboard,
   getWhiteboardFailure, getWhiteboards, getWhiteboardsFailure, getWhiteboardsSuccess,
   getWhiteboardSuccess,
@@ -40,6 +41,23 @@ export class WhiteboardEffects {
               return getWhiteboardsSuccess({whiteboards});
             }),
             catchError((error) => of(getWhiteboardsFailure({error})))
+          );
+        }
+      )
+    )
+  );
+
+  createWhiteboard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createWhiteboard),
+      mergeMap(({groupId, name}) => {
+          return this.http.post<Whiteboard>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/whiteboards`, {
+            name
+          }).pipe(
+            map((whiteboard) => {
+              return createWhiteboardSuccess({whiteboard});
+            }),
+            catchError((error) => of(createWhiteboardFailure({error})))
           );
         }
       )

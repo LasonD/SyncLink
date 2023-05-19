@@ -34,3 +34,8 @@ export const selectGroupHubRooms = createSelector(
   selectGroupHubFeature,
   (state: GroupHubState) => state.groupRooms
 );
+
+export const selectCurrentGroupId = createSelector(
+  selectGroupHubFeature,
+  (state: GroupHubState) => state.group?.id
+);

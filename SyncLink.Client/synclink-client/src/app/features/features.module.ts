@@ -8,6 +8,10 @@ import { WhiteboardsListComponent } from "./whiteboard/whiteboards-list/whiteboa
 import { StoreModule } from "@ngrx/store";
 import { whiteboardReducer } from "./whiteboard/store/whiteboard.reducer";
 import { CreateWhiteboardComponent } from './whiteboard/create-whiteboard/create-whiteboard.component';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatCardModule } from "@angular/material/card";
+import { ReactiveFormsModule } from "@angular/forms";
 
 export const featureRoutes: Routes = [
   {
@@ -31,6 +35,10 @@ export const featureRoutes: Routes = [
     NgWhiteboardModule,
     NgxColorsModule,
     StoreModule.forFeature('whiteboards', whiteboardReducer),
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    ReactiveFormsModule,
   ],
 })
 export class FeaturesModule { }
