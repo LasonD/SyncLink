@@ -5,6 +5,8 @@ import { NgWhiteboardModule } from "ng-whiteboard";
 import { Routes } from "@angular/router";
 import { NgxColorsModule } from "ngx-colors";
 import { WhiteboardsListComponent } from "./whiteboard/whiteboards-list/whiteboards-list.component";
+import { StoreModule } from "@ngrx/store";
+import { whiteboardReducer } from "./whiteboard/store/whiteboard.reducer";
 
 export const featureRoutes: Routes = [
   {
@@ -23,6 +25,7 @@ export const featureRoutes: Routes = [
     CommonModule,
     NgWhiteboardModule,
     NgxColorsModule,
+    StoreModule.forFeature('whiteboards', whiteboardReducer),
   ],
 })
 export class FeaturesModule { }
