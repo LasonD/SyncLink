@@ -15,17 +15,20 @@ internal class WhiteboardConfiguration : IEntityTypeConfiguration<Whiteboard>
             e.HasOne(x => x.Author)
                 .WithMany()
                 .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
         });
 
         builder.HasOne(x => x.Group)
             .WithMany()
             .HasForeignKey(x => x.GroupId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.SetNull)
+            .IsRequired(false);
 
         builder.HasOne(x => x.Owner)
             .WithMany()
             .HasForeignKey(x => x.OwnerId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.SetNull)
+            .IsRequired(false);
     }
 }
