@@ -9,10 +9,12 @@ using Microsoft.OpenApi.Models;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Domain;
+using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Mapping;
 using SyncLink.Application.UseCases.Commands.Auth.Register;
 using SyncLink.Application.UseCases.Queries.GetById.Group;
+using SyncLink.Application.UseCases.Queries.GetById.Whiteboard;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Data.Repositories;
@@ -159,10 +161,12 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IGroupsRepository, GroupsRepository>();
         services.AddTransient<IRoomsRepository, RoomsRepository>();
         services.AddTransient<IMessagesRepository, MessagesRepository>();
+        services.AddTransient<IWhiteboardRepository, WhiteboardRepository>();
 
         services.AddTransient<IEntityRepository<Group>, GroupsRepository>();
 
-        services.AddTransient<IRequestHandler<GetGroupById.Query, GroupDto>, GetGroupById.Handler>();
+        services.AddTransient<IRequestHandler<GetGroupById.Query, GroupDto>, GetGroupById.Handler>(); 
+        services.AddTransient<IRequestHandler<GetWhiteboardById.Query, WhiteboardDto>, GetWhiteboardById.Handler>();
 
         services.AddTransient<INotificationsService, NotificationService>();
 

@@ -7,14 +7,13 @@ import { ActivatedRoute, Router } from "@angular/router";
   styleUrls: ['./group-features-list.component.scss']
 })
 export class GroupFeaturesListComponent {
-  features: Feature[] = [ { name: 'Whiteboard', path: ['features', 'whiteboard'] } ];
+  features: Feature[] = [ { name: 'Whiteboard', path: ['features', 'whiteboards-list'] } ];
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router) {
   }
 
   navigateFeature(feature: Feature) {
-    console.log('Navigating to', feature);
     this.router.navigate(feature.path, { relativeTo: this.activatedRoute });
   }
 }

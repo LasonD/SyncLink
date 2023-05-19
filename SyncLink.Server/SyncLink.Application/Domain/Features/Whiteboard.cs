@@ -8,11 +8,11 @@ public class Whiteboard : EntityBase
 
     public List<WhiteboardElement> WhiteboardElements { get; set; } = new();
 
-    public int OwnerId { get; set; }
+    public int? OwnerId { get; set; }
 
     public User Owner { get; set; } = null!;
 
-    public int GroupId { get; set; }
+    public int? GroupId { get; set; }
 
     public Group Group { get; set; } = null!;
 
@@ -33,7 +33,7 @@ public class WhiteboardElement
     public WhiteboardElementOptions Options { get; set; } = null!;
 
     public User Author { get; set; } = null!;
-    public int AuthorId { get; set; }
+    public int? AuthorId { get; set; }
 }
 
 public enum ElementTypeEnum

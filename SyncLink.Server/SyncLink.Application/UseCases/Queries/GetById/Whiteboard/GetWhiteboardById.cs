@@ -15,7 +15,7 @@ public class GetWhiteboardById
     {
         private readonly IUserRepository _userRepository;
 
-        public Handler(IEntityRepository<Domain.Features.Whiteboard> genericRepository, IMapper mapper, IUserRepository userRepository) : base(genericRepository, mapper)
+        public Handler(IWhiteboardRepository whiteboardRepository, IMapper mapper, IUserRepository userRepository) : base(whiteboardRepository, mapper)
         {
             _userRepository = userRepository;
         }

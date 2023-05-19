@@ -12,6 +12,20 @@ internal class WhiteboardConfiguration : IEntityTypeConfiguration<Whiteboard>
         {
             e.WithOwner();
             e.OwnsOne(x => x.Options);
+            e.HasOne(x => x.Author)
+                .WithMany()
+                .HasForeignKey(x => x.AuthorId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
+
+        builder.HasOne(x => x.Group)
+            .WithMany()
+            .HasForeignKey(x => x.GroupId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(x => x.Owner)
+            .WithMany()
+            .HasForeignKey(x => x.OwnerId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
