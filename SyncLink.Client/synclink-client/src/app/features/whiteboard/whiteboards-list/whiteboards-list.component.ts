@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Whiteboard } from "../store/whiteboard.reducer";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-whiteboards-list',
   templateUrl: './whiteboards-list.component.html',
   styleUrls: ['./whiteboards-list.component.scss']
 })
-export class WhiteboardsListComponent {
+export class WhiteboardsListComponent implements OnInit {
   whiteboards: Whiteboard[] = [
     {
       id: 1,
@@ -24,13 +25,16 @@ export class WhiteboardsListComponent {
     },
   ];
 
-  constructor() { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
   }
 
   navigateToWhiteboard(id: number): void {
-    // replace with your actual routing logic
-    console.log(`Navigating to whiteboard ${id}`);
+    this.router.navigate([id], { relativeTo: this.activatedRoute });
+  }
+
+  openCreateForm() {
+    this.router.navigate(['create']);
   }
 }

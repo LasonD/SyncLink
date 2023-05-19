@@ -7,9 +7,12 @@ import { NgxColorsModule } from "ngx-colors";
 import { WhiteboardsListComponent } from "./whiteboard/whiteboards-list/whiteboards-list.component";
 import { StoreModule } from "@ngrx/store";
 import { whiteboardReducer } from "./whiteboard/store/whiteboard.reducer";
-import { MatRippleModule } from "@angular/material/core";
+import { CreateWhiteboardComponent } from './whiteboard/create-whiteboard/create-whiteboard.component';
 
 export const featureRoutes: Routes = [
+  {
+    path: 'features/whiteboards/create', component: WhiteboardsListComponent,
+  },
   {
     path: 'features/whiteboards/:whiteboardId', component: WhiteboardComponent,
   },
@@ -20,7 +23,8 @@ export const featureRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    WhiteboardComponent
+    WhiteboardComponent,
+    CreateWhiteboardComponent
   ],
   imports: [
     CommonModule,

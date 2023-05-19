@@ -19,6 +19,8 @@ import { RoomEffects } from "./rooms/store/rooms.effects";
 import { NotificationEffects } from "./common/store/notifications.effects";
 import { WhiteboardsListComponent } from './features/whiteboard/whiteboards-list/whiteboards-list.component';
 import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { MatCardModule } from "@angular/material/card";
     EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, NotificationEffects]),
     ToastrModule.forRoot(),
     MatCardModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
