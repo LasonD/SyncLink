@@ -9,11 +9,15 @@ export const selectWhiteboardsState = createSelector(
   (state: FeaturesState) => state.whiteboards
 );
 
+export const selectWhiteboardLoading = createSelector(
+  selectWhiteboardsState,
+  (state: WhiteboardState): boolean => state.whiteboardLoading
+);
+
 export const selectWhiteboards = createSelector(
   selectWhiteboardsState,
   (state: WhiteboardState): Whiteboard[] => Object.values(state.entities)
 );
-
 
 export const selectSelectedWhiteboardId = createSelector(
   selectWhiteboardsState,

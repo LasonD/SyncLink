@@ -18,6 +18,7 @@ import { GroupRoomsListComponent } from "./group-hub/group-rooms-list/group-room
 import { featureRoutes } from "../features/features.module";
 import { NgxColorsModule } from "ngx-colors";
 import { NgWhiteboardModule } from "ng-whiteboard";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 const routes: Routes = [
   {
@@ -54,6 +55,7 @@ const routes: Routes = [
     RoomsModule,
     NgxColorsModule,
     NgWhiteboardModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class GroupsModule { }

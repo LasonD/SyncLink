@@ -3,9 +3,9 @@ import { GroupsState } from "../store/groups.reducer";
 import { Store } from "@ngrx/store";
 import { closeGroup, getGroup, openGroup } from "./store/group-hub.actions";
 import { ActivatedRoute } from "@angular/router";
-import { distinctUntilChanged, Subject, takeUntil } from "rxjs";
+import { distinctUntilChanged, Observable, Subject, takeUntil } from "rxjs";
 import { filter, map } from "rxjs/operators";
-import { selectGroupHubGroup } from "./store/group-hub.selectors";
+import { selectGroupHubGroup, selectGroupHubLoading } from "./store/group-hub.selectors";
 import { Group } from "../../models/group.model";
 
 @Component({
@@ -15,6 +15,7 @@ import { Group } from "../../models/group.model";
 })
 export class GroupHubComponent implements OnInit, OnDestroy {
   destroyed$: Subject<boolean> = new Subject<boolean>();
+  isLoading$: Observable<boolean>;
   group: Group;
 
   constructor(private store: Store<GroupsState>,
@@ -22,6 +23,8 @@ export class GroupHubComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.isLoading$ = this.store.select(selectGroupHubLoading).pipe(takeUntil(this.destroyed$));
+
     this.store.select(selectGroupHubGroup)
       .pipe(
         takeUntil(this.destroyed$)
@@ -37,7 +40,6 @@ export class GroupHubComponent implements OnInit, OnDestroy {
         filter(id => !!id),
         distinctUntilChanged()
       ).subscribe((id) => {
-        console.log('getGroup Dispatch', id)
         this.store.dispatch(getGroup({ id }))
     });
   }

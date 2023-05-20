@@ -1,24 +1,31 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #sidenav class="sidenav" mode="side" opened>
-    <mat-nav-list>
-      <app-group-users-list></app-group-users-list>
-    </mat-nav-list>
-    <mat-divider></mat-divider>
-    <mat-nav-list>
-      <app-group-rooms-list></app-group-rooms-list>
-    </mat-nav-list>
-    <mat-divider></mat-divider>
-    <mat-nav-list>
-      <app-group-features-list></app-group-features-list>
-    </mat-nav-list>
-  </mat-sidenav>
+<ng-container *ngIf="isLoading$ | async; else content">
+  <div class="d-flex justify-content-center align-items-center" style="height: 100vh">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+</ng-container>
+<ng-template #content>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav class="sidenav" mode="side" opened>
+      <mat-nav-list>
+        <app-group-users-list></app-group-users-list>
+      </mat-nav-list>
+      <mat-divider></mat-divider>
+      <mat-nav-list>
+        <app-group-rooms-list></app-group-rooms-list>
+      </mat-nav-list>
+      <mat-divider></mat-divider>
+      <mat-nav-list>
+        <app-group-features-list></app-group-features-list>
+      </mat-nav-list>
+    </mat-sidenav>
 
-  <mat-sidenav-content>
-    <button mat-icon-button class="toggle-button" (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <div>
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    <mat-sidenav-content>
+      <button mat-icon-button class="toggle-button" (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div>
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-template>

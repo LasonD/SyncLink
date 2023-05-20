@@ -1,5 +1,17 @@
-import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ElementTypeEnum, FormatType, NgWhiteboardService, ToolsEnum, WhiteboardElement } from 'ng-whiteboard';
+import { Store } from "@ngrx/store";
+import { AppState } from "../../store/app.reducer";
+import {
+  selectSelectedWhiteboard,
+  selectSelectedWhiteboardId,
+  selectWhiteboardLoading
+} from "./store/whiteboard.selectors";
+import { distinctUntilChanged, Observable, Subject, takeUntil, withLatestFrom } from "rxjs";
+import { filter, map, take } from "rxjs/operators";
+import { getWhiteboard, whiteboardUpdated } from "./store/whiteboard.actions";
+import { selectCurrentGroupId } from "../../groups/group-hub/store/group-hub.selectors";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-whiteboard',
@@ -8,8 +20,12 @@ import { ElementTypeEnum, FormatType, NgWhiteboardService, ToolsEnum, Whiteboard
   providers: [NgWhiteboardService],
   encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class WhiteboardComponent {
+export class WhiteboardComponent implements OnInit, OnDestroy {
   @ViewChild('workarea', {static: false}) private workarea!: ElementRef<HTMLElement>;
+  private destroyed$ = new Subject<boolean>();
+  isLoading$: Observable<boolean>;
+
+  isLoaded = false;
 
   toolsEnum = ToolsEnum;
   elementTypeEnum = ElementTypeEnum;
@@ -36,7 +52,40 @@ export class WhiteboardComponent {
 
   isExternalChange = false;
 
-  constructor(private _whiteboardService: NgWhiteboardService) {
+  constructor(private _whiteboardService: NgWhiteboardService, private store: Store<AppState>, private activatedRoute: ActivatedRoute) {
+  }
+
+  ngOnInit() {
+    this.store.select(selectWhiteboardLoading).pipe(takeUntil(this.destroyed$))
+      .subscribe(isLoading => this.isLoaded = isLoading);
+
+    // this.activatedRoute.paramMap.pipe(
+    //   takeUntil(this.destroyed$),
+    //   map(p => +p.get('whiteboardId')))
+    //   .subscribe(whiteboardId => console.log('WhiteboardId: ', whiteboardId));
+    //
+    // this.store.select(selectCurrentGroupId)
+    //   .subscribe(groupId => console.log('GroupId: ', groupId));
+
+    this.activatedRoute.paramMap.pipe(
+      takeUntil(this.destroyed$),
+      map(p => +p.get('whiteboardId')),
+      filter(id => !!id),
+      distinctUntilChanged(),
+      withLatestFrom(this.store.select(selectCurrentGroupId).pipe(filter(id => !!id)))
+    ).subscribe(([whiteboardId, groupId]) => {
+      //console.log('Getting whiteboard: ', whiteboardId, groupId);
+      this.store.dispatch(getWhiteboard({ groupId, id: whiteboardId }));
+    })
+
+    this.store.select(selectSelectedWhiteboard)
+      .pipe(
+        takeUntil(this.destroyed$),
+        distinctUntilChanged(),
+        filter(w => !!w)
+      ).subscribe(whiteboard => {
+        this.data = [...whiteboard.whiteboardElements];
+    });
   }
 
   ngAfterViewInit(): void {
@@ -285,15 +334,38 @@ export class WhiteboardComponent {
   }
 
   onDataChange(data: WhiteboardElement[]) {
-    const change = data.filter(e => !this.data.includes(e));
-    this.data = data;
-    console.log(change);
+    console.log(data);
 
-    if (this.isExternalChange) {
-      this.isExternalChange = false;
+    console.log('Data ', data);
+
+    if (!this.isLoaded) {
       return;
     }
 
-    //this.signalrService.whiteboardUpdated(this.data);
+    const change = data.filter(e => this.data.some(d => d.id === e.id));
+    this.data = data;
+
+    if (!!change?.length) {
+      return;
+    }
+
+    // if (this.isExternalChange) {
+    //   this.isExternalChange = false;
+    //   return;
+    // }
+
+    this.store.select(selectCurrentGroupId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        take(1),
+        withLatestFrom(this.store.select(selectSelectedWhiteboardId).pipe(filter(id => !!id)))
+      ).subscribe(([groupId, selectedWhiteboardId]) => {
+        console.log('Whiteboard updated', groupId, change);
+      this.store.dispatch(whiteboardUpdated({ groupId, id: selectedWhiteboardId, changes: change }));
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(true);
   }
 }

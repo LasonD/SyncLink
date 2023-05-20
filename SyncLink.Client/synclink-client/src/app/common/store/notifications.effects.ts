@@ -14,7 +14,11 @@ import {
   getGroupRoomsFailure
 } from "../../groups/group-hub/store/group-hub.actions";
 import { LOGIN_FAILURE } from "../../auth/store/auth.actions";
-import { createWhiteboardFailure, createWhiteboardSuccess } from "../../features/whiteboard/store/whiteboard.actions";
+import {
+  createWhiteboardFailure,
+  createWhiteboardSuccess,
+  whiteboardUpdatedFailure
+} from "../../features/whiteboard/store/whiteboard.actions";
 
 @Injectable()
 export class NotificationEffects {
@@ -153,6 +157,16 @@ export class NotificationEffects {
       ofType(createWhiteboardSuccess),
       tap(({whiteboard}) => {
           this.notificationsService.success(`Whiteboard ${whiteboard.name} has been created`, 'Success');
+        }
+      )
+    ), {dispatch: false}
+  );
+
+  whiteboardUpdatedFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(whiteboardUpdatedFailure),
+      tap(({error}) => {
+          this.notificationsService.error(error, 'Whiteboard update has failed. Reload the page');
         }
       )
     ), {dispatch: false}
