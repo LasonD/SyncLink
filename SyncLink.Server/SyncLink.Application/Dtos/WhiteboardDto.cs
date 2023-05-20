@@ -2,6 +2,8 @@
 
 public class WhiteboardDto
 {
+    public int Id { get; set; }
+
     public string Name { get; set; } = null!;
 
     public List<WhiteboardElementDto> WhiteboardElements { get; set; } = null!;

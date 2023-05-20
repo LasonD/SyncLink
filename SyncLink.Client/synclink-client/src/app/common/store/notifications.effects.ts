@@ -14,6 +14,7 @@ import {
   getGroupRoomsFailure
 } from "../../groups/group-hub/store/group-hub.actions";
 import { LOGIN_FAILURE } from "../../auth/store/auth.actions";
+import { createWhiteboardFailure, createWhiteboardSuccess } from "../../features/whiteboard/store/whiteboard.actions";
 
 @Injectable()
 export class NotificationEffects {
@@ -132,6 +133,26 @@ export class NotificationEffects {
       ofType(LOGIN_FAILURE),
       tap(({error}) => {
           this.notificationsService.error(error, 'Login has failed');
+        }
+      )
+    ), {dispatch: false}
+  );
+
+  createWhiteboardFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createWhiteboardFailure),
+      tap(({error}) => {
+          this.notificationsService.error(error, 'Whiteboard creation has failed');
+        }
+      )
+    ), {dispatch: false}
+  );
+
+  createWhiteboardSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createWhiteboardSuccess),
+      tap(({whiteboard}) => {
+          this.notificationsService.success(`Whiteboard ${whiteboard.name} has been created`, 'Success');
         }
       )
     ), {dispatch: false}

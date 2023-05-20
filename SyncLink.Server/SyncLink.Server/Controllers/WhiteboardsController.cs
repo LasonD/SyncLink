@@ -24,7 +24,7 @@ public class WhiteboardsController : ApiControllerBase
         _mapper = mapper;
     }
 
-    [HttpPost("")]
+    [HttpGet("{whiteboardId}")]
     public async Task<IActionResult> GetWhiteboard(int groupId, int whiteboardId, CancellationToken cancellationToken)
     {
         var query = new GetWhiteboardById.Query
@@ -39,7 +39,7 @@ public class WhiteboardsController : ApiControllerBase
         return Ok(result);
     }
 
-    [HttpPost("")]
+    [HttpGet("")]
     public async Task<IActionResult> GetWhiteboards(int groupId, int pageNumber = 1, int pageSize = int.MaxValue, CancellationToken cancellationToken = default)
     {
         var query = new GetWhiteboards.Query

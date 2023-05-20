@@ -1,7 +1,13 @@
 import { adapter, WhiteboardState } from "./whiteboard.reducer";
 import { createFeatureSelector, createSelector } from "@ngrx/store";
+import { FeaturesState } from "../../store/features.reducer";
 
-export const selectWhiteboardFeature = createFeatureSelector<WhiteboardState>('whiteboards');
+export const selectFeaturesFeature = createFeatureSelector<FeaturesState>('features');
+
+export const selectWhiteboardsState = createSelector(
+  selectFeaturesFeature,
+  (state: FeaturesState) => state.whiteboards
+);
 
 export const {
   selectIds,
@@ -11,8 +17,13 @@ export const {
 } = adapter.getSelectors();
 
 export const selectSelectedWhiteboardId = createSelector(
-  selectWhiteboardFeature,
+  selectWhiteboardsState,
   (state: WhiteboardState) => state.selectedWhiteboardId
+);
+
+export const selectCreatedWhiteboardId = createSelector(
+  selectWhiteboardsState,
+  (state: WhiteboardState) => state.createdWhiteboardId
 );
 
 export const selectSelectedWhiteboard = createSelector(

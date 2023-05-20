@@ -3,6 +3,7 @@ using SyncLink.Application.UseCases.Commands.Auth.Login;
 using SyncLink.Application.UseCases.Commands.Auth.Register;
 using SyncLink.Application.UseCases.Commands.CreateGroup;
 using SyncLink.Application.UseCases.Commands.CreateRoom;
+using SyncLink.Application.UseCases.Commands.Features.Whiteboard;
 using SyncLink.Application.UseCases.Commands.SendMessage;
 using SyncLink.Server.Dtos;
 
@@ -17,6 +18,7 @@ public class ApiModelsProfile : Profile
 
         CreateMap<CreateGroupDto, CreateGroup.Command>();
         CreateMap<CreateRoomDto, CreateRoom.Command>();
+        CreateMap<CreateWhiteboardDto, CreateWhiteboard.Command>();
 
         CreateMap<SendMessageDto, SendMessage.Command>()
             .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => src.RoomId == 0 ? null : src.RoomId))

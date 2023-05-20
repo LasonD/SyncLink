@@ -2,6 +2,7 @@
 using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Domain.Associations;
+using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.UseCases.Commands.Auth.Login;
 using SyncLink.Application.UseCases.Commands.Auth.Register;
@@ -31,8 +32,8 @@ public class ApplicationProfile : Profile
         CreateMap<Room, RoomDto>();
         CreateMap<User, GroupMemberDto>();
         CreateMap<Message, MessageDto>();
+        CreateMap<Whiteboard, WhiteboardDto>();
         
-
         CreateMap(typeof(PaginatedResult<>), typeof(PaginatedResult<>));
     }
 }

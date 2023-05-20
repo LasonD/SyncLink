@@ -21,6 +21,7 @@ import { WhiteboardsListComponent } from './features/whiteboard/whiteboards-list
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
+import { WhiteboardEffects } from "./features/whiteboard/store/whiteboard.effects";
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import { MatButtonModule } from "@angular/material/button";
     CoreModule,
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
-    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, NotificationEffects]),
+    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, WhiteboardEffects, NotificationEffects]),
     ToastrModule.forRoot(),
     MatCardModule,
     MatIconModule,

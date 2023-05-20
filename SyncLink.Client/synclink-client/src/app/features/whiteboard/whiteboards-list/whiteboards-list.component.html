@@ -4,7 +4,7 @@
     Create Whiteboard
   </button>
   <mat-card
-    *ngFor="let whiteboard of whiteboards"
+    *ngFor="let whiteboard of (whiteboards$ | async) "
     (click)="navigateToWhiteboard(whiteboard.id)"
     class="whiteboard-card"
   >

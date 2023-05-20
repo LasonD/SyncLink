@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { Subject } from "rxjs";
+import { distinctUntilChanged, Subject, takeUntil } from "rxjs";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { RoomsState } from "../../../rooms/store/rooms.reducer";
 import { selectCurrentGroupId } from "../../../groups/group-hub/store/group-hub.selectors";
-import { take } from "rxjs/operators";
+import { filter, take } from "rxjs/operators";
 import { createWhiteboard } from "../store/whiteboard.actions";
+import { selectCreatedWhiteboardId } from "../store/whiteboard.selectors";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-create-whiteboard',
@@ -17,7 +19,7 @@ export class CreateWhiteboardComponent {
 
   createWhiteboardForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private store: Store<RoomsState>) {
+  constructor(private fb: FormBuilder, private store: Store<RoomsState>, private router: Router, private route: ActivatedRoute) {
 
   }
 
@@ -36,9 +38,15 @@ export class CreateWhiteboardComponent {
 
     const name = value.whiteboardName;
 
-    this.store.select(selectCurrentGroupId).pipe(take(1))
+    this.store.select(selectCurrentGroupId).pipe(filter(id => !!id), take(1))
       .subscribe(groupId => {
         this.store.dispatch(createWhiteboard({ name, groupId }));
+      });
+
+    this.store.select(selectCreatedWhiteboardId)
+      .pipe(distinctUntilChanged(), filter(id => !!id), takeUntil(this.destroyed$), take(1))
+      .subscribe(_ => {
+        this.router.navigate(['../'], { relativeTo: this.route });
       });
   }
 

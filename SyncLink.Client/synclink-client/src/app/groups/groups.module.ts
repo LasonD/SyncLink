@@ -22,6 +22,7 @@ import { GroupRoomsListComponent } from "./group-hub/group-rooms-list/group-room
 import { featureRoutes } from "../features/features.module";
 import { NgxColorsModule } from "ngx-colors";
 import { NgWhiteboardModule } from "ng-whiteboard";
+import { featuresReducer } from "../features/store/features.reducer";
 
 const routes: Routes = [
   {
@@ -52,6 +53,7 @@ const routes: Routes = [
     StoreModule.forFeature('groupSearch', groupsSearchReducer),
     StoreModule.forFeature('createGroup', createGroupReducer),
     StoreModule.forFeature('groupHub', groupHubReducer),
+    StoreModule.forFeature('features', featuresReducer),
     RouterModule.forChild(routes),
     MatListModule,
     MatExpansionModule,

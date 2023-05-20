@@ -1,33 +1,40 @@
-import { Component, OnInit } from '@angular/core';
-import { Whiteboard } from "../store/whiteboard.reducer";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Whiteboard, WhiteboardState } from "../store/whiteboard.reducer";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { getWhiteboards } from "../store/whiteboard.actions";
+import { selectCurrentGroupId } from "../../../groups/group-hub/store/group-hub.selectors";
+import { distinctUntilChanged, Observable, Subject, takeUntil } from "rxjs";
+import { selectAll } from "../store/whiteboard.selectors";
+import { filter } from "rxjs/operators";
 
 @Component({
   selector: 'app-whiteboards-list',
   templateUrl: './whiteboards-list.component.html',
   styleUrls: ['./whiteboards-list.component.scss']
 })
-export class WhiteboardsListComponent implements OnInit {
-  whiteboards: Whiteboard[] = [
-    {
-      id: 1,
-      name: 'Whiteboard 1',
-      whiteboardElements: [],
-      creatorId: 1,
-      groupId: 1
-    },
-    {
-      id: 2,
-      name: 'Whiteboard 2',
-      whiteboardElements: [],
-      creatorId: 1,
-      groupId: 1
-    },
-  ];
+export class WhiteboardsListComponent implements OnInit, OnDestroy {
+  destroyed$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+  whiteboards$: Observable<Whiteboard[]>;
+
+  constructor(private store: Store<WhiteboardState>, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.store.select(selectCurrentGroupId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        filter(id => !!id),
+        distinctUntilChanged()
+      ).subscribe(groupId => {
+      this.store.dispatch(getWhiteboards({ groupId }))
+    });
+
+    this.whiteboards$ = this.store.select(selectAll)
+      .pipe(
+        takeUntil(this.destroyed$),
+        distinctUntilChanged()
+      );
   }
 
   navigateToWhiteboard(id: number): void {
@@ -35,6 +42,10 @@ export class WhiteboardsListComponent implements OnInit {
   }
 
   openCreateForm() {
-    this.router.navigate(['create']);
+    this.router.navigate(['create'], { relativeTo: this.activatedRoute });
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(true);
   }
 }

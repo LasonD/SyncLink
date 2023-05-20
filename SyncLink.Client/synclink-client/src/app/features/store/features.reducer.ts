@@ -3,9 +3,9 @@ import { combineReducers } from "@ngrx/store";
 import { whiteboardReducer } from "../whiteboard/store/whiteboard.reducer";
 
 export interface FeaturesState {
-  whiteboard: fromWhiteboard.WhiteboardState,
+  whiteboards: fromWhiteboard.WhiteboardState,
 }
 
 export const featuresReducer = combineReducers<FeaturesState>({
-  whiteboard: whiteboardReducer,
+  whiteboards: whiteboardReducer,
 });
