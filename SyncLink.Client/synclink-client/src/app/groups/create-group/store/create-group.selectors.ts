@@ -1,7 +1,11 @@
-import { createFeatureSelector, createSelector } from "@ngrx/store";
+import { createSelector } from "@ngrx/store";
 import { CreateGroupState } from "./create-group.reducer";
+import { selectGroupsFeature } from "../../group-hub/store/group-hub.selectors";
 
-export const selectCreateGroupFeature = createFeatureSelector<CreateGroupState>('createGroup');
+export const selectCreateGroupFeature = createSelector(
+  selectGroupsFeature,
+  state => state.createGroup,
+);
 
 export const selectCreatedGroup = createSelector(
   selectCreateGroupFeature,

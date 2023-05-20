@@ -5,11 +5,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { GroupsSearchComponent } from "./groups-search/groups-search.component";
 import { CreateGroupComponent } from './create-group/create-group.component';
 import { GroupHubComponent } from './group-hub/group-hub.component';
-import { StoreModule } from "@ngrx/store";
-import { groupsSearchReducer } from "./groups-search/store/groups-search.reducer";
-import { createGroupReducer } from "./create-group/store/create-group.reducer";
 import { AuthGuard } from "../auth/services/auth.guard";
-import { groupHubReducer } from "./group-hub/store/group-hub.reducer";
 import { MatListModule } from "@angular/material/list";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -22,7 +18,6 @@ import { GroupRoomsListComponent } from "./group-hub/group-rooms-list/group-room
 import { featureRoutes } from "../features/features.module";
 import { NgxColorsModule } from "ngx-colors";
 import { NgWhiteboardModule } from "ng-whiteboard";
-import { featuresReducer } from "../features/store/features.reducer";
 
 const routes: Routes = [
   {
@@ -50,10 +45,6 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forFeature('groupSearch', groupsSearchReducer),
-    StoreModule.forFeature('createGroup', createGroupReducer),
-    StoreModule.forFeature('groupHub', groupHubReducer),
-    StoreModule.forFeature('features', featuresReducer),
     RouterModule.forChild(routes),
     MatListModule,
     MatExpansionModule,

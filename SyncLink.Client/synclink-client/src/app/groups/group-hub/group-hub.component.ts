@@ -3,8 +3,8 @@ import { GroupsState } from "../store/groups.reducer";
 import { Store } from "@ngrx/store";
 import { closeGroup, getGroup, openGroup } from "./store/group-hub.actions";
 import { ActivatedRoute } from "@angular/router";
-import { Subject, takeUntil } from "rxjs";
-import { map } from "rxjs/operators";
+import { distinctUntilChanged, Subject, takeUntil } from "rxjs";
+import { filter, map } from "rxjs/operators";
 import { selectGroupHubGroup } from "./store/group-hub.selectors";
 import { Group } from "../../models/group.model";
 
@@ -30,16 +30,15 @@ export class GroupHubComponent implements OnInit, OnDestroy {
         this.store.dispatch(openGroup({ groupId: this.group?.id }));
     })
 
-    const groupId = +this.activatedRoute.snapshot.paramMap.get('groupId');
-
-    this.store.dispatch(getGroup({ id: groupId }))
-
     this.activatedRoute.paramMap
       .pipe(
         takeUntil(this.destroyed$),
-        map((p) => +p.get('groupId'))
+        map((p) => +p.get('groupId')),
+        filter(id => !!id),
+        distinctUntilChanged()
       ).subscribe((id) => {
-      this.store.dispatch(getGroup({ id }))
+        console.log('getGroup Dispatch', id)
+        this.store.dispatch(getGroup({ id }))
     });
   }
 

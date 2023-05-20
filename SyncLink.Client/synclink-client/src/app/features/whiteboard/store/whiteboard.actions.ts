@@ -1,6 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 import { Whiteboard } from "./whiteboard.reducer";
 import { WhiteboardElement } from "ng-whiteboard";
+import { Page } from "../../../models/pagination.model";
 
 export const getWhiteboard = createAction(
   '[Whiteboard] Get Whiteboard',
@@ -23,12 +24,12 @@ export const getWhiteboards= createAction(
 );
 
 export const getWhiteboardsSuccess = createAction(
-  '[Whiteboard] Get Whiteboard Success',
-  props<{ whiteboards: Whiteboard[] }>()
+  '[Whiteboard] Get Whiteboards Success',
+  props<{ whiteboards: Page<Whiteboard> }>()
 );
 
 export const getWhiteboardsFailure = createAction(
-  '[Whiteboard] Get Whiteboard Failure',
+  '[Whiteboard] Get Whiteboards Failure',
   props<{ error: any }>()
 );
 

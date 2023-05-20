@@ -42,17 +42,15 @@ export const initialState: GroupHubState = {
 
 export const groupHubReducer = createReducer(
   initialState,
-  on(getGroup, (state) : GroupHubState => ({ ...state, groupLoading: true })),
-  on(getGroupSuccess, (state, { group }) : GroupHubState => ({...state, group, groupLoading: false })),
+  on(getGroup, (state) : GroupHubState => ({...state, groupLoading: true})),
+  on(getGroupSuccess, (state, { group }) : GroupHubState => ({...state, group, groupLoading: false})),
   on(getGroupFailure, (state, { error }) : GroupHubState => ({ ...state, groupError: error, groupLoading: false })),
-
   on(getGroupMembersSuccess, (state, { membersPage }) : GroupHubState => {
     return ({...state, groupMembersError: null, groupMembersLoading: false, groupMembers: [membersPage, ...state.groupMembers]});
   }),
   on(getGroupMembersFailure, (state, { error }) : GroupHubState => {
     return ({...state, groupMembersError: error, groupMembersLoading: false});
   }),
-
   on(getGroupRoomsSuccess, (state, { roomsPage }) : GroupHubState => {
     return ({...state, groupRoomsError: null, groupRoomsLoading: false, groupRooms: [roomsPage, ...state.groupRooms]});
   }),

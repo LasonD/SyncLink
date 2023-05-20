@@ -14,6 +14,7 @@ import {
   whiteboardUpdated, whiteboardUpdatedFailure,
   whiteboardUpdatedSuccess
 } from "./whiteboard.actions";
+import { Page } from "../../../models/pagination.model";
 
 @Injectable()
 export class WhiteboardEffects {
@@ -36,7 +37,7 @@ export class WhiteboardEffects {
     this.actions$.pipe(
       ofType(getWhiteboards),
       mergeMap(({ groupId }) => {
-          return this.http.get<Whiteboard[]>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/whiteboards`).pipe(
+          return this.http.get<Page<Whiteboard>>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/whiteboards`).pipe(
             map((whiteboards) => {
               return getWhiteboardsSuccess({whiteboards});
             }),

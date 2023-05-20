@@ -37,9 +37,13 @@ export const initialState: WhiteboardState = adapter.getInitialState({
 export const whiteboardReducer = createReducer(
   initialState,
   on(getWhiteboard, (state): WhiteboardState => ({ ...state, whiteboardLoading: true })),
-  on(getWhiteboards, (state): WhiteboardState => ({ ...state, whiteboardLoading: true })),
-  on(getWhiteboardSuccess, (state, { whiteboard }): WhiteboardState => adapter.upsertOne(whiteboard, { ...state, selectedWhiteboardId: whiteboard.id, whiteboardLoading: false })),
-  on(getWhiteboardsSuccess, (state, { whiteboards }): WhiteboardState => adapter.addMany(whiteboards, { ...state, whiteboardLoading: false })),
+  on(getWhiteboards, (state): WhiteboardState => ({...state, whiteboardLoading: true})),
+  on(getWhiteboardSuccess, (state, { whiteboard }): WhiteboardState => adapter.upsertOne(whiteboard, {
+    ...state,
+    selectedWhiteboardId: whiteboard.id,
+    whiteboardLoading: false
+  })),
+  on(getWhiteboardsSuccess, (state, { whiteboards }): WhiteboardState => adapter.addMany(whiteboards.entities, { ...state, whiteboardLoading: false })),
   on(getWhiteboardFailure, (state, { error }): WhiteboardState => ({ ...state, whiteboardError: error, whiteboardLoading: false })),
   on(getWhiteboardsFailure, (state, { error }): WhiteboardState => ({ ...state, whiteboardError: error, whiteboardLoading: false })),
   on(createWhiteboard, (state): WhiteboardState => ({...state, whiteboardLoading: true})),

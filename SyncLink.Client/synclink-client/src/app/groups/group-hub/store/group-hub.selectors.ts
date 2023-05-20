@@ -2,40 +2,46 @@ import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { GroupHubState } from "./group-hub.reducer";
 import lodash from "lodash";
 import { GroupMember } from "../../../models/group.model";
+import { GroupsState } from "../../store/groups.reducer";
 
-export const selectGroupHubFeature = createFeatureSelector<GroupHubState>('groupHub');
+export const selectGroupsFeature = createFeatureSelector<GroupsState>('groups');
+
+export const selectGroupHubState = createSelector(
+  selectGroupsFeature,
+  (state: GroupsState) => state.groupHub
+)
 
 export const selectGroupHubGroup = createSelector(
-  selectGroupHubFeature,
+  selectGroupHubState,
   (state: GroupHubState) => state.group
 );
 
 export const selectGroupHubLoading = createSelector(
-  selectGroupHubFeature,
+  selectGroupHubState,
   (state: GroupHubState) => state.groupLoading
 );
 
 export const selectGroupHubError = createSelector(
-  selectGroupHubFeature,
+  selectGroupHubState,
   (state: GroupHubState) => state.groupError
 );
 
 export const selectGroupMemberPages = createSelector(
-  selectGroupHubFeature,
+  selectGroupHubState,
   (state: GroupHubState) => state.groupMembers
 );
 
 export const selectGroupMembers = createSelector(
-  selectGroupHubFeature,
+  selectGroupHubState,
   (state: GroupHubState) => lodash.uniqBy(state.groupMembers.flatMap(p => p.entities), 'id') as GroupMember[]
 );
 
 export const selectGroupHubRooms = createSelector(
-  selectGroupHubFeature,
+  selectGroupHubState,
   (state: GroupHubState) => state.groupRooms
 );
 
 export const selectCurrentGroupId = createSelector(
-  selectGroupHubFeature,
+  selectGroupHubState,
   (state: GroupHubState) => state.group?.id
 );

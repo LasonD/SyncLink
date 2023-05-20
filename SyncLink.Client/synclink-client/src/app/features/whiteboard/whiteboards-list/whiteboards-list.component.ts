@@ -5,8 +5,8 @@ import { Store } from "@ngrx/store";
 import { getWhiteboards } from "../store/whiteboard.actions";
 import { selectCurrentGroupId } from "../../../groups/group-hub/store/group-hub.selectors";
 import { distinctUntilChanged, Observable, Subject, takeUntil } from "rxjs";
-import { selectAll } from "../store/whiteboard.selectors";
-import { filter } from "rxjs/operators";
+import { selectWhiteboards } from "../store/whiteboard.selectors";
+import { filter, tap } from "rxjs/operators";
 
 @Component({
   selector: 'app-whiteboards-list',
@@ -27,13 +27,16 @@ export class WhiteboardsListComponent implements OnInit, OnDestroy {
         filter(id => !!id),
         distinctUntilChanged()
       ).subscribe(groupId => {
-      this.store.dispatch(getWhiteboards({ groupId }))
-    });
+        this.store.dispatch(getWhiteboards({groupId}))
+      });
 
-    this.whiteboards$ = this.store.select(selectAll)
+    this.whiteboards$ = this.store.select(selectWhiteboards)
       .pipe(
         takeUntil(this.destroyed$),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        tap(res => {
+          console.log('res: ', res);
+        })
       );
   }
 
