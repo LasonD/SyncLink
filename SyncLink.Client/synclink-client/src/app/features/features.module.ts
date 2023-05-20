@@ -11,6 +11,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from "@angular/material/card";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 export const featureRoutes: Routes = [
   {
@@ -38,6 +39,7 @@ export const featureRoutes: Routes = [
     MatCardModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class FeaturesModule { }

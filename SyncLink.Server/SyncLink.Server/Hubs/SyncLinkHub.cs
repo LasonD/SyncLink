@@ -14,7 +14,7 @@ public interface ISyncLinkHub
 {
     Task MessageReceived(int? roomId, int? otherUserId, bool isPrivate, MessageDto message);
 
-    Task BoardUpdated(WhiteboardElementDto change);
+    Task BoardUpdated(int groupId, int whiteboardId, WhiteboardElementDto[] change);
 }
 
 [Authorize]
@@ -66,7 +66,7 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
 
     #region Whiteboard
 
-    public async Task BoardUpdated(int groupId, int whiteboardId, WhiteboardElementDto update)
+    public async Task BoardUpdated(int groupId, int whiteboardId, WhiteboardElementDto[] update)
     {
         var command = new UpdateWhiteboard.Command
         {
@@ -78,7 +78,7 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
 
         var result = await _mediator.Send(command);
 
-        await Clients.GroupExcept(GetGroupNameByGroupId(groupId), new[] { ConnectionId }).BoardUpdated(result);
+        await Clients.GroupExcept(GetGroupNameByGroupId(groupId), new[] { ConnectionId }).BoardUpdated(groupId, whiteboardId, result);
     }
 
     #endregion

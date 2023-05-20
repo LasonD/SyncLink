@@ -7,11 +7,12 @@ import {
   selectSelectedWhiteboardId,
   selectWhiteboardLoading
 } from "./store/whiteboard.selectors";
-import { distinctUntilChanged, Observable, Subject, takeUntil, withLatestFrom } from "rxjs";
+import { distinctUntilChanged, Observable, ReplaySubject, takeUntil, withLatestFrom } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
 import { getWhiteboard, whiteboardUpdated } from "./store/whiteboard.actions";
 import { selectCurrentGroupId } from "../../groups/group-hub/store/group-hub.selectors";
 import { ActivatedRoute } from "@angular/router";
+import { Whiteboard } from "./store/whiteboard.reducer";
 
 @Component({
   selector: 'app-whiteboard',
@@ -22,10 +23,12 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class WhiteboardComponent implements OnInit, OnDestroy {
   @ViewChild('workarea', {static: false}) private workarea!: ElementRef<HTMLElement>;
-  private destroyed$ = new Subject<boolean>();
-  isLoading$: Observable<boolean>;
+  private destroyed$ = new ReplaySubject<boolean>(1);
 
-  isLoaded = false;
+  isLoading$: Observable<boolean>;
+  isLoading = false;
+
+  whiteboard$: Observable<Whiteboard>;
 
   toolsEnum = ToolsEnum;
   elementTypeEnum = ElementTypeEnum;
@@ -56,16 +59,19 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.select(selectWhiteboardLoading).pipe(takeUntil(this.destroyed$))
-      .subscribe(isLoading => this.isLoaded = isLoading);
+    this.whiteboard$ = this.store.select(selectSelectedWhiteboard).pipe(
+      takeUntil(this.destroyed$),
+    );
 
-    // this.activatedRoute.paramMap.pipe(
-    //   takeUntil(this.destroyed$),
-    //   map(p => +p.get('whiteboardId')))
-    //   .subscribe(whiteboardId => console.log('WhiteboardId: ', whiteboardId));
-    //
-    // this.store.select(selectCurrentGroupId)
-    //   .subscribe(groupId => console.log('GroupId: ', groupId));
+    this.whiteboard$.pipe(filter(w => !!w))
+      .subscribe(w => {
+        setTimeout(() => this.calculateSize(), 0);
+      });
+
+    this.isLoading$ = this.store.select(selectWhiteboardLoading).pipe(takeUntil(this.destroyed$));
+
+    this.isLoading$
+      .subscribe(isLoading => this.isLoading = isLoading);
 
     this.activatedRoute.paramMap.pipe(
       takeUntil(this.destroyed$),
@@ -74,7 +80,6 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       withLatestFrom(this.store.select(selectCurrentGroupId).pipe(filter(id => !!id)))
     ).subscribe(([whiteboardId, groupId]) => {
-      //console.log('Getting whiteboard: ', whiteboardId, groupId);
       this.store.dispatch(getWhiteboard({ groupId, id: whiteboardId }));
     })
 
@@ -84,19 +89,9 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         filter(w => !!w)
       ).subscribe(whiteboard => {
+        console.log('selectSelectedWhiteboard data', whiteboard.whiteboardElements);
         this.data = [...whiteboard.whiteboardElements];
     });
-  }
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.calculateSize();
-    }, 0);
-
-    // this.signalrService.boardChange$.subscribe(change => {
-    //   this.data = change;
-    //   this.isExternalChange = true;
-    // })
   }
 
   calculateSize() {
@@ -334,25 +329,12 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
   }
 
   onDataChange(data: WhiteboardElement[]) {
-    console.log(data);
-
-    console.log('Data ', data);
-
-    if (!this.isLoaded) {
-      return;
-    }
-
     const change = data.filter(e => this.data.some(d => d.id === e.id));
     this.data = data;
 
-    if (!!change?.length) {
+    if (!change?.length) {
       return;
     }
-
-    // if (this.isExternalChange) {
-    //   this.isExternalChange = false;
-    //   return;
-    // }
 
     this.store.select(selectCurrentGroupId)
       .pipe(
@@ -360,8 +342,8 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
         take(1),
         withLatestFrom(this.store.select(selectSelectedWhiteboardId).pipe(filter(id => !!id)))
       ).subscribe(([groupId, selectedWhiteboardId]) => {
-        console.log('Whiteboard updated', groupId, change);
-      this.store.dispatch(whiteboardUpdated({ groupId, id: selectedWhiteboardId, changes: change }));
+      console.log('Whiteboard updated', groupId, change);
+      this.store.dispatch(whiteboardUpdated({groupId, id: selectedWhiteboardId, changes: change}));
     });
   }
 

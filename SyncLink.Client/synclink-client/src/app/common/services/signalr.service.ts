@@ -9,6 +9,7 @@ import { firstValueFrom, Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { Message } from "../../models/message.model";
 import { WhiteboardElement } from "ng-whiteboard";
+import { whiteboardUpdatedExternal } from "../../features/whiteboard/store/whiteboard.actions";
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,8 @@ export class SignalRService {
       this.store.dispatch(sendMessageSuccess({ roomId, otherUserId, isPrivate, correlationId: null, message: new Message(message) }));
     });
 
-    this.hubConnection.on('boardUpdated', (changes) => {
-      this.boardChange$.next(JSON.parse(changes) as WhiteboardElement[]);
+    this.hubConnection.on('boardUpdated', (groupId: number, whiteboardId: number, changes) => {
+      this.store.dispatch(whiteboardUpdatedExternal({ groupId, id: whiteboardId, changes }))
     });
 
     this.connectionPromise = this.hubConnection.start()

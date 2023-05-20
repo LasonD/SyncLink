@@ -38,6 +38,11 @@ export const whiteboardUpdated = createAction(
   props<{ id: number, groupId: number, changes: WhiteboardElement[] }>()
 );
 
+export const whiteboardUpdatedExternal = createAction(
+  '[Whiteboard] Whiteboard Updated',
+  props<{ id: number, groupId: number, changes: WhiteboardElement[] }>()
+);
+
 export const whiteboardUpdatedSuccess = createAction(
   '[Whiteboard] Whiteboard Updated Success',
   props<{ id: number }>()

@@ -5,7 +5,7 @@ import {
   getWhiteboardFailure,
   getWhiteboards, getWhiteboardsFailure,
   getWhiteboardsSuccess,
-  getWhiteboardSuccess
+  getWhiteboardSuccess, whiteboardUpdatedExternal
 } from "./whiteboard.actions";
 import { WhiteboardElement } from "ng-whiteboard";
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
@@ -53,4 +53,13 @@ export const whiteboardReducer = createReducer(
     whiteboardLoading: false
   })),
   on(createWhiteboardFailure, (state, { error }): WhiteboardState => ({ ...state, whiteboardError: error, whiteboardLoading: false })),
+  on(whiteboardUpdatedExternal, (state, { id, changes, groupId }): WhiteboardState => {
+    if (!state.entities[id] || state.entities[id].groupId !== groupId) {
+      return state;
+    }
+    const updatedWhiteboardElements = [...state.entities[id].whiteboardElements, ...changes];
+    const updatedWhiteboard = { ...state.entities[id], whiteboardElements: updatedWhiteboardElements };
+
+    return adapter.updateOne({ id: id, changes: updatedWhiteboard }, state);
+  }),
 );

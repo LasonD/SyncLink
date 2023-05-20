@@ -8,7 +8,7 @@ namespace SyncLink.Application.UseCases.Commands.Features.Whiteboard;
 
 public static class UpdateWhiteboard
 {
-    public record Command : IRequest<WhiteboardElementDto>
+    public record Command : IRequest<WhiteboardElementDto[]>
     {
         public int UserId { get; set; }
 
@@ -16,10 +16,10 @@ public static class UpdateWhiteboard
 
         public int WhiteboardId { get; set; }
 
-        public WhiteboardElementDto Update { get; set; } = null!;
+        public WhiteboardElementDto[] Update { get; set; } = null!;
     }
 
-    public class Handler : IRequestHandler<Command, WhiteboardElementDto>
+    public class Handler : IRequestHandler<Command, WhiteboardElementDto[]>
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
@@ -32,7 +32,7 @@ public static class UpdateWhiteboard
             _whiteboardRepository = whiteboardRepository;
         }
 
-        public async Task<WhiteboardElementDto> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<WhiteboardElementDto[]> Handle(Command request, CancellationToken cancellationToken)
         {
             var authorResult = await _userRepository.GetUsersFromGroupAsync(request.GroupId, new[] { request.UserId }, cancellationToken);
 
@@ -40,17 +40,20 @@ public static class UpdateWhiteboard
 
             var whiteboard = (await _whiteboardRepository.GetByIdAsync(request.WhiteboardId, cancellationToken)).GetResult();
 
-            var update = _mapper.Map<WhiteboardElement>(request.Update);
+            var updates = _mapper.Map<WhiteboardElement[]>(request.Update);
 
-            update.Author = author;
+            foreach (var update in updates)
+            {
+                update.Author = author;
 
-            whiteboard.WhiteboardElements.Add(update);
+                whiteboard.WhiteboardElements.Add(update);
+            }
 
             whiteboard.LastUpdatedTime = DateTime.UtcNow;
 
             await _whiteboardRepository.SaveChangesAsync(cancellationToken);
 
-            var dto = _mapper.Map<WhiteboardElementDto>(update);
+            var dto = _mapper.Map<WhiteboardElementDto[]>(updates);
 
             return dto;
         }

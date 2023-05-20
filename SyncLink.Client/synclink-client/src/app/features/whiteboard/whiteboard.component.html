@@ -1,4 +1,7 @@
-<div class="demo">
+<div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="height: 100vh">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
+<div *ngIf="!isLoading" class="demo">
   <div class="editor">
     <div id="rulers">
       <div id="ruler_corner"></div>
