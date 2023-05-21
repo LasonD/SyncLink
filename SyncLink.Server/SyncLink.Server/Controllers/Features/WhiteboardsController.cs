@@ -8,7 +8,7 @@ using SyncLink.Application.UseCases.Queries.GetById.Whiteboard;
 using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
 
-namespace SyncLink.Server.Controllers;
+namespace SyncLink.Server.Controllers.Features;
 
 [Authorize]
 [ApiController]

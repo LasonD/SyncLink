@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Domain.Features;
@@ -8,18 +9,18 @@ using System.Reflection;
 
 namespace SyncLink.Infrastructure.Data.Context;
 
-public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>
+public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>, IAppDbContext
 {
     public SyncLinkDbContext(DbContextOptions<SyncLinkDbContext> options)
         : base(options)
     {
     }
 
-    public DbSet<Message> Messages { get; protected set; } = null!;
+    public DbSet<Message> Messages { get; set; } = null!;
 
-    public DbSet<Room> Rooms { get; protected set; } = null!;
+    public DbSet<Room> Rooms { get; set; } = null!;
 
-    public DbSet<Group> Groups { get; protected set; } = null!;
+    public DbSet<Group> Groups { get; set; } = null!;
 
     public DbSet<User> ApplicationUsers { get; set; } = null!;
 
@@ -28,6 +29,12 @@ public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>
     public DbSet<UserRoom> UsersToRooms { get; set; } = null!;
 
     public DbSet<Whiteboard> Whiteboards { get; set; } = null!;
+
+    public DbSet<TextPlotGame> TextPlotGames { get; set; } = null!;
+
+    public DbSet<TextPlotEntry> TextPlotEntries { get; set; } = null!;
+
+    public DbSet<TextPlotVote> TextPlotVotes { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

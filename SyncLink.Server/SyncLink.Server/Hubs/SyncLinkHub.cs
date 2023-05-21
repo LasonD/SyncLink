@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 using SyncLink.Application.UseCases.Commands.Features.Whiteboard;
@@ -16,6 +17,13 @@ public interface ISyncLinkHub
     Task MessageReceived(int? roomId, int? otherUserId, bool isPrivate, MessageDto message);
 
     Task BoardUpdated(int groupId, int whiteboardId, WhiteboardElementDto[] change);
+
+    #region TextPlotGame
+    Task GameStarted(TextPlotGame game);
+    Task NewEntry(TextPlotEntry entry);
+    Task VoteReceived(TextPlotVote vote);
+    Task GameEnded(TextPlotGame game);
+    #endregion
 }
 
 [Authorize]

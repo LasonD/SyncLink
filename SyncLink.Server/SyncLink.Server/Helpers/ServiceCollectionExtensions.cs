@@ -9,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Domain;
-using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Mapping;
 using SyncLink.Application.UseCases.Commands.Auth.Register;
@@ -96,6 +95,7 @@ internal static class ServiceCollectionExtensions
         var connectionString = config.GetConnectionString("SyncLinkDbContextConnection") ?? throw new InvalidOperationException("Connection string 'SyncLinkDbContextConnection' not found.");
 
         services.AddDbContext<SyncLinkDbContext>(options => options.UseSqlServer(connectionString));
+        services.AddScoped<IAppDbContext, SyncLinkDbContext>();
 
         return services;
     }

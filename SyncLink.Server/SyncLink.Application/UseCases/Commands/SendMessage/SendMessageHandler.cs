@@ -17,15 +17,15 @@ public partial class SendMessage
         private readonly IRoomsRepository _roomsRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMessagesRepository _messageRepository;
-        private readonly INotificationsService _notificationsService;
+        private readonly IGeneralNotificationsService _generalNotificationsService;
 
-        public Handler(IMapper mapper, IRoomsRepository roomsRepository, IUserRepository userRepository, IMessagesRepository messageRepository, INotificationsService notificationsService)
+        public Handler(IMapper mapper, IRoomsRepository roomsRepository, IUserRepository userRepository, IMessagesRepository messageRepository, IGeneralNotificationsService generalNotificationsService)
         {
             _mapper = mapper;
             _roomsRepository = roomsRepository;
             _userRepository = userRepository;
             _messageRepository = messageRepository;
-            _notificationsService = notificationsService;
+            _generalNotificationsService = generalNotificationsService;
         }
 
         public async Task<MessageDto> Handle(Command request, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ public partial class SendMessage
 
             var isPrivate = request.RecipientId.HasValue;
 
-            await _notificationsService.NotifyMessageReceivedAsync(request.GroupId, request.RoomId, request.RecipientId, isPrivate, dto, cancellationToken);
+            await _generalNotificationsService.NotifyMessageReceivedAsync(request.GroupId, request.RoomId, request.RecipientId, isPrivate, dto, cancellationToken);
 
             return dto;
         }
