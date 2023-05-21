@@ -4,7 +4,7 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Commands.Features.Whiteboard;
+namespace SyncLink.Application.UseCases.Features.Whiteboard;
 
 public static class UpdateWhiteboard
 {
@@ -45,7 +45,7 @@ public static class UpdateWhiteboard
             foreach (var update in updates)
             {
                 update.Author = author;
-                update.Id += Guid.NewGuid().ToString();  
+                update.Id += Guid.NewGuid().ToString();
 
                 whiteboard.WhiteboardElements.Add(update);
             }

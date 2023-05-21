@@ -3,7 +3,7 @@ using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Commands.Features.Whiteboard;
+namespace SyncLink.Application.UseCases.Features.Whiteboard;
 
 public class CreateWhiteboard
 {

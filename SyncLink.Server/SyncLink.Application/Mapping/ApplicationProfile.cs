@@ -3,7 +3,9 @@ using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Domain.Features;
+using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.Dtos;
+using SyncLink.Application.Dtos.TextPlotGame;
 using SyncLink.Application.UseCases.Commands.Auth.Login;
 using SyncLink.Application.UseCases.Commands.Auth.Register;
 
@@ -35,6 +37,10 @@ public class ApplicationProfile : Profile
         CreateMap<Whiteboard, WhiteboardDto>();
         CreateMap<WhiteboardElementDto, WhiteboardElement>().ReverseMap();
         CreateMap<WhiteboardElementOptionsDto, WhiteboardElementOptions>().ReverseMap();
+
+        CreateMap<TextPlotGame, TextPlotGameDto>().ReverseMap();
+        CreateMap<TextPlotEntry, TextPlotEntryDto>().ReverseMap();
+        CreateMap<TextPlotVote, TextPlotVoteDto>().ReverseMap();
 
         CreateMap(typeof(PaginatedResult<>), typeof(PaginatedResult<>));
     }

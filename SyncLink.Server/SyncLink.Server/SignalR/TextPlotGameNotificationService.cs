@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using SyncLink.Application.Contracts.RealTime;
-using SyncLink.Application.Domain.Features;
+using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Server.Helpers;
 using SyncLink.Server.Hubs;
 

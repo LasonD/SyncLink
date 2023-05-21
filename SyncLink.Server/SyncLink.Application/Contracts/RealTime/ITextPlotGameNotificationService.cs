@@ -1,4 +1,4 @@
-﻿using SyncLink.Application.Domain.Features;
+﻿using SyncLink.Application.Domain.Features.TextPlotGame;
 
 namespace SyncLink.Application.Contracts.RealTime;
 
