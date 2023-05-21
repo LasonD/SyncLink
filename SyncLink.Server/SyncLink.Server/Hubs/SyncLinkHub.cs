@@ -69,19 +69,28 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
 
     public async Task BoardUpdated(int groupId, int whiteboardId, string updateJson)
     {
-        var update = JsonConvert.DeserializeObject<WhiteboardElementDto[]>(updateJson);
-
-        var command = new UpdateWhiteboard.Command
+        try
         {
-            GroupId = groupId,
-            Update = update?.ToArray()!,
-            UserId = UserId,
-            WhiteboardId = whiteboardId
-        };
+            var update = JsonConvert.DeserializeObject<WhiteboardElementDto[]>(updateJson);
 
-        var result = await _mediator.Send(command);
+            var command = new UpdateWhiteboard.Command
+            {
+                GroupId = groupId,
+                Update = update?.ToArray()!,
+                UserId = UserId,
+                WhiteboardId = whiteboardId
+            };
 
-        await Clients.GroupExcept(GetGroupNameByGroupId(groupId), new[] { ConnectionId }).BoardUpdated(groupId, whiteboardId, result);
+            var result = await _mediator.Send(command);
+
+            await Clients.GroupExcept(GetGroupNameByGroupId(groupId), new[] { ConnectionId }).BoardUpdated(groupId, whiteboardId, result);
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     #endregion

@@ -1,5 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ElementTypeEnum, FormatType, NgWhiteboardService, ToolsEnum, WhiteboardElement } from 'ng-whiteboard';
+import {
+  ElementTypeEnum,
+  FormatType,
+  LineCapEnum, LineJoinEnum,
+  NgWhiteboardService,
+  ToolsEnum,
+  WhiteboardElement
+} from 'ng-whiteboard';
 import { Store } from "@ngrx/store";
 import { AppState } from "../../store/app.reducer";
 import {
@@ -35,7 +42,7 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
   selectedTool: ToolsEnum = ToolsEnum.BRUSH;
   selectedElement!: WhiteboardElement;
   data: WhiteboardElement[] = [];
-  prevData: WhiteboardElement[] = [];
+  changes: WhiteboardElement[] = [];
 
   options = {
     strokeColor: '#ff0',
@@ -90,15 +97,9 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         filter(w => !!w)
       ).subscribe(whiteboard => {
-        console.log(whiteboard?.whiteboardElements);
-        this.data = whiteboard?.whiteboardElements.map(e => new WhiteboardElement(this.getWhiteboardElementType(e.type), e.options, e.value));
-        console.log('selectSelectedWhiteboard data', this.data)
+      this.data = [...whiteboard.whiteboardElements.map(e => ({...e}))];
+      console.log('selectSelectedWhiteboard data', this.data)
     });
-  }
-
-  private getWhiteboardElementType(type: string): ElementTypeEnum {
-    const values = Object.values(ElementTypeEnum);
-    return values.find(v => v === type);
   }
 
   calculateSize() {
@@ -336,20 +337,16 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
   }
 
   onDataChange(data: WhiteboardElement[]) {
-    console.log('Existing data: ', this.data);
-    console.log('New data: ', data);
-
-
-
-    const change = data.filter(e => !this.prevData.some(d => d.id === e.id));
+    const change = data.filter(e => !e.id.endsWith('_External') && !this.changes.some(c => c === e));
 
     console.log('Change', change);
     this.data = data;
-    this.prevData = data;
 
     if (!change?.length) {
       return;
     }
+
+    this.changes = [...this.changes, ...change];
 
     this.store.select(selectCurrentGroupId)
       .pipe(

@@ -24,10 +24,10 @@ public class WhiteboardElement
     public ElementTypeEnum Type { get; set; }
     public string Value { get; set; } = null!;
     public string Id { get; set; } = null!;
-    public int X { get; set; }
-    public int Y { get; set; }
-    public int Rotation { get; set; }
-    public int Opacity { get; set; }
+    public float X { get; set; }
+    public float Y { get; set; }
+    public float Rotation { get; set; }
+    public float Opacity { get; set; }
     public WhiteboardElementOptions Options { get; set; } = null!;
 
     public User Author { get; set; } = null!;
@@ -47,30 +47,30 @@ public enum ElementTypeEnum
 
 public class WhiteboardElementOptions
 {
-    public int? Width { get; set; }
-    public int? Height { get; set; }
-    public int? StrokeWidth { get; set; }
+    public float? Width { get; set; }
+    public float? Height { get; set; }
+    public float? StrokeWidth { get; set; }
     public string? StrokeColor { get; set; }
     public string? Fill { get; set; }
     public LineJoinEnum LineJoin { get; set; }
     public LineCapEnum LineCap { get; set; }
-    public int? Left { get; set; }
-    public int? Top { get; set; }
-    public int? FontSize { get; set; }
+    public float? Left { get; set; }
+    public float? Top { get; set; }
+    public float? FontSize { get; set; }
     public string? FontFamily { get; set; }
     public string? FontStyle { get; set; }
     public string? FontWeight { get; set; }
     public string? Color { get; set; }
     public string? DashArray { get; set; }
-    public int? DashOffset { get; set; }
-    public int? X1 { get; set; }
-    public int? Y1 { get; set; }
-    public int? X2 { get; set; }
-    public int? Y2 { get; set; }
-    public int? Rx { get; set; }
-    public int? Ry { get; set; }
-    public int? Cx { get; set; }
-    public int? Cy { get; set; }
+    public float? DashOffset { get; set; }
+    public float? X1 { get; set; }
+    public float? Y1 { get; set; }
+    public float? X2 { get; set; }
+    public float? Y2 { get; set; }
+    public float? Rx { get; set; }
+    public float? Ry { get; set; }
+    public float? Cx { get; set; }
+    public float? Cy { get; set; }
 }
 
 public enum LineCapEnum

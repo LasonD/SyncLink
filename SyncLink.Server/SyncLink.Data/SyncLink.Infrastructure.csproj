@@ -18,7 +18,4 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\SyncLink.Application\SyncLink.Application.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Migrations\" />
-	</ItemGroup>
 </Project>
