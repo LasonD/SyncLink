@@ -12,6 +12,7 @@ import { MatCardModule } from "@angular/material/card";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { TextPlotGameComponent } from './text-plot-game/text-plot-game.component';
 
 export const featureRoutes: Routes = [
   {
@@ -28,7 +29,8 @@ export const featureRoutes: Routes = [
 @NgModule({
   declarations: [
     WhiteboardComponent,
-    CreateWhiteboardComponent
+    CreateWhiteboardComponent,
+    TextPlotGameComponent
   ],
   imports: [
     CommonModule,

@@ -168,7 +168,7 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IRequestHandler<GetGroupById.Query, GroupDto>, GetGroupById.Handler>(); 
         services.AddTransient<IRequestHandler<GetWhiteboardById.Query, WhiteboardDto>, GetWhiteboardById.Handler>();
 
-        services.AddTransient<INotificationsService, NotificationService>();
+        services.AddTransient<IGeneralNotificationsService, GeneralGeneralNotificationsService>();
 
         return services;
     }
