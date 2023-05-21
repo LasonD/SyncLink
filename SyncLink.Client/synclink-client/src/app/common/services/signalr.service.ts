@@ -54,7 +54,7 @@ export class SignalRService {
 
   public async whiteboardUpdated(groupId: number, id: number, change: WhiteboardElement[]) {
     await this.connectionPromise;
-    return this.hubConnection.invoke('boardUpdated', groupId, id,  change);
+    return this.hubConnection.invoke('boardUpdated', groupId, id, JSON.stringify(change));
   }
 }
 

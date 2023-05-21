@@ -13,7 +13,7 @@ public class Whiteboard : EntityBase
     public User Owner { get; set; } = null!;
 
     public int? GroupId { get; set; }
-
+    
     public Group Group { get; set; } = null!;
 
     public DateTime LastUpdatedTime { get; set; }
@@ -21,8 +21,6 @@ public class Whiteboard : EntityBase
 
 public class WhiteboardElement
 {
-    public int WhiteboardElementId { get; set; }
-
     public ElementTypeEnum Type { get; set; }
     public string Value { get; set; } = null!;
     public string Id { get; set; } = null!;
@@ -52,18 +50,18 @@ public class WhiteboardElementOptions
     public int? Width { get; set; }
     public int? Height { get; set; }
     public int? StrokeWidth { get; set; }
-    public string StrokeColor { get; set; }
-    public string Fill { get; set; }
+    public string? StrokeColor { get; set; }
+    public string? Fill { get; set; }
     public LineJoinEnum LineJoin { get; set; }
     public LineCapEnum LineCap { get; set; }
     public int? Left { get; set; }
     public int? Top { get; set; }
     public int? FontSize { get; set; }
-    public string FontFamily { get; set; }
-    public string FontStyle { get; set; }
-    public string FontWeight { get; set; }
-    public string Color { get; set; }
-    public string DashArray { get; set; }
+    public string? FontFamily { get; set; }
+    public string? FontStyle { get; set; }
+    public string? FontWeight { get; set; }
+    public string? Color { get; set; }
+    public string? DashArray { get; set; }
     public int? DashOffset { get; set; }
     public int? X1 { get; set; }
     public int? Y1 { get; set; }

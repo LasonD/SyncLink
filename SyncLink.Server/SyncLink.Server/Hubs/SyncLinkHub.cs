@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
@@ -66,12 +67,14 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
 
     #region Whiteboard
 
-    public async Task BoardUpdated(int groupId, int whiteboardId, WhiteboardElementDto[] update)
+    public async Task BoardUpdated(int groupId, int whiteboardId, string updateJson)
     {
+        var update = JsonConvert.DeserializeObject<WhiteboardElementDto[]>(updateJson);
+
         var command = new UpdateWhiteboard.Command
         {
             GroupId = groupId,
-            Update = update,
+            Update = update?.ToArray()!,
             UserId = UserId,
             WhiteboardId = whiteboardId
         };

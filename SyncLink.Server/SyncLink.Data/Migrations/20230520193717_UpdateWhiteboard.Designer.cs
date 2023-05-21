@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SyncLink.Infrastructure.Data.Context;
 
@@ -11,9 +12,11 @@ using SyncLink.Infrastructure.Data.Context;
 namespace SyncLink.Infrastructure.Migrations
 {
     [DbContext(typeof(SyncLinkDbContext))]
-    partial class SyncLinkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520193717_UpdateWhiteboard")]
+    partial class UpdateWhiteboard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -524,11 +527,8 @@ namespace SyncLink.Infrastructure.Migrations
                             b1.Property<int>("WhiteboardId")
                                 .HasColumnType("int");
 
-                            b1.Property<int>("WhiteboardElementId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("WhiteboardElementId"));
+                            b1.Property<string>("Id")
+                                .HasColumnType("nvarchar(450)");
 
                             b1.Property<int?>("AuthorId")
                                 .HasColumnType("int");
@@ -546,13 +546,16 @@ namespace SyncLink.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
+                            b1.Property<int>("WhiteboardElementId")
+                                .HasColumnType("int");
+
                             b1.Property<int>("X")
                                 .HasColumnType("int");
 
                             b1.Property<int>("Y")
                                 .HasColumnType("int");
 
-                            b1.HasKey("WhiteboardId", "WhiteboardElementId");
+                            b1.HasKey("WhiteboardId", "Id");
 
                             b1.HasIndex("AuthorId");
 
@@ -571,8 +574,8 @@ namespace SyncLink.Infrastructure.Migrations
                                     b2.Property<int>("WhiteboardElementWhiteboardId")
                                         .HasColumnType("int");
 
-                                    b2.Property<int>("WhiteboardElementId")
-                                        .HasColumnType("int");
+                                    b2.Property<string>("WhiteboardElementId")
+                                        .HasColumnType("nvarchar(450)");
 
                                     b2.Property<string>("Color")
                                         .HasColumnType("nvarchar(max)");

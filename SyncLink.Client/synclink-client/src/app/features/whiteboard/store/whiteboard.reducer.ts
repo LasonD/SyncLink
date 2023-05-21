@@ -54,6 +54,7 @@ export const whiteboardReducer = createReducer(
   })),
   on(createWhiteboardFailure, (state, { error }): WhiteboardState => ({ ...state, whiteboardError: error, whiteboardLoading: false })),
   on(whiteboardUpdatedExternal, (state, { id, changes, groupId }): WhiteboardState => {
+    console.log('Whiteboard')
     if (!state.entities[id] || state.entities[id].groupId !== groupId) {
       return state;
     }

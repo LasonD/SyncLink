@@ -33,7 +33,9 @@ public class ApplicationProfile : Profile
         CreateMap<User, GroupMemberDto>();
         CreateMap<Message, MessageDto>();
         CreateMap<Whiteboard, WhiteboardDto>();
-        
+        CreateMap<WhiteboardElementDto, WhiteboardElement>().ReverseMap();
+        CreateMap<WhiteboardElementOptionsDto, WhiteboardElementOptions>().ReverseMap();
+
         CreateMap(typeof(PaginatedResult<>), typeof(PaginatedResult<>));
     }
 }

@@ -45,6 +45,7 @@ public static class UpdateWhiteboard
             foreach (var update in updates)
             {
                 update.Author = author;
+                update.Id += Guid.NewGuid().ToString();  
 
                 whiteboard.WhiteboardElements.Add(update);
             }

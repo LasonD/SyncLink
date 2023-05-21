@@ -35,6 +35,7 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
   selectedTool: ToolsEnum = ToolsEnum.BRUSH;
   selectedElement!: WhiteboardElement;
   data: WhiteboardElement[] = [];
+  prevData: WhiteboardElement[] = [];
 
   options = {
     strokeColor: '#ff0',
@@ -89,9 +90,15 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         filter(w => !!w)
       ).subscribe(whiteboard => {
-        console.log('selectSelectedWhiteboard data', whiteboard.whiteboardElements);
-        this.data = [...whiteboard.whiteboardElements];
+        console.log(whiteboard?.whiteboardElements);
+        this.data = whiteboard?.whiteboardElements.map(e => new WhiteboardElement(this.getWhiteboardElementType(e.type), e.options, e.value));
+        console.log('selectSelectedWhiteboard data', this.data)
     });
+  }
+
+  private getWhiteboardElementType(type: string): ElementTypeEnum {
+    const values = Object.values(ElementTypeEnum);
+    return values.find(v => v === type);
   }
 
   calculateSize() {
@@ -329,8 +336,16 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
   }
 
   onDataChange(data: WhiteboardElement[]) {
-    const change = data.filter(e => this.data.some(d => d.id === e.id));
+    console.log('Existing data: ', this.data);
+    console.log('New data: ', data);
+
+
+
+    const change = data.filter(e => !this.prevData.some(d => d.id === e.id));
+
+    console.log('Change', change);
     this.data = data;
+    this.prevData = data;
 
     if (!change?.length) {
       return;

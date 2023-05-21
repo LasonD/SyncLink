@@ -39,7 +39,7 @@ export const whiteboardUpdated = createAction(
 );
 
 export const whiteboardUpdatedExternal = createAction(
-  '[Whiteboard] Whiteboard Updated',
+  '[Whiteboard] Whiteboard Updated External',
   props<{ id: number, groupId: number, changes: WhiteboardElement[] }>()
 );
 
