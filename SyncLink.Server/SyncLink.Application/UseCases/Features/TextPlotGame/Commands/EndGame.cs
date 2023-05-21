@@ -11,6 +11,8 @@ public static class EndGame
     public class Command : IRequest<TextPlotGameDto>
     {
         public int GameId { get; set; }
+        public int GroupId { get; set; }
+        public int UserId { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, TextPlotGameDto>

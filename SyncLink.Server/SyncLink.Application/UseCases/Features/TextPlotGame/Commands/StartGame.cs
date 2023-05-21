@@ -11,7 +11,7 @@ public static class StartGame
     public class Command : IRequest<TextPlotGameDto>
     {
         public int GroupId { get; set; }
-        public int StarterId { get; set; }
+        public int UserId { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, TextPlotGameDto>
@@ -30,7 +30,7 @@ public static class StartGame
         public async Task<TextPlotGameDto> Handle(Command request, CancellationToken cancellationToken)
         {
             var group = await _context.Groups.FindAsync(request.GroupId, cancellationToken);
-            var starter = await _context.ApplicationUsers.FindAsync(request.StarterId, cancellationToken);
+            var starter = await _context.ApplicationUsers.FindAsync(request.UserId, cancellationToken);
 
             var game = new Domain.Features.TextPlotGame.TextPlotGame(group, starter);
 
