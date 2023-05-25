@@ -30,28 +30,28 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpPost("submitEntry")]
-    public async Task<ActionResult<TextPlotEntry>> SubmitEntry([FromBody] SubmitEntry.Command command)
+    public async Task<ActionResult<TextPlotEntry>> SubmitEntry([FromBody] SubmitEntry.Command command, CancellationToken cancellationToken)
     {
         command.UserId = GetRequiredAppUserId();
-        var entry = await _mediator.Send(command);
+        var entry = await _mediator.Send(command, cancellationToken);
 
         return Ok(entry);
     }
 
     [HttpPost("voteEntry")]
-    public async Task<ActionResult> VoteEntry([FromBody] VoteEntry.Command command)
+    public async Task<ActionResult> VoteEntry([FromBody] VoteEntry.Command command, CancellationToken cancellationToken)
     {
         command.UserId = GetRequiredAppUserId();
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return Ok(result);
     }
 
     [HttpPost("endGame")]
-    public async Task<ActionResult> EndGame([FromBody] EndGame.Command command)
+    public async Task<ActionResult> EndGame([FromBody] EndGame.Command command, CancellationToken cancellationToken)
     {
         command.UserId = GetRequiredAppUserId();
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
 }

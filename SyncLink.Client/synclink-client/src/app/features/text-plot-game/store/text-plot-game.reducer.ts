@@ -1,7 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
 import * as TextPlotGameActions from './text-plot-game.actions';
-import { User } from "../../../auth/user.model";
-import { Group } from "../../../models/group.model";
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 
 export const adapter: EntityAdapter<TextPlotGame> = createEntityAdapter<TextPlotGame>();
@@ -19,7 +17,6 @@ export const initialState: TextPlotGameState = {
   entries: entryAdapter.getInitialState(),
   votes: voteAdapter.getInitialState(),
 };
-
 
 export const textPlotGameReducer = createReducer(
   initialState,
@@ -51,25 +48,26 @@ export const textPlotGameReducer = createReducer(
   })
 );
 
-export interface TextPlotGame {
-  id: number;
-  group: Group;
-  startedBy: User;
-  startedAt: Date;
-  endedAt: Date | null;
-}
-
 export interface TextPlotEntry {
   id: number;
-  game: TextPlotGame;
-  submittedBy: User;
+  userId: number;
+  gameId: number;
   text: string;
-  submittedAt: Date;
+  createdAt: Date;
+  votes: TextPlotVote[];
+}
+
+export interface TextPlotGame {
+  id: number;
+  groupId: number;
+  starterId: number;
+  startedAt: Date;
+  endedAt: Date | null;
+  entries: TextPlotEntry[];
 }
 
 export interface TextPlotVote {
   id: number;
-  entry: TextPlotEntry;
-  votedBy: User;
-  votedAt: Date;
+  userId: number;
+  entryId: number;
 }

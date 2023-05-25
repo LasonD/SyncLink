@@ -7,4 +7,5 @@ public class TextPlotGameDto
     public int StarterId { get; set; }
     public DateTime StartedAt { get; set; }
     public DateTime? EndedAt { get; set; }
+    public IList<TextPlotEntryDto> Entries { get; set; } = new List<TextPlotEntryDto>();
 }
