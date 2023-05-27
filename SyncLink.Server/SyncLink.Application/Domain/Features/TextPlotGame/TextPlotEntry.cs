@@ -12,6 +12,8 @@ public class TextPlotEntry : EntityBase
     public DateTime CreatedAt { get; set; }
     public IList<TextPlotVote> Votes { get; set; } = new List<TextPlotVote>();
 
+    protected TextPlotEntry() { }
+
     public TextPlotEntry(User user, TextPlotGame game, string text)
     {
         User = user;

@@ -12,6 +12,8 @@ public class TextPlotGame : EntityBase
     public DateTime? EndedAt { get; set; }
     public IList<TextPlotEntry> Entries { get; set; } = new List<TextPlotEntry>();
 
+    protected TextPlotGame() { }
+
     public TextPlotGame(Group group, User starter)
     {
         Group = group;

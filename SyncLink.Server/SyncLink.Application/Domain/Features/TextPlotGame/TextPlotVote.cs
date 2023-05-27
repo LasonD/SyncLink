@@ -9,6 +9,8 @@ public class TextPlotVote : EntityBase
     public int EntryId { get; set; }
     public TextPlotEntry Entry { get; set; }
 
+    protected TextPlotVote() { }
+
     public TextPlotVote(User user, TextPlotEntry entry)
     {
         User = user;
