@@ -20,7 +20,7 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpPost("start")]
-    public async Task<ActionResult<TextPlotGame>> StartGame(StartGame.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult<TextPlotGame>> StartGame([FromBody] StartGame.Command command, CancellationToken cancellationToken)
     {
         command.UserId = GetRequiredAppUserId();
 
