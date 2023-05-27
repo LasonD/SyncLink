@@ -4,7 +4,7 @@ namespace SyncLink.Application.Domain.Features.TextPlotGame;
 
 public class TextPlotEntry : EntityBase
 {
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
     public User User { get; set; }
     public int GameId { get; set; }
     public TextPlotGame Game { get; set; }

@@ -6,19 +6,17 @@ public class TextPlotGame : EntityBase
 {
     public int GroupId { get; set; }
     public Group Group { get; set; }
-    public int StarterId { get; set; }
-    public User Starter { get; set; }
-    public DateTime StartedAt { get; set; }
+    public int? CreatorId { get; set; }
+    public User Creator { get; set; }
     public DateTime? EndedAt { get; set; }
     public IList<TextPlotEntry> Entries { get; set; } = new List<TextPlotEntry>();
 
     protected TextPlotGame() { }
 
-    public TextPlotGame(Group group, User starter)
+    public TextPlotGame(Group group, User creator)
     {
         Group = group;
-        Starter = starter;
-        StartedAt = DateTime.UtcNow;
+        Creator = creator;
     }
 
     public void EndGame()

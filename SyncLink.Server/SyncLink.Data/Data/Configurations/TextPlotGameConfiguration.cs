@@ -11,39 +11,49 @@ internal class TextPlotGameConfiguration : IEntityTypeConfiguration<TextPlotGame
         builder.HasOne(x => x.Group)
             .WithMany()
             .HasForeignKey(x => x.GroupId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+
+        builder.HasMany(x => x.Entries)
+            .WithOne(x => x.Game)
+            .HasForeignKey(x => x.GameId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+    }
+}
+
+internal class TextPlotEntryConfiguration : IEntityTypeConfiguration<TextPlotEntry>
+{
+    public void Configure(EntityTypeBuilder<TextPlotEntry> builder)
+    {
+        builder.HasMany(x => x.Votes)
+            .WithOne(x => x.Entry)
+            .HasForeignKey(x => x.EntryId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.SetNull)
+            .IsRequired(false);
+    }
+}
+
+internal class TextPlotVoteConfiguration : IEntityTypeConfiguration<TextPlotVote>
+{
+    public void Configure(EntityTypeBuilder<TextPlotVote> builder)
+    {
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.SetNull)
             .IsRequired(false);
 
-        builder.OwnsMany(x => x.Entries, e =>
-        {
-            e.WithOwner();
-            e.HasOne(x => x.User)
-                .WithMany()
-                .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
-
-            e.HasOne(x => x.Game)
-                .WithMany()
-                .HasForeignKey(x => x.GameId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            e.OwnsMany(x => x.Votes, v =>
-            {
-                v.WithOwner();
-                v.HasOne(x => x.User)
-                    .WithMany()
-                    .HasForeignKey(x => x.UserId)
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .IsRequired(false);
-
-                v.HasOne(x => x.Entry)
-                    .WithMany()
-                    .HasForeignKey(x => x.EntryId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-            });
-        });
+        builder.HasOne(x => x.Entry)
+            .WithMany()
+            .HasForeignKey(x => x.EntryId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
     }
 }
