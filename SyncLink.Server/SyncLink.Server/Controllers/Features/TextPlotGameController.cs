@@ -20,38 +20,38 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpPost("start")]
-    public async Task<ActionResult<TextPlotGame>> StartGame([FromBody] StartGame.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult<TextPlotGame>> StartGame([FromBody] StartGame.StartGameCommand startGameCommand, CancellationToken cancellationToken)
     {
-        command.UserId = GetRequiredAppUserId();
+        startGameCommand.UserId = GetRequiredAppUserId();
 
-        var game = await _mediator.Send(command, cancellationToken);
+        var game = await _mediator.Send(startGameCommand, cancellationToken);
 
         return Ok(game);
     }
 
     [HttpPost("submitEntry")]
-    public async Task<ActionResult<TextPlotEntry>> SubmitEntry([FromBody] SubmitEntry.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult<TextPlotEntry>> SubmitEntry([FromBody] SubmitEntry.SubmitEntryCommand submitEntryCommand, CancellationToken cancellationToken)
     {
-        command.UserId = GetRequiredAppUserId();
-        var entry = await _mediator.Send(command, cancellationToken);
+        submitEntryCommand.UserId = GetRequiredAppUserId();
+        var entry = await _mediator.Send(submitEntryCommand, cancellationToken);
 
         return Ok(entry);
     }
 
     [HttpPost("voteEntry")]
-    public async Task<ActionResult> VoteEntry([FromBody] VoteEntry.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult> VoteEntry([FromBody] VoteEntry.VoteCommand voteCommand, CancellationToken cancellationToken)
     {
-        command.UserId = GetRequiredAppUserId();
-        var result = await _mediator.Send(command, cancellationToken);
+        voteCommand.UserId = GetRequiredAppUserId();
+        var result = await _mediator.Send(voteCommand, cancellationToken);
 
         return Ok(result);
     }
 
     [HttpPost("endGame")]
-    public async Task<ActionResult> EndGame([FromBody] EndGame.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult> EndGame([FromBody] EndGame.EndGameCommand endGameCommand, CancellationToken cancellationToken)
     {
-        command.UserId = GetRequiredAppUserId();
-        var result = await _mediator.Send(command, cancellationToken);
+        endGameCommand.UserId = GetRequiredAppUserId();
+        var result = await _mediator.Send(endGameCommand, cancellationToken);
         return Ok(result);
     }
 }

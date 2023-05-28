@@ -8,14 +8,14 @@ namespace SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
 
 public static class EndGame
 {
-    public class Command : IRequest<TextPlotGameDto>
+    public class EndGameCommand : IRequest<TextPlotGameDto>
     {
         public int GameId { get; set; }
         public int GroupId { get; set; }
         public int UserId { get; set; }
     }
 
-    public class Handler : IRequestHandler<Command, TextPlotGameDto>
+    public class Handler : IRequestHandler<EndGameCommand, TextPlotGameDto>
     {
         private readonly IAppDbContext _context;
         private readonly ITextPlotGameNotificationService _notificationService;
@@ -28,7 +28,7 @@ public static class EndGame
             _mapper = mapper;
         }
 
-        public async Task<TextPlotGameDto> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<TextPlotGameDto> Handle(EndGameCommand request, CancellationToken cancellationToken)
         {
             var game = await _context.TextPlotGames.FindAsync(request.GameId, cancellationToken);
 
