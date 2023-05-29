@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
+using SyncLink.Application.UseCases.Features.TextPlotGame.Queries;
 using SyncLink.Server.Controllers.Base;
 
 namespace SyncLink.Server.Controllers.Features;
@@ -17,6 +19,20 @@ public class TextPlotGamesController : ApiControllerBase
     public TextPlotGamesController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IPaginatedResult<TextPlotGame>>> GetGroupGames([FromQuery] int groupId, CancellationToken cancellationToken)
+    {
+        var query = new GetGroupTextPlotGames.Query
+        {
+            GroupId = groupId,
+            UserId = GetRequiredAppUserId()
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
     }
 
     [HttpPost("start")]
@@ -52,6 +68,7 @@ public class TextPlotGamesController : ApiControllerBase
     {
         endGameCommand.UserId = GetRequiredAppUserId();
         var result = await _mediator.Send(endGameCommand, cancellationToken);
+
         return Ok(result);
     }
 }
