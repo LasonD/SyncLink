@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Commands.CreateRoom;
+namespace SyncLink.Application.UseCases.Rooms.Commands.CreateRoom;
 
 public partial class CreateRoom
 {

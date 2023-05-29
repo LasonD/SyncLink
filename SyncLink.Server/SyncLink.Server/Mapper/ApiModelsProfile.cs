@@ -4,7 +4,7 @@ using SyncLink.Application.UseCases.Commands.Auth.Register;
 using SyncLink.Application.UseCases.Commands.CreateGroup;
 using SyncLink.Application.UseCases.Commands.CreateRoom;
 using SyncLink.Application.UseCases.Commands.SendMessage;
-using SyncLink.Application.UseCases.Features.Whiteboard;
+using SyncLink.Application.UseCases.Features.Whiteboard.Commands;
 using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Mapper;

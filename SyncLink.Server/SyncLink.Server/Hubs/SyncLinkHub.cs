@@ -6,7 +6,7 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
-using SyncLink.Application.UseCases.Features.Whiteboard;
+using SyncLink.Application.UseCases.Features.Whiteboard.Commands;
 using SyncLink.Common.Helpers.Jwt;
 using SyncLink.Server.Helpers;
 

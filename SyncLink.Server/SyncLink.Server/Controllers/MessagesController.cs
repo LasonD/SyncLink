@@ -2,7 +2,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SyncLink.Application.UseCases.Commands.SendMessage;
+using SyncLink.Application.UseCases.Messages.Commands.SendMessage;
 using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
 

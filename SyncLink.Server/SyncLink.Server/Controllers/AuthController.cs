@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SyncLink.Application.UseCases.Commands.Auth.Login;
-using SyncLink.Application.UseCases.Commands.Auth.Register;
+using SyncLink.Application.UseCases.Auth.Commands.Login;
+using SyncLink.Application.UseCases.Auth.Commands.Register;
 using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
 

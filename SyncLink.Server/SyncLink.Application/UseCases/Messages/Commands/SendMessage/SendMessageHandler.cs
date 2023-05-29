@@ -7,7 +7,7 @@ using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
-namespace SyncLink.Application.UseCases.Commands.SendMessage;
+namespace SyncLink.Application.UseCases.Messages.Commands.SendMessage;
 
 public partial class SendMessage
 {

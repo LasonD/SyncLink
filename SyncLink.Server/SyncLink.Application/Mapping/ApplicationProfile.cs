@@ -6,8 +6,8 @@ using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Dtos.TextPlotGame;
-using SyncLink.Application.UseCases.Commands.Auth.Login;
-using SyncLink.Application.UseCases.Commands.Auth.Register;
+using SyncLink.Application.UseCases.Auth.Commands.Login;
+using SyncLink.Application.UseCases.Auth.Commands.Register;
 
 namespace SyncLink.Application.Mapping;
 

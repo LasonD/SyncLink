@@ -4,7 +4,7 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Features.Whiteboard;
+namespace SyncLink.Application.UseCases.Features.Whiteboard.Commands;
 
 public static class UpdateWhiteboard
 {

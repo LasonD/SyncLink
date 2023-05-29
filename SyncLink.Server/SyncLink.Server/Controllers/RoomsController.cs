@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SyncLink.Application.UseCases.Commands.CreateRoom;
+using SyncLink.Application.UseCases.Rooms.Commands.CreateRoom;
 using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
 

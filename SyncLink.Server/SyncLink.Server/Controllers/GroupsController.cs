@@ -3,10 +3,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.Contracts.Data.Enums;
-using SyncLink.Application.UseCases.Commands.CreateGroup;
+using SyncLink.Application.UseCases.Groups.Commands.CreateGroup;
+using SyncLink.Application.UseCases.Groups.Queries;
+using SyncLink.Application.UseCases.Groups.Queries.SearchGroups;
+using SyncLink.Application.UseCases.Messages.Queries;
 using SyncLink.Application.UseCases.Queries;
-using SyncLink.Application.UseCases.Queries.GetById.Group;
-using SyncLink.Application.UseCases.Queries.SearchGroups;
+using SyncLink.Application.UseCases.Rooms.Queries;
 using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
 
