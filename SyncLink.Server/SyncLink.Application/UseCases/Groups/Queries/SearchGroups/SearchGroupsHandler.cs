@@ -4,7 +4,7 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Queries.SearchGroups;
+namespace SyncLink.Application.UseCases.Groups.Queries.SearchGroups;
 
 public partial class SearchGroups
 {

@@ -9,6 +9,7 @@ public class User : EntityBase
     private readonly IList<UserGroup> _userGroups = new List<UserGroup>();
     private readonly IList<UserRoom> _userRooms = new List<UserRoom>();
     private readonly IList<Message> _messages = new List<Message>();
+    private readonly IList<Language> _languages = new List<Language>();
 
     public User(string userName)
     {
@@ -29,4 +30,6 @@ public class User : EntityBase
     public IReadOnlyCollection<UserRoom> UserRooms => _userRooms.AsReadOnly();
 
     public IReadOnlyCollection<Message> Messages => _messages.AsReadOnly();
+
+    public IReadOnlyCollection<Language> Languages => _languages.AsReadOnly();
 }

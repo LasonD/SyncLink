@@ -5,7 +5,7 @@ using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
-namespace SyncLink.Application.UseCases.Queries;
+namespace SyncLink.Application.UseCases.Rooms.Queries;
 
 public static class GetRoom
 {

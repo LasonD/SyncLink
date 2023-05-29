@@ -5,7 +5,7 @@ using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
-namespace SyncLink.Application.UseCases.Commands.CreateGroup;
+namespace SyncLink.Application.UseCases.Groups.Commands.CreateGroup;
 
 public partial class CreateGroup
 {

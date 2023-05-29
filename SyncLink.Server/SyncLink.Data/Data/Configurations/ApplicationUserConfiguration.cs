@@ -34,5 +34,7 @@ internal class ApplicationUserConfiguration : IEntityTypeConfiguration<User>
         builder.Metadata
             .FindNavigation(nameof(User.UserRooms))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.OwnsMany(x => x.Languages);
     }
 }

@@ -1,10 +1,10 @@
 using AutoMapper;
-using SyncLink.Application.UseCases.Commands.Auth.Login;
-using SyncLink.Application.UseCases.Commands.Auth.Register;
-using SyncLink.Application.UseCases.Commands.CreateGroup;
-using SyncLink.Application.UseCases.Commands.CreateRoom;
-using SyncLink.Application.UseCases.Commands.SendMessage;
+using SyncLink.Application.UseCases.Auth.Commands.Login;
+using SyncLink.Application.UseCases.Auth.Commands.Register;
 using SyncLink.Application.UseCases.Features.Whiteboard.Commands;
+using SyncLink.Application.UseCases.Groups.Commands.CreateGroup;
+using SyncLink.Application.UseCases.Messages.Commands.SendMessage;
+using SyncLink.Application.UseCases.Rooms.Commands.CreateRoom;
 using SyncLink.Server.Dtos;
 
 namespace SyncLink.Server.Mapper;

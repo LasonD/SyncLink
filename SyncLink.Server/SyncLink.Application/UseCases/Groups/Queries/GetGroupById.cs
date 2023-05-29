@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Dtos;
+using SyncLink.Application.UseCases.Queries.GetById.Base;
 
-namespace SyncLink.Application.UseCases.Queries.GetById.Group;
+namespace SyncLink.Application.UseCases.Groups.Queries;
 
 public class GetGroupById
 {
-    public record Query : Base.GetById.Query<Domain.Group, GroupDto>;
+    public record Query : GetById.Query<Domain.Group, GroupDto>;
 
-    public class Handler : Base.GetById.Handler<Domain.Group, GroupDto>
+    public class Handler : GetById.Handler<Domain.Group, GroupDto>
     {
         private readonly IUserRepository _userRepository;
 

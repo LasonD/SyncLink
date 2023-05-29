@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
-using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
-namespace SyncLink.Application.UseCases.Queries;
+namespace SyncLink.Application.UseCases.Messages.Queries;
 
 public static class GetMessages
 {

@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Dtos;
+using SyncLink.Application.UseCases.Queries.GetById.Base;
 
-namespace SyncLink.Application.UseCases.Queries.GetById.Whiteboard;
+namespace SyncLink.Application.UseCases.Features.Whiteboard.Queries;
 
 public class GetWhiteboardById
 {
-    public record Query : Base.GetById.Query<Domain.Features.Whiteboard, WhiteboardDto>
+    public record Query : GetById.Query<Domain.Features.Whiteboard, WhiteboardDto>
     {
         public int GroupId { get; set; }
     };
 
-    public class Handler : Base.GetById.Handler<Domain.Features.Whiteboard, WhiteboardDto>
+    public class Handler : GetById.Handler<Domain.Features.Whiteboard, WhiteboardDto>
     {
         private readonly IUserRepository _userRepository;
 
@@ -20,7 +21,7 @@ public class GetWhiteboardById
             _userRepository = userRepository;
         }
 
-        protected override Task<bool> CheckUserHasAccessAsync(Base.GetById.Query<Domain.Features.Whiteboard, WhiteboardDto> request, CancellationToken cancellationToken)
+        protected override Task<bool> CheckUserHasAccessAsync(UseCases.Queries.GetById.Base.GetById.Query<Domain.Features.Whiteboard, WhiteboardDto> request, CancellationToken cancellationToken)
         {
             if (!(request is Query query))
             {

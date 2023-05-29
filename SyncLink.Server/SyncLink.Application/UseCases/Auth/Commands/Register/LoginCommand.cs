@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Commands.Auth.Register;
+namespace SyncLink.Application.UseCases.Auth.Commands.Register;
 
 public partial class Register
 {

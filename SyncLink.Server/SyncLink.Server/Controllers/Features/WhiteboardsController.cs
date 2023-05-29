@@ -3,8 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.UseCases.Features.Whiteboard.Commands;
+using SyncLink.Application.UseCases.Features.Whiteboard.Queries;
 using SyncLink.Application.UseCases.Queries;
-using SyncLink.Application.UseCases.Queries.GetById.Whiteboard;
 using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
 

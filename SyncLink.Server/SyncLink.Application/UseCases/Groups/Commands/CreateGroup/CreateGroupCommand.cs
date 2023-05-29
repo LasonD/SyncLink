@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Commands.CreateGroup;
+namespace SyncLink.Application.UseCases.Groups.Commands.CreateGroup;
 
 public partial class CreateGroup
 {

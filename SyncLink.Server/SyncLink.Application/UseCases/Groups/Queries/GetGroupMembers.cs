@@ -7,7 +7,7 @@ using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
-namespace SyncLink.Application.UseCases.Queries;
+namespace SyncLink.Application.UseCases.Groups.Queries;
 
 public static class GetGroupMembers
 {

@@ -3,11 +3,10 @@ using MediatR;
 using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
-using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
-namespace SyncLink.Application.UseCases.Queries;
+namespace SyncLink.Application.UseCases.Features.Whiteboard.Queries;
 
 public static class GetWhiteboards
 {
@@ -43,7 +42,7 @@ public static class GetWhiteboards
 
             var whiteboardsResult = await _whiteboardRepository.GetGroupWhiteboardsAsync(
                 request.GroupId, 
-                new OrderedPaginationQuery<Whiteboard>(request.PageNumber, request.PageSize), 
+                new OrderedPaginationQuery<Domain.Features.Whiteboard>(request.PageNumber, request.PageSize), 
                 cancellationToken);
 
             var whiteboards = whiteboardsResult.GetResult();

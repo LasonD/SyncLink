@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
-using SyncLink.Application.Contracts.Data;
+using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
-using SyncLink.Application.Domain.Associations;
 
-namespace SyncLink.Application.UseCases.Queries;
+namespace SyncLink.Application.UseCases.Rooms.Queries;
 
 public static class GetRoomMembers
 {

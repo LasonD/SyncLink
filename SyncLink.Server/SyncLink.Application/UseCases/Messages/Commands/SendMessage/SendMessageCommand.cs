@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SyncLink.Application.Dtos;
 
-namespace SyncLink.Application.UseCases.Commands.SendMessage;
+namespace SyncLink.Application.UseCases.Messages.Commands.SendMessage;
 
 public partial class SendMessage
 {
