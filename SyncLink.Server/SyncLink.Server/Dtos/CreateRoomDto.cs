@@ -4,7 +4,7 @@ public class CreateRoomDto
 {
     public int GroupId { get; set; }
 
-    public int[] MembersId { get; set; } = null!;
+    public int[] MemberIds { get; set; } = null!;
 
     public string? Name { get; set; }
 

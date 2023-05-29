@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { Group } from "../../../models/group.model";
 import { searchGroups, searchGroupsFailure, searchGroupsSuccess } from "./groups-search.actions";
 import { Page } from "../../../models/pagination.model";
+import { createEntityAdapter, EntityAdapter } from "@ngrx/entity";
 
 export interface GroupsSearchState {
   searchedGroups: Page<Group>[];
@@ -14,6 +15,8 @@ export const initialState: GroupsSearchState = {
   searchGroupLoading: false,
   groupSearchError: null,
 };
+
+export const adapter: EntityAdapter<Group> = createEntityAdapter<Group>();
 
 export const groupsSearchReducer = createReducer(
   initialState,

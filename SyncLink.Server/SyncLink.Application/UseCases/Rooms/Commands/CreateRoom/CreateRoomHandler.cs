@@ -25,7 +25,7 @@ public partial class CreateRoom
 
         public async Task<RoomDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var completeUserIds = request.UserIds.Append(request.UserId).Distinct().ToList();
+            var completeUserIds = request.MemberIds.Append(request.UserId).Distinct().ToList();
 
             var usersResult = await _usersRepository.GetUsersFromGroupAsync(request.GroupId, completeUserIds, cancellationToken);
 
@@ -48,10 +48,10 @@ public partial class CreateRoom
         private static void CheckAllUsersBelongToGroup(Command request, IPaginatedResult<User> users)
         {
             var userDifference = users.Entities
-                .ExceptBy(request.UserIds, u => u.Id)
+                .ExceptBy(request.MemberIds, u => u.Id)
                 .ToList();
 
-            if (userDifference.Any())
+            if (userDifference.Count > 1)
             {
                 throw new BusinessException($"Users with ids {string.Join(", ", userDifference)} don't belong to group with id {request.GroupId}");
             }

@@ -11,6 +11,6 @@ public partial class CreateRoom
         public int GroupId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public IEnumerable<int> UserIds { get; set; } = Enumerable.Empty<int>();
+        public IEnumerable<int> MemberIds { get; set; } = Enumerable.Empty<int>();
     }
 }
