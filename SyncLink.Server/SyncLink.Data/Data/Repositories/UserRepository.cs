@@ -52,6 +52,15 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
         return await GetBySpecificationAsync(query, cancellationToken);
     }
 
+    public Task<bool> IsUserAdminOfGroupAsync(int userId, int groupId, CancellationToken cancellationToken)
+    {
+        return DbContext.UsersToGroups.AnyAsync(ug =>
+                ug.UserId == userId &&
+                ug.GroupId == groupId &&
+                ug.IsAdmin, cancellationToken
+        );
+    }
+
     public Task<bool> UserHasGroupWithNameAsync(int userId, string groupName, CancellationToken cancellationToken)
     {
         return DbContext.UsersToGroups.AnyAsync(ug =>

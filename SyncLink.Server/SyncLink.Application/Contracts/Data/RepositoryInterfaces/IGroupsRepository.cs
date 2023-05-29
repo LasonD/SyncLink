@@ -7,4 +7,6 @@ namespace SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 public interface IGroupsRepository : IEntityRepository<Group>
 {
     Task<PaginatedRepositoryResultSet<Group>> SearchByNameAndDescriptionAsync(int userId, string[] terms, GroupSearchMode searchMode, CancellationToken cancellationToken);
+
+    Task<int> GetGroupMembersCountAsync(int groupId, CancellationToken cancellationToken);
 }

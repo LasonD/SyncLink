@@ -20,7 +20,7 @@ public abstract partial class GetById
             Mapper = mapper;
         }
 
-        public async Task<TDto> Handle(Query<TEntity, TDto> request, CancellationToken cancellationToken)
+        public virtual async Task<TDto> Handle(Query<TEntity, TDto> request, CancellationToken cancellationToken)
         {
             var isOperationAllowed = await CheckUserHasAccessAsync(request, cancellationToken);
 

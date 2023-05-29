@@ -8,6 +8,7 @@ export interface Group {
   description?: string;
   isPrivate: boolean;
   membersCount: number;
+  isAdmin: boolean;
 }
 
 export enum GroupSearchMode {

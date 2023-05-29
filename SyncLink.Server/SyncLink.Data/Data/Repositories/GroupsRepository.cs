@@ -5,6 +5,7 @@ using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
 using SyncLink.Infrastructure.Data.Context;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace SyncLink.Infrastructure.Data.Repositories;
 
@@ -40,5 +41,10 @@ public class GroupsRepository : GenericEntityRepository<Group>, IGroupsRepositor
         specification.FilteringExpressions.Add(filteringCondition);
 
         return GetBySpecificationAsync(specification, cancellationToken);
+    }
+
+    public Task<int> GetGroupMembersCountAsync(int groupId, CancellationToken cancellationToken)
+    {
+        return DbContext.UsersToGroups.CountAsync(ug => ug.GroupId == groupId, cancellationToken);
     }
 }
