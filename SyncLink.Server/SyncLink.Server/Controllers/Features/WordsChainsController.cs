@@ -50,12 +50,14 @@ public class WordsChainsController : ApiControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetWordsChainGames(int groupId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetWordsChainGames(int groupId, int pageNumber = 1, int pageSize = int.MaxValue, CancellationToken cancellationToken = default)
     {
         var query = new GetWordsChainGamesOverview.Query
         {
             GroupId = groupId,
             UserId = GetRequiredAppUserId(),
+            PageNumber = pageNumber,
+            PageSize = pageSize,
         };
 
         var result = await _mediator.Send(query, cancellationToken);
