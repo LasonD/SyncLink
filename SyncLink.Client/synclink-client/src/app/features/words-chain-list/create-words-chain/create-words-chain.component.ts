@@ -5,9 +5,9 @@ import { Store } from "@ngrx/store";
 import { ActivatedRoute, Router } from "@angular/router";
 import { selectCurrentGroupId } from "../../../groups/group-hub/store/group-hub.selectors";
 import { filter, take } from "rxjs/operators";
-import { createWhiteboard } from "../../whiteboard/store/whiteboard.actions";
 import { selectCreatedWhiteboardId } from "../../whiteboard/store/whiteboard.selectors";
 import { AppState } from "../../../store/app.reducer";
+import { createWordsChainGame } from "../store/words-chain.actions";
 
 @Component({
   selector: 'app-create-words-chain',
@@ -36,11 +36,11 @@ export class CreateWordsChainComponent {
 
     const value = this.createWordsChainForm.value;
 
-    const name = value.topic;
+    const topic = value.topic;
 
     this.store.select(selectCurrentGroupId).pipe(filter(id => !!id), take(1))
       .subscribe(groupId => {
-        this.store.dispatch(createWhiteboard({ name, groupId }));
+        this.store.dispatch(createWordsChainGame({ createWordsChainDto: { topic }, groupId }));
       });
 
     this.store.select(selectCreatedWhiteboardId)
