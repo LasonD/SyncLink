@@ -20,6 +20,16 @@ public class WordsChainGamesRepository : GenericEntityRepository<WordsChainGame>
         return GetBySpecificationAsync(query, cancellationToken);
     }
 
+    public Task<int> CountGameEntriesAsync(int gameId, CancellationToken cancellationToken)
+    {
+        return DbContext.Set<WordsChainEntry>().CountAsync(m => m.GameId == gameId, cancellationToken);
+    }
+
+    public Task<int> CountGameParticipantsAsync(int gameId, CancellationToken cancellationToken)
+    {
+        return DbContext.Set<UserWordsChainGame>().CountAsync(m => m.GameId == gameId, cancellationToken);
+    }
+
     public Task<PaginatedRepositoryResultSet<WordsChainEntry>> GetWordsChainGameEntriesAsync(int groupId, int gameId, OrderedPaginationQuery<WordsChainEntry> query, CancellationToken cancellationToken)
     {
         query.IncludeExpressions.Add(m => m.Game);
@@ -38,6 +48,6 @@ public class WordsChainGamesRepository : GenericEntityRepository<WordsChainGame>
 
     public Task<bool> CheckUserIsParticipantAsync(int gameId, int userId, CancellationToken cancellationToken)
     {
-        return DbContext.Set<UserToWordsChainGame>().AnyAsync(m => m.GameId == gameId && m.UserId == userId, cancellationToken);
+        return DbContext.Set<UserWordsChainGame>().AnyAsync(m => m.GameId == gameId && m.UserId == userId, cancellationToken);
     }
 }

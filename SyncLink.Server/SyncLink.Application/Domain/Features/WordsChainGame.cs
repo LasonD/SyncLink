@@ -11,7 +11,7 @@ public class WordsChainGame : EntityBase
 
     public List<WordsChainEntry> Entries { get; set; } = null!;
 
-    public List<UserToWordsChainGame> Participants { get; set; } = null!;
+    public List<UserWordsChainGame> Participants { get; set; } = null!;
 }
 
 public class WordsChainEntry : EntityBase
@@ -22,10 +22,10 @@ public class WordsChainEntry : EntityBase
     public WordsChainGame Game { get; set; } = null!;
 
     public int ParticipantId { get; set; }
-    public UserToWordsChainGame Participant { get; set; } = null!;
+    public UserWordsChainGame Participant { get; set; } = null!;
 }
 
-public class UserToWordsChainGame
+public class UserWordsChainGame
 {
     public int Score { get; set; }
 

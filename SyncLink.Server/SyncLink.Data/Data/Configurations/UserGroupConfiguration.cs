@@ -4,14 +4,14 @@ using SyncLink.Application.Domain.Features;
 
 namespace SyncLink.Infrastructure.Data.Configurations;
 
-internal class UserToWordsChainGameConfiguration : IEntityTypeConfiguration<UserToWordsChainGame>
+internal class UserToWordsChainGameConfiguration : IEntityTypeConfiguration<UserWordsChainGame>
 {
-    public void Configure(EntityTypeBuilder<UserToWordsChainGame> builder)
+    public void Configure(EntityTypeBuilder<UserWordsChainGame> builder)
     {
         builder
             .HasKey(
-                nameof(UserToWordsChainGame.UserId),
-                nameof(UserToWordsChainGame.GameId)
+                nameof(UserWordsChainGame.UserId),
+                nameof(UserWordsChainGame.GameId)
             );
     }
 }

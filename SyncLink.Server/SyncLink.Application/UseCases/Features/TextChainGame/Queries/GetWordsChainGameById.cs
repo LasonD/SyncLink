@@ -3,6 +3,7 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Dtos.WordsChainGame;
 using SyncLink.Application.UseCases.Queries.GetById.Base;
+using System.Linq.Expressions;
 
 namespace SyncLink.Application.UseCases.Features.TextChainGame.Queries;
 
@@ -35,6 +36,11 @@ public class GetWordsChainGameById
             }
 
             return _userRepository.IsUserInGroupAsync(query.UserId.Value, query.GroupId, cancellationToken);
+        }
+
+        protected override Expression<Func<WordsChainGame, object>>[] GetInclusions(GetById.Query<WordsChainGame, WordsChainGameDto> request)
+        {
+            return base.GetInclusions(request).Append(g => g.Participants).ToArray();
         }
     }
 }

@@ -50,6 +50,12 @@ public static class GetWordsChainGamesOverview
 
             var dto = _mapper.Map<PaginatedResult<WordsChainGameOverviewDto>>(whiteboards);
 
+            foreach (var d in dto.Entities)
+            {
+                d.WordsCount = await _wordsChainGamesRepository.CountGameEntriesAsync(d.Id, cancellationToken);
+                d.ParticipantsCount = await _wordsChainGamesRepository.CountGameParticipantsAsync(d.Id, cancellationToken);
+            }
+
             return dto;
         }
     }

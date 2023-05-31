@@ -41,7 +41,7 @@ public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>, IAppDb
 
     public DbSet<WordsChainEntry> WordsChainEntries { get; set; } = null!;
 
-    public DbSet<UserToWordsChainGame> UsersToWordsChains { get; set; } = null!;
+    public DbSet<UserWordsChainGame> UsersToWordsChains { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

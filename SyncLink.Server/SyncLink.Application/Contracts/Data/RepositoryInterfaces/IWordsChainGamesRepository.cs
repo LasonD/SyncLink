@@ -9,4 +9,6 @@ public interface IWordsChainGamesRepository : IEntityRepository<WordsChainGame>
     Task<PaginatedRepositoryResultSet<WordsChainEntry>> GetWordsChainGameEntriesAsync(int groupId, int gameId, OrderedPaginationQuery<WordsChainEntry> query, CancellationToken cancellationToken);
     Task<bool> CheckGameAlreadyHasWordAsync(int gameId, string word, CancellationToken cancellationToken);
     Task<bool> CheckUserIsParticipantAsync(int gameId, int userId, CancellationToken cancellationToken);
+    Task<int> CountGameEntriesAsync(int gameId, CancellationToken cancellationToken);
+    Task<int> CountGameParticipantsAsync(int gameId, CancellationToken cancellationToken);
 }

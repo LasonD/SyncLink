@@ -32,7 +32,7 @@ public interface IAppDbContext
 
     public DbSet<WordsChainEntry> WordsChainEntries { get; set; }
 
-    public DbSet<UserToWordsChainGame> UsersToWordsChains { get; set; }
+    public DbSet<UserWordsChainGame> UsersToWordsChains { get; set; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

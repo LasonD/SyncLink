@@ -41,7 +41,7 @@ public static class CreateWordsChainGame
             {
                 Topic = request.Topic,
                 GroupId = request.GroupId,
-                Participants = new List<UserToWordsChainGame>
+                Participants = new List<UserWordsChainGame>
                 {
                     new()
                     {

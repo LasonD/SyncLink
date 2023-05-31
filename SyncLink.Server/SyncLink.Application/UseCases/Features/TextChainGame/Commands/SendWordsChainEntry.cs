@@ -78,7 +78,7 @@ public static class SendWordsChainEntry
 
             if (!isUserParticipant)
             {
-                var userToGame = new UserToWordsChainGame
+                var userToGame = new UserWordsChainGame
                 {
                     UserId = request.UserId,
                     User = sender,
@@ -89,6 +89,8 @@ public static class SendWordsChainEntry
             }
             
             await _context.WordsChainEntries.AddAsync(chainEntry, cancellationToken);
+
+            await _context.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<WordsChainGameEntryDto>(chainEntry);
 
