@@ -16,4 +16,8 @@
     <ProjectReference Include="..\SyncLink.Common\SyncLink.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Features\TextChainGame\Queries\" />
+  </ItemGroup>
+
 </Project>

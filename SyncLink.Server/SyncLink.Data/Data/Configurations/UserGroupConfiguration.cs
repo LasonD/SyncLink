@@ -1,17 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SyncLink.Application.Domain.Associations;
+using SyncLink.Application.Domain.Features;
 
 namespace SyncLink.Infrastructure.Data.Configurations;
 
-internal class UserGroupConfiguration : IEntityTypeConfiguration<UserGroup>
+internal class UserToWordsChainGameConfiguration : IEntityTypeConfiguration<UserToWordsChainGame>
 {
-    public void Configure(EntityTypeBuilder<UserGroup> builder)
+    public void Configure(EntityTypeBuilder<UserToWordsChainGame> builder)
     {
         builder
             .HasKey(
-                nameof(UserGroup.UserId),
-                nameof(UserGroup.GroupId)
+                nameof(UserToWordsChainGame.UserId),
+                nameof(UserToWordsChainGame.GameId)
             );
     }
 }

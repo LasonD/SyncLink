@@ -28,5 +28,11 @@ public interface IAppDbContext
 
     public DbSet<TextPlotVote> TextPlotVotes { get; set; }
 
+    public DbSet<WordsChainGame> WordsChainGames { get; set; }
+
+    public DbSet<WordsChainEntry> WordsChainEntries { get; set; }
+
+    public DbSet<UserToWordsChainGame> UsersToWordsChains { get; set; }
+
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

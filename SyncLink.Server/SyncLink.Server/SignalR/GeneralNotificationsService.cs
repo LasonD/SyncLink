@@ -6,11 +6,11 @@ using SyncLink.Server.Hubs;
 
 namespace SyncLink.Server.SignalR;
 
-internal class GeneralGeneralNotificationsService : IGeneralNotificationsService
+internal class GeneralNotificationsService : IGeneralNotificationsService
 {
     private readonly IHubContext<SyncLinkHub, ISyncLinkHub> _hubContext;
 
-    public GeneralGeneralNotificationsService(IHubContext<SyncLinkHub, ISyncLinkHub> hubContext)
+    public GeneralNotificationsService(IHubContext<SyncLinkHub, ISyncLinkHub> hubContext)
     {
         _hubContext = hubContext;
     }

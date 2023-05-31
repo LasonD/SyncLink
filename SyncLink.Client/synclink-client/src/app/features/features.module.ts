@@ -13,6 +13,9 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { TextPlotGameComponent } from './text-plot-game/text-plot-game.component';
+import { WordsChainComponent } from './words-chain-list/words-chain/words-chain.component';
+import { WordsChainListComponent } from './words-chain-list/words-chain-list.component';
+import { CreateWordsChainComponent } from './words-chain-list/create-words-chain/create-words-chain.component';
 
 export const featureRoutes: Routes = [
   {
@@ -24,13 +27,19 @@ export const featureRoutes: Routes = [
   {
     path: 'features/whiteboards', component: WhiteboardsListComponent,
   },
+  {
+    path: 'features/words-chain', component: WordsChainComponent,
+  },
 ];
 
 @NgModule({
   declarations: [
     WhiteboardComponent,
     CreateWhiteboardComponent,
-    TextPlotGameComponent
+    TextPlotGameComponent,
+    WordsChainComponent,
+    WordsChainListComponent,
+    CreateWordsChainComponent
   ],
   imports: [
     CommonModule,

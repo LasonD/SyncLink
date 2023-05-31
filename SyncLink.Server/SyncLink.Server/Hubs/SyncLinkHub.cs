@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.Dtos;
+using SyncLink.Application.Dtos.WordsChainGame;
 using SyncLink.Application.Exceptions;
 using SyncLink.Application.UseCases.Features.Whiteboard.Commands;
 using SyncLink.Common.Helpers.Jwt;
@@ -23,6 +24,11 @@ public interface ISyncLinkHub
     Task NewEntry(TextPlotEntry entry);
     Task VoteReceived(TextPlotVote vote);
     Task GameEnded(TextPlotGame game);
+    #endregion
+
+    #region WordsChainGame
+    Task NewWordsChainGame(WordsChainGameOverviewDto game);
+    Task NewEntry(WordsChainGameEntryDto entry);
     #endregion
 }
 

@@ -37,6 +37,12 @@ public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>, IAppDb
 
     public DbSet<TextPlotVote> TextPlotVotes { get; set; } = null!;
 
+    public DbSet<WordsChainGame> WordsChainGames { get; set; } = null!;
+
+    public DbSet<WordsChainEntry> WordsChainEntries { get; set; } = null!;
+
+    public DbSet<UserToWordsChainGame> UsersToWordsChains { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
