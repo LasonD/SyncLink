@@ -15,5 +15,5 @@ public interface IUserRepository : IEntityRepository<User>
 
     Task<PaginatedRepositoryResultSet<UserRoom>> GetRoomMembersAsync(int groupId, int roomId, OrderedPaginationQuery<UserRoom> query, CancellationToken cancellationToken);
     
-    Task<bool> IsUserAdminOfGroupAsync(int userId, int grupId, CancellationToken cancellationToken);
+    Task<bool> IsUserAdminOfGroupAsync(int userId, int groupId, CancellationToken cancellationToken);
 }
