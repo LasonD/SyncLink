@@ -10,8 +10,11 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Dtos;
+using SyncLink.Application.Dtos.WordsChainGame;
 using SyncLink.Application.Mapping;
+using SyncLink.Application.Services;
 using SyncLink.Application.UseCases.Auth.Commands.Register;
+using SyncLink.Application.UseCases.Features.TextChainGame.Queries;
 using SyncLink.Application.UseCases.Features.Whiteboard.Queries;
 using SyncLink.Application.UseCases.Groups.Queries;
 using SyncLink.Infrastructure.Data.Context;
@@ -162,15 +165,19 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IRoomsRepository, RoomsRepository>();
         services.AddTransient<IMessagesRepository, MessagesRepository>();
         services.AddTransient<IWhiteboardRepository, WhiteboardRepository>();
+        services.AddTransient<IWordsChainGamesRepository, WordsChainGamesRepository>();
 
         services.AddTransient<IEntityRepository<Group>, GroupsRepository>();
 
         services.AddTransient<IRequestHandler<GetGroupById.Query, GroupDto>, GetGroupById.Handler>(); 
         services.AddTransient<IRequestHandler<GetWhiteboardById.Query, WhiteboardDto>, GetWhiteboardById.Handler>();
+        services.AddTransient<IRequestHandler<GetWordsChainGameById.Query, WordsChainGameDto>, GetWordsChainGameById.Handler>();
 
         services.AddTransient<IGeneralNotificationsService, GeneralNotificationsService>();
         services.AddTransient<ITextPlotGameNotificationService, TextPlotGameNotificationService>();
         services.AddTransient<IWordsChainGameNotificationService, WordsChainGameNotificationService>();
+
+        services.AddTransient<IWordCheckerService, WordCheckerService>();
 
         return services;
     }
