@@ -4,12 +4,12 @@
     Create Whiteboard
   </button>
   <mat-card
-    *ngFor="let whiteboard of (whiteboards$ | async) "
-    (click)="navigateToWhiteboard(whiteboard.id)"
+    *ngFor="let wordChain of (wordChains$ | async) "
+    (click)="navigateToWordsChain(wordChain.id)"
     class="whiteboard-card"
   >
     <mat-card-header>
-      <mat-card-title>{{ whiteboard.name }}</mat-card-title>
+      <mat-card-title>{{ wordChain.topic }}</mat-card-title>
     </mat-card-header>
     <mat-card-content class="content-center">
       <div class="preview-placeholder"></div>

@@ -33,7 +33,7 @@ public class WordsChainGamesRepository : GenericEntityRepository<WordsChainGame>
     public Task<PaginatedRepositoryResultSet<WordsChainEntry>> GetWordsChainGameEntriesAsync(int groupId, int gameId, OrderedPaginationQuery<WordsChainEntry> query, CancellationToken cancellationToken)
     {
         query.IncludeExpressions.Add(m => m.Game);
-        query.IncludeExpressions.Add(m => m.ParticipantId);
+        query.IncludeExpressions.Add(m => m.UserId);
         query.FilteringExpressions.Add(m => m.GameId == gameId && m.Game.GroupId == groupId);
         query.OrderingExpressions.Add(new OrderingCriteria<WordsChainEntry>(m => m.CreationDate, IsAscending: false));
 

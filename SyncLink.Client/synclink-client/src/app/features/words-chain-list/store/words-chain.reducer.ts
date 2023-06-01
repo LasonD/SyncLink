@@ -57,6 +57,7 @@ export const wordsChainsReducer = createReducer(
 
 export interface WordsChainOverview {
   id: number,
+  topic: string,
 }
 
 export interface WordsChain {

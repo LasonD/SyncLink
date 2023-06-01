@@ -73,7 +73,7 @@ public static class SendWordsChainEntry
             {
                 Word = request.Word.Trim().ToLowerInvariant(),
                 GameId = request.GameId,
-                ParticipantId = request.UserId,
+                UserId = request.UserId,
             };
 
             if (!isUserParticipant)

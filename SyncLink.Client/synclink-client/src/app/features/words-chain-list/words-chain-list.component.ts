@@ -4,12 +4,10 @@ import { Store } from "@ngrx/store";
 import { ActivatedRoute, Router } from "@angular/router";
 import { selectCurrentGroupId } from "../../groups/group-hub/store/group-hub.selectors";
 import { filter, tap } from "rxjs/operators";
-import { getWhiteboards } from "../whiteboard/store/whiteboard.actions";
-import { selectWhiteboards } from "../whiteboard/store/whiteboard.selectors";
 import { WordsChainOverview } from "./store/words-chain.reducer";
 import { AppState } from "../../store/app.reducer";
 import { getWordsChainGames } from "./store/words-chain.actions";
-import { selectWordsChainEntities } from "./store/words-chain.selectors";
+import { selectAllWordsChains } from "./store/words-chain.selectors";
 
 @Component({
   selector: 'app-words-chain-list',
@@ -19,7 +17,7 @@ import { selectWordsChainEntities } from "./store/words-chain.selectors";
 export class WordsChainListComponent {
   destroyed$: Subject<boolean> = new Subject<boolean>();
 
-  whiteboards$: Observable<WordsChainOverview[]>;
+  wordChains$: Observable<WordsChainOverview[]>;
 
   constructor(private store: Store<AppState>, private router: Router, private activatedRoute: ActivatedRoute) { }
 
@@ -33,7 +31,7 @@ export class WordsChainListComponent {
       this.store.dispatch(getWordsChainGames({groupId}))
     });
 
-    this.whiteboards$ = this.store.select(selectWordsChainEntities)
+    this.wordChains$ = this.store.select(selectAllWordsChains)
       .pipe(
         takeUntil(this.destroyed$),
         distinctUntilChanged(),
@@ -43,7 +41,7 @@ export class WordsChainListComponent {
       );
   }
 
-  navigateToWhiteboard(id: number): void {
+  navigateToWordsChain(id: number): void {
     this.router.navigate([id], { relativeTo: this.activatedRoute });
   }
 

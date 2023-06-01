@@ -21,7 +21,8 @@ public class WordsChainEntry : EntityBase
     public int GameId { get; set; }
     public WordsChainGame Game { get; set; } = null!;
 
-    public int ParticipantId { get; set; }
+    public int UserId { get; set; }
+
     public UserWordsChainGame Participant { get; set; } = null!;
 }
 
