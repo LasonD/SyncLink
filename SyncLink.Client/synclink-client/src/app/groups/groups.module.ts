@@ -19,6 +19,7 @@ import { featureRoutes } from "../features/features.module";
 import { NgxColorsModule } from "ngx-colors";
 import { NgWhiteboardModule } from "ng-whiteboard";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatButtonModule } from "@angular/material/button";
 
 const routes: Routes = [
   {
@@ -56,6 +57,7 @@ const routes: Routes = [
     NgxColorsModule,
     NgWhiteboardModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
   ]
 })
 export class GroupsModule { }

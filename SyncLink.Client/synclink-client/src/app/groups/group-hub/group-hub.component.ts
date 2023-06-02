@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GroupsState } from "../store/groups.reducer";
 import { Store } from "@ngrx/store";
 import { closeGroup, getGroup, openGroup } from "./store/group-hub.actions";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { distinctUntilChanged, Observable, Subject, takeUntil } from "rxjs";
 import { filter, map } from "rxjs/operators";
 import { selectGroupHubGroup, selectGroupHubLoading } from "./store/group-hub.selectors";
@@ -19,7 +19,8 @@ export class GroupHubComponent implements OnInit, OnDestroy {
   group: Group;
 
   constructor(private store: Store<GroupsState>,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -47,5 +48,9 @@ export class GroupHubComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.store.dispatch(closeGroup({ groupId: this.group?.id }));
     this.destroyed$.next(true);
+  }
+
+  navigateToHub() {
+    this.router.navigate(['groups', this.group.id, 'hub']);
   }
 }

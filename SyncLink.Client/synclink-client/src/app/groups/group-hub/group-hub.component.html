@@ -7,6 +7,13 @@
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav class="sidenav" mode="side" opened>
       <mat-nav-list>
+        <mat-list-item (click)="navigateToHub()">
+          <div class="d-flex justify-content-center align-items-center">
+            <span class="mat-line">Hub</span>
+          </div>
+        </mat-list-item>
+      </mat-nav-list>
+      <mat-nav-list>
         <app-group-users-list></app-group-users-list>
       </mat-nav-list>
       <mat-divider></mat-divider>
