@@ -7,7 +7,7 @@ export const selectWordsChainOverviewFeature = createSelector(
   selectFeaturesFeature,
   (state: FeaturesState) => state.wordsChainState.wordsChainOverviewState
 );
-export const selectWordsChainFeature = createSelector(
+export const selectWordsChainDetailsFeature = createSelector(
   selectFeaturesFeature,
   (state: FeaturesState) => state.wordsChainState.wordsChainDetailsState);
 
@@ -19,14 +19,14 @@ export const {
 } = wordsChainOverviewAdapter.getSelectors(selectWordsChainOverviewFeature);
 
 export const {
-  selectIds: selectWordsChainIds,
-  selectEntities: selectWordsChainEntities,
-  selectAll: selectAllWordsChains,
-  selectTotal: selectTotalWordsChains,
-} = wordsChainAdapter.getSelectors(selectWordsChainFeature);
+  selectIds: selectWordsChainEntriesIds,
+  selectEntities: selectWordsChainEntryEntities,
+  selectAll: selectAllWordsChainEntries,
+  selectTotal: selectTotalWordsChainsEntries,
+} = wordsChainAdapter.getSelectors(selectWordsChainDetailsFeature);
 
 export const selectCurrentWordsChain = createSelector(
-  selectWordsChainEntities,
-  selectWordsChainFeature,
+  selectWordsChainEntryEntities,
+  selectWordsChainDetailsFeature,
   (entities, wordsChainState) => entities[wordsChainState.selectedWordsChainId]
 );

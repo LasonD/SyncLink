@@ -14,12 +14,12 @@ export const wordsChainOverviewAdapter = createEntityAdapter<WordsChainOverview>
   selectId: (overview: WordsChainOverview) => overview.id
 });
 
-export interface WordsChainDetailsState extends EntityState<WordsChain> {
+export interface WordsChainDetailsState extends EntityState<WordChainEntry> {
   selectedWordsChainId: number | null;
 }
 
-export const wordsChainAdapter = createEntityAdapter<WordsChain>({
-  selectId: (chain: WordsChain) => chain.id
+export const wordsChainAdapter = createEntityAdapter<WordChainEntry>({
+  selectId: (entry: WordChainEntry) => entry.id
 });
 
 export const initialWordsChainOverviewState: WordsChainOverviewState = wordsChainOverviewAdapter.getInitialState();
@@ -68,6 +68,7 @@ export interface WordsChain {
 }
 
 export interface WordChainEntry {
+  id: number,
   word: string,
   senderId: number,
 }

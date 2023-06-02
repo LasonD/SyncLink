@@ -7,7 +7,7 @@ import { filter, tap } from "rxjs/operators";
 import { WordsChainOverview } from "./store/words-chain.reducer";
 import { AppState } from "../../store/app.reducer";
 import { getWordsChainGames } from "./store/words-chain.actions";
-import { selectAllWordsChains } from "./store/words-chain.selectors";
+import { selectAllWordsChainOverviews } from "./store/words-chain.selectors";
 
 @Component({
   selector: 'app-words-chain-list',
@@ -31,7 +31,7 @@ export class WordsChainListComponent {
       this.store.dispatch(getWordsChainGames({groupId}))
     });
 
-    this.wordChains$ = this.store.select(selectAllWordsChains)
+    this.wordChains$ = this.store.select(selectAllWordsChainOverviews)
       .pipe(
         takeUntil(this.destroyed$),
         distinctUntilChanged(),
