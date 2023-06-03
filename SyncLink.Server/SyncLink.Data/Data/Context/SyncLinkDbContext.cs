@@ -5,6 +5,7 @@ using SyncLink.Application.Domain;
 using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Domain.Features.TextPlotGame;
+using SyncLink.Application.Domain.Feed;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using System.Reflection;
 
@@ -42,6 +43,10 @@ public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>, IAppDb
     public DbSet<WordsChainEntry> WordsChainEntries { get; set; } = null!;
 
     public DbSet<UserWordsChainGame> UsersToWordsChains { get; set; } = null!;
+
+    public DbSet<WordsQuiz> WordsQuizzes { get; set; } = null!;
+    public DbSet<Voting> Votings { get; set; } = null!;
+    public DbSet<WordPhraseOfDayDiscussion> Discussions { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
