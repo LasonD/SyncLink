@@ -20,6 +20,11 @@ import { NgxColorsModule } from "ngx-colors";
 import { NgWhiteboardModule } from "ng-whiteboard";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatButtonModule } from "@angular/material/button";
+import { GroupFeedComponent } from './group-hub/group-feed/group-feed.component';
+import { DiscussionFeedItemComponent } from './group-hub/group-feed/discussion-feed-item/discussion-feed-item.component';
+import { VotingFeedItemComponent } from './group-hub/group-feed/voting-feed-item/voting-feed-item.component';
+import { QuizFeedItemComponent } from './group-hub/group-feed/quiz-feed-item/quiz-feed-item.component';
+import { MatCardModule } from "@angular/material/card";
 
 const routes: Routes = [
   {
@@ -30,7 +35,12 @@ const routes: Routes = [
   },
   {
     path: ':groupId/hub', component: GroupHubComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(AuthGuard).canActivate(route, state)],
-    children: [...roomsRoutes, ...featureRoutes]
+    children: [
+      {
+        path: '', component: GroupFeedComponent
+      },
+      ...roomsRoutes,
+      ...featureRoutes]
   },
 ];
 
@@ -42,6 +52,10 @@ const routes: Routes = [
     GroupUsersListComponent,
     GroupRoomsListComponent,
     GroupFeaturesListComponent,
+    GroupFeedComponent,
+    DiscussionFeedItemComponent,
+    VotingFeedItemComponent,
+    QuizFeedItemComponent,
   ],
   imports: [
     CommonModule,
@@ -58,6 +72,7 @@ const routes: Routes = [
     NgWhiteboardModule,
     MatProgressSpinnerModule,
     MatButtonModule,
+    MatCardModule,
   ]
 })
 export class GroupsModule { }

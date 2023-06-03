@@ -1,0 +1,7 @@
+<div *ngFor="let item of feedItems">
+  <ng-container [ngSwitch]="item.type">
+    <app-discussion-feed-item *ngSwitchCase="'discussion'" [item]="item"></app-discussion-feed-item>
+    <app-voting-feed-item *ngSwitchCase="'voting'" [item]="item"></app-voting-feed-item>
+    <app-quiz-feed-item *ngSwitchCase="'quiz'" [item]="item"></app-quiz-feed-item>
+  </ng-container>
+</div>

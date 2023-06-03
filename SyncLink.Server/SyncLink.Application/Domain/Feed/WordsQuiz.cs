@@ -1,4 +1,6 @@
-﻿namespace SyncLink.Application.Domain.Feed;
+﻿using SyncLink.Application.Domain.Base;
+
+namespace SyncLink.Application.Domain.Feed;
 
 public class WordsQuiz : FeedItem
 {
@@ -6,9 +8,11 @@ public class WordsQuiz : FeedItem
 
     public string Topic { get; set; } = null!;
     public string Question { get; set; } = null!;
+
+    public List<QuizOption> Options { get; set; } = null!;
 }
 
-public class QuizOption
+public class QuizOption : EntityBase
 {
     public string Text { get; set; } = null!;
     public bool IsCorrect { get; set; }
