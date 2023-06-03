@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { DiscussionItem, FeedItemType, Voting, WordPhraseOfDayDiscussion, WordsQuiz } from "./models";
+import { User } from "../../../auth/user.model";
+import { Group } from "../../../models/group.model";
 
 @Component({
   selector: 'app-group-feed',
@@ -6,62 +9,94 @@ import { Component } from '@angular/core';
   styleUrls: ['./group-feed.component.scss']
 })
 export class GroupFeedComponent {
-  feedItems = [
+  feedItemType = FeedItemType;
+  feedItems: (Voting | WordPhraseOfDayDiscussion | WordsQuiz)[] = [
     {
-      id: 1,
-      type: 'discussion',
-      wordPhrase: 'Learning English',
-      descriptionOrQuestion: 'What are some effective ways to learn English?',
-      discussionItems: [
-        {
-          text: 'Practicing speaking is the best way.',
-          upVotesCount: 5,
-          downVotesCount: 2,
-          discussionId: 1,
-        },
-        {
-          text: 'You can try language learning apps.',
-          upVotesCount: 3,
-          downVotesCount: 1,
-          discussionId: 1,
-        },
-      ],
-    },
-    {
-      id: 2,
-      type: 'voting',
-      question: 'Do you find learning English difficult?',
+      type: FeedItemType.Voting,
+      groupId: 1,
+      group: { /* ...group data here... */ } as Group,
+      authorId: 123,
+      author: { username: 'Alex'/* ...user data here... */ } as User,
+      question: "Who should be the next group leader?",
       votingOptions: [
         {
-          id: 1,
-          text: 'Yes',
+          text: "Alice",
           votes: [
-            { voterId: 1 },
-            { voterId: 2 },
+            {
+              voterId: 456,
+              voter: { /* ...user data here... */ } as User,
+            },
+            {
+              voterId: 789,
+              voter: { /* ...user data here... */ } as User,
+            }
           ],
-          votingId: 2,
+          votingId: 1,
+          voting: { /* ...voting data here... */ } as Voting,
         },
         {
-          id: 2,
-          text: 'No',
-          votes: [],
+          text: "Bob",
+          votes: [
+            {
+              voterId: 12,
+              voter: { /* ...user data here... */ } as User,
+            }
+          ],
           votingId: 2,
-        },
-      ],
+          voting: { /* ...voting data here... */ } as Voting,
+        }
+      ]
     },
     {
-      id: 3,
-      type: 'quiz',
-      topic: 'English Grammar',
-      question: 'What is the past tense of "go"?',
-      options: [
-        { text: 'Went', isCorrect: true },
-        { text: 'Gone', isCorrect: false },
-        { text: 'Goed', isCorrect: false },
-        { text: 'Goes', isCorrect: false },
-      ],
+      type: FeedItemType.Discussion,
+      groupId: 2,
+      group: { /* ...group data here... */ } as Group,
+      authorId: 345,
+      author: { /* ...user data here... */ } as User,
+      wordPhrase: "Eternal Sunshine of the Spotless Mind",
+      descriptionOrQuestion: "What are your thoughts on this movie?",
+      discussionItems: [
+        {
+          text: "Looks good!",
+          downVotesCount: 1,
+          upVotesCount: 10,
+        } as DiscussionItem,
+        {
+          text: "It's a good definition of words!!",
+          downVotesCount: 2,
+          upVotesCount: 8,
+        } as DiscussionItem,
+      ]
     },
+    {
+      type: FeedItemType.WordsQuiz,
+      groupId: 3,
+      group: { /* ...group data here... */ } as Group,
+      authorId: 678,
+      author: { /* ...user data here... */ } as User,
+      topic: "English vocabulary",
+      question: "What is the synonym for 'happy'?",
+      options: [
+        {
+          text: "Sad",
+          isCorrect: false,
+        },
+        {
+          text: "Joyful",
+          isCorrect: true,
+        },
+        {
+          text: "Angry",
+          isCorrect: false,
+        },
+        {
+          text: "Bored",
+          isCorrect: false,
+        }
+      ]
+    }
   ];
+
 
   //constructor(private feedService: FeedService) { } // Inject the service
 

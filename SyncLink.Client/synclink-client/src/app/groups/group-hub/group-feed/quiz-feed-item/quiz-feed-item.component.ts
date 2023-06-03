@@ -7,4 +7,15 @@ import { Component, Input } from '@angular/core';
 })
 export class QuizFeedItemComponent {
   @Input() item: any;
+
+  selectedOption: string;
+
+  submitVote() {
+    if (this.selectedOption) {
+      // Submit the vote.
+    } else {
+      // Show an error message because no option was selected.
+    }
+  }
+
 }

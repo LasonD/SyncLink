@@ -7,13 +7,17 @@
     <p>
       {{ item.question }}
     </p>
-    <mat-list>
-      <mat-list-item *ngFor="let option of item.options">
-        {{ option.text }}
-      </mat-list-item>
-    </mat-list>
+    <mat-radio-group [(ngModel)]="selectedOption">
+      <mat-list>
+        <mat-list-item *ngFor="let option of item.options">
+          <mat-radio-button value="{{option.text}}">
+            {{ option.text }}
+          </mat-radio-button>
+        </mat-list-item>
+      </mat-list>
+    </mat-radio-group>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-button>VOTE</button>
+  <mat-card-actions align="end">
+    <button mat-raised-button color="primary" (click)="submitVote()">SUBMIT VOTE</button>
   </mat-card-actions>
 </mat-card>

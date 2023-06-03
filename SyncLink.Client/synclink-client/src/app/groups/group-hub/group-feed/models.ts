@@ -1,8 +1,8 @@
 import { Group } from "../../../models/group.model";
 import { User } from "../../../auth/user.model";
 
-export abstract class FeedItem {
-  abstract type: FeedItemType;
+export interface FeedItem {
+  type: FeedItemType;
   groupId: number;
   group: Group;
   authorId?: number;
@@ -15,31 +15,32 @@ export enum FeedItemType {
   WordsQuiz,
 }
 
-export class Voting extends FeedItem {
+export interface Voting extends FeedItem {
   type: FeedItemType.Voting;
   question: string;
   votingOptions: VotingOption[];
 }
 
-export class VotingOption {
+export interface VotingOption {
   text: string;
   votes: Vote[];
   votingId: number;
   voting: Voting;
 }
 
-export class Vote {
+export interface Vote {
   voterId: number;
   voter: User;
 }
 
-export class WordPhraseOfDayDiscussion extends FeedItem {
+export interface WordPhraseOfDayDiscussion extends FeedItem {
   type: FeedItemType.Discussion;
   wordPhrase: string;
   descriptionOrQuestion?: string;
+  discussionItems: DiscussionItem[];
 }
 
-export class DiscussionItem {
+export interface DiscussionItem {
   text: string;
   upVotesCount: number;
   downVotesCount: number;
@@ -47,14 +48,14 @@ export class DiscussionItem {
   discussion: WordPhraseOfDayDiscussion;
 }
 
-export class WordsQuiz extends FeedItem {
+export interface WordsQuiz extends FeedItem {
   type: FeedItemType.WordsQuiz;
   topic: string;
   question: string;
   options: QuizOption[];
 }
 
-class QuizOption {
+export interface QuizOption {
   text: string;
   isCorrect: boolean;
 }

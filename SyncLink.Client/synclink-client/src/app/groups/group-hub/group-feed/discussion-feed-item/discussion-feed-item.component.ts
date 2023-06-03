@@ -7,4 +7,8 @@ import { Component, Input } from '@angular/core';
 })
 export class DiscussionFeedItemComponent {
   @Input() item: any;
+
+  onSubmit(value: any) {
+
+  }
 }

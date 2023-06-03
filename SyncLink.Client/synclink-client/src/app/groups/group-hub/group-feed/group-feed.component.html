@@ -1,7 +1,10 @@
-<div *ngFor="let item of feedItems">
+<mat-card *ngFor="let item of feedItems" class="mb-3">
   <ng-container [ngSwitch]="item.type">
-    <app-discussion-feed-item *ngSwitchCase="'discussion'" [item]="item"></app-discussion-feed-item>
-    <app-voting-feed-item *ngSwitchCase="'voting'" [item]="item"></app-voting-feed-item>
-    <app-quiz-feed-item *ngSwitchCase="'quiz'" [item]="item"></app-quiz-feed-item>
+    <app-discussion-feed-item *ngSwitchCase="feedItemType.Discussion" [item]="item">
+    </app-discussion-feed-item>
+    <app-voting-feed-item *ngSwitchCase="feedItemType.Voting" [item]="item">
+    </app-voting-feed-item>
+    <app-quiz-feed-item *ngSwitchCase="feedItemType.WordsQuiz" [item]="item">
+    </app-quiz-feed-item>
   </ng-container>
-</div>
+</mat-card>

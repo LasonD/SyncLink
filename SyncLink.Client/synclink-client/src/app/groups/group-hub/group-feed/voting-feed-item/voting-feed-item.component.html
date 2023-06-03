@@ -6,7 +6,7 @@
   <mat-card-content>
     <mat-list>
       <mat-list-item *ngFor="let option of item.votingOptions">
-        {{ option.text }} (Votes: {{ option.votes.length }})
+        {{ option.text }} (Votes: {{ option.votes?.length }})
       </mat-list-item>
     </mat-list>
   </mat-card-content>

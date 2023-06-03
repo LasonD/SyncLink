@@ -1,23 +1,42 @@
-<mat-card class="feed-item">
+<mat-card class="mat-elevation-z4">
   <mat-card-header>
     <div mat-card-avatar class="example-header-image"></div>
     <mat-card-title>{{ item.wordPhrase }}</mat-card-title>
-    <mat-card-subtitle>Posted by: {{ item.Author?.Name || 'Anonymous' }}</mat-card-subtitle>
+    <mat-card-subtitle>Posted by: {{ item.author?.username || 'Anonymous' }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <p>
-      {{ item.DescriptionOrQuestion }}
+      {{ item.descriptionOrQuestion }}
     </p>
-    <div *ngFor="let discussionItem of item.DiscussionItems">
-      <p>{{ discussionItem.Text }}</p>
-      <div>
-        <span>Upvotes: {{ discussionItem.UpVotesCount }}</span>
-        <span>Downvotes: {{ discussionItem.DownVotesCount }}</span>
-      </div>
-    </div>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Discussion
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngFor="let discussionItem of item.discussionItems">
+          <p>{{ discussionItem.text }}</p>
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="mat-caption">Upvotes: {{ discussionItem.upVotesCount }}</span>
+            <span class="mat-caption">Downvotes: {{ discussionItem.downVotesCount }}</span>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-button>LIKE</button>
-    <button mat-button>SHARE</button>
+  <mat-card-actions align="end">
+    <button mat-raised-button color="primary" class="mat-margin-right">LIKE</button>
+    <button mat-raised-button color="accent">SHARE</button>
   </mat-card-actions>
+  <mat-card-content>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+      <mat-form-field class="full-width">
+        <mat-label>Add a discussion item</mat-label>
+        <textarea matInput ngModel name="newDiscussionText"></textarea>
+      </mat-form-field>
+      <button type="submit" mat-raised-button color="primary">ADD</button>
+    </form>
+  </mat-card-content>
 </mat-card>

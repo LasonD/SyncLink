@@ -25,6 +25,9 @@ import { DiscussionFeedItemComponent } from './group-hub/group-feed/discussion-f
 import { VotingFeedItemComponent } from './group-hub/group-feed/voting-feed-item/voting-feed-item.component';
 import { QuizFeedItemComponent } from './group-hub/group-feed/quiz-feed-item/quiz-feed-item.component';
 import { MatCardModule } from "@angular/material/card";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatRadioModule } from "@angular/material/radio";
 
 const routes: Routes = [
   {
@@ -73,6 +76,9 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatButtonModule,
     MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRadioModule,
   ]
 })
 export class GroupsModule { }
