@@ -9,14 +9,14 @@ namespace SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
 
 public static class SubmitEntry
 {
-    public class SubmitEntryCommand : IRequest<TextPlotEntryDto>
+    public class Command : IRequest<TextPlotEntryDto>
     {
         public int GameId { get; set; }
         public int UserId { get; set; }
         public string Text { get; set; } = null!;
     }
 
-    public class Handler : IRequestHandler<SubmitEntryCommand, TextPlotEntryDto>
+    public class Handler : IRequestHandler<Command, TextPlotEntryDto>
     {
         private readonly IAppDbContext _context;
         private readonly ITextPlotGameNotificationService _notificationService;
@@ -29,7 +29,7 @@ public static class SubmitEntry
             _mapper = mapper;
         }
 
-        public async Task<TextPlotEntryDto> Handle(SubmitEntryCommand request, CancellationToken cancellationToken)
+        public async Task<TextPlotEntryDto> Handle(Command request, CancellationToken cancellationToken)
         {
             var game = await _context.TextPlotGames.FindAsync(request.GameId, cancellationToken);
             var user = await _context.ApplicationUsers.FindAsync(request.UserId, cancellationToken);

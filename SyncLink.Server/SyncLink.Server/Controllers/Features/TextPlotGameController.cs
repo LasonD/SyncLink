@@ -6,6 +6,7 @@ using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
 using SyncLink.Application.UseCases.Features.TextPlotGame.Queries;
 using SyncLink.Server.Controllers.Base;
+using SyncLink.Server.Dtos.TextPlotGame;
 
 namespace SyncLink.Server.Controllers.Features;
 
@@ -36,38 +37,61 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpPost("start")]
-    public async Task<ActionResult<TextPlotGame>> StartGame([FromBody] StartGame.StartGameCommand startGameCommand, CancellationToken cancellationToken)
+    public async Task<ActionResult<TextPlotGame>> StartGame([FromBody] StartGameDto startGameDto, CancellationToken cancellationToken)
     {
-        startGameCommand.UserId = GetRequiredAppUserId();
+        var command = new StartGame.Command
+        {
+            GroupId = startGameDto.GroupId,
+            Topic = startGameDto.Topic,
+            UserId = GetRequiredAppUserId()
+        };
 
-        var game = await _mediator.Send(startGameCommand, cancellationToken);
+        var game = await _mediator.Send(command, cancellationToken);
 
         return Ok(game);
     }
 
     [HttpPost("submitEntry")]
-    public async Task<ActionResult<TextPlotEntry>> SubmitEntry([FromBody] SubmitEntry.SubmitEntryCommand submitEntryCommand, CancellationToken cancellationToken)
+    public async Task<ActionResult<TextPlotEntry>> SubmitEntry([FromBody] SubmitEntryDto submitEntryDto, CancellationToken cancellationToken)
     {
-        submitEntryCommand.UserId = GetRequiredAppUserId();
-        var entry = await _mediator.Send(submitEntryCommand, cancellationToken);
+        var command = new   SubmitEntry.Command
+        {
+            GameId = submitEntryDto.GameId,
+            Text = submitEntryDto.Text,
+            UserId = GetRequiredAppUserId()
+        };
+
+        var entry = await _mediator.Send(command, cancellationToken);
 
         return Ok(entry);
     }
 
     [HttpPost("voteEntry")]
-    public async Task<ActionResult> VoteEntry([FromBody] VoteEntry.VoteCommand voteCommand, CancellationToken cancellationToken)
+    public async Task<ActionResult> VoteEntry([FromBody] VoteEntryDto voteEntryDto, CancellationToken cancellationToken)
     {
-        voteCommand.UserId = GetRequiredAppUserId();
-        var result = await _mediator.Send(voteCommand, cancellationToken);
+        var command = new VoteEntry.Command
+        {
+            EntryId = voteEntryDto.EntryId,
+            GameId = voteEntryDto.GameId,
+            UserId = GetRequiredAppUserId()
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
 
         return Ok(result);
     }
 
     [HttpPost("endGame")]
-    public async Task<ActionResult> EndGame([FromBody] EndGame.EndGameCommand endGameCommand, CancellationToken cancellationToken)
+    public async Task<ActionResult> EndGame([FromBody] EndGameDto endGameDto, CancellationToken cancellationToken)
     {
-        endGameCommand.UserId = GetRequiredAppUserId();
-        var result = await _mediator.Send(endGameCommand, cancellationToken);
+        var command = new EndGame.Command
+        {
+            GameId = endGameDto.GameId,
+            GroupId = endGameDto.GroupId,
+            UserId = GetRequiredAppUserId()
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
 
         return Ok(result);
     }

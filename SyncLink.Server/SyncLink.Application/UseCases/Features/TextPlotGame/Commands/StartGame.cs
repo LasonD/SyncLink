@@ -8,13 +8,14 @@ namespace SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
 
 public static class StartGame
 {
-    public class StartGameCommand : IRequest<TextPlotGameDto>
+    public class Command : IRequest<TextPlotGameDto>
     {
+        public string Topic { get; set; } = null!;
         public int GroupId { get; set; }
         public int UserId { get; set; }
     }
 
-    public class Handler : IRequestHandler<StartGameCommand, TextPlotGameDto>
+    public class Handler : IRequestHandler<Command, TextPlotGameDto>
     {
         private readonly IAppDbContext _context;
         private readonly ITextPlotGameNotificationService _notificationService;
@@ -27,7 +28,7 @@ public static class StartGame
             _mapper = mapper;
         }
 
-        public async Task<TextPlotGameDto> Handle(StartGameCommand request, CancellationToken cancellationToken)
+        public async Task<TextPlotGameDto> Handle(Command request, CancellationToken cancellationToken)
         {
             var group = await _context.Groups.FindAsync(request.GroupId, cancellationToken);
             var starter = await _context.ApplicationUsers.FindAsync(request.UserId, cancellationToken);

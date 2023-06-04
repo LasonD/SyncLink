@@ -14,14 +14,14 @@ namespace SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
 
 public static class VoteEntry
 {
-    public class VoteCommand : IRequest<TextPlotVoteDto>
+    public class Command : IRequest<TextPlotVoteDto>
     {
         public int GameId { get; set; }
         public int EntryId { get; set; }
         public int UserId { get; set; }
     }
 
-    public class Handler : IRequestHandler<VoteCommand, TextPlotVoteDto>
+    public class Handler : IRequestHandler<Command, TextPlotVoteDto>
     {
         private readonly IAppDbContext _context;
         private readonly ITextPlotGameNotificationService _notificationService;
@@ -34,7 +34,7 @@ public static class VoteEntry
             _mapper = mapper;
         }
 
-        public async Task<TextPlotVoteDto> Handle(VoteCommand request, CancellationToken cancellationToken)
+        public async Task<TextPlotVoteDto> Handle(Command request, CancellationToken cancellationToken)
         {
             var entry = await _context.TextPlotEntries.SingleOrDefaultAsync(e => e.GameId == request.GameId && e.Id == request.EntryId, cancellationToken);
 
