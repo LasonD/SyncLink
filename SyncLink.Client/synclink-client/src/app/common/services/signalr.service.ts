@@ -17,7 +17,6 @@ import { whiteboardUpdatedExternal } from "../../features/whiteboard/store/white
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   private readonly connectionPromise: Promise<void>;
-
   public boardChange$: Subject<WhiteboardElement[]> = new Subject<WhiteboardElement[]>();
 
   constructor(private store: Store<AppState>) {
@@ -40,6 +39,19 @@ export class SignalRService {
     this.connectionPromise = this.hubConnection.start()
       .then(() => console.log('SignalR connection started.'))
       .catch(err => console.log('Error while starting SignalR connection: ', err));
+  }
+
+  public on(eventName: string, newMethod: (...args: any[]) => void): void {
+    this.hubConnection.on(eventName, newMethod);
+  }
+
+  public async invoke(methodName: string, ...args: any[]): Promise<any> {
+    await this.connectionPromise;
+    return this.hubConnection.invoke(methodName, ...args);
+  }
+
+  public off(eventName: string): void {
+    this.hubConnection.off(eventName);
   }
 
   public async groupOpened(groupId: number) {
