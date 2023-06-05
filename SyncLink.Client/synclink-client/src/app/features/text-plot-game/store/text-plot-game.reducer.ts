@@ -45,6 +45,11 @@ export const textPlotGameReducer = createReducer(
       ...state,
       game: adapter.removeAll(state.game),
     };
+  }),
+  on(TextPlotGameActions.gameStartedExternal, (state, action) => {
+    return {
+      ...state,
+    };
   })
 );
 

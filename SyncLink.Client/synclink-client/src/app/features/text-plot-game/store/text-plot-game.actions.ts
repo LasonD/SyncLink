@@ -17,6 +17,8 @@ export const endGame = createAction('[Text Plot Game] End Game', props<{ gameId:
 export const endGameSuccess = createAction('[Text Plot Game] End Game Success');
 export const endGameFailure = createAction('[Text Plot Game] End Game Failure', props<{ error: any }>());
 
+export const enterGame = createAction('[Text Plot Game] Enter Game', props<{ groupId: number, gameId: number }>());
+
 export const gameStartedExternal = createAction('[Text Plot Game] Game Started External', props<{ game: TextPlotGame }>());
 export const gameEndedExternal = createAction('[Text Plot Game] Game Ended External', props<{ game: TextPlotGame }>());
 export const newEntryExternal = createAction('[Text Plot Game] New Entry External', props<{ entry: TextPlotEntry }>());
