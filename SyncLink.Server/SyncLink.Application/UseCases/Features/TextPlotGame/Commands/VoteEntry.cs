@@ -17,6 +17,7 @@ public static class VoteEntry
     public class Command : IRequest<TextPlotVoteDto>
     {
         public int GameId { get; set; }
+        public int GroupId { get; set; }
         public int EntryId { get; set; }
         public int UserId { get; set; }
     }

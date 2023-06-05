@@ -43,7 +43,7 @@ export class TextPlotGameEffects {
       mergeMap(({ vote }) =>
         this.http.post(`${environment.apiBaseUrl}/textPlotGame/voteEntry`, vote)
           .pipe(
-            map(() => TextPlotGameActions.voteEntrySuccess()),
+            map(() => TextPlotGameActions.voteEntrySuccess({ vote })),
             catchError(err => of(TextPlotGameActions.voteEntryFailure({ error: err })))
           )
       )

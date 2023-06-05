@@ -1,6 +1,4 @@
-﻿using SyncLink.Application.Domain;
-
-namespace SyncLink.Application.Dtos.TextPlotGame;
+﻿namespace SyncLink.Application.Dtos.TextPlotGame;
 
 public class TextPlotGameDto
 {
@@ -9,10 +7,8 @@ public class TextPlotGameDto
     public DateTime? EndedAt { get; set; }
 
     public int GroupId { get; set; }
-    public Group Group { get; set; } = null!;
+    public GroupDto Group { get; set; } = null!;
 
     public int CreatorId { get; set; }
-    public User Creator { get; set; } = null!;
-
-    public IList<TextPlotEntryDto> Entries { get; set; } = new List<TextPlotEntryDto>();
+    public GroupMemberDto Creator { get; set; } = null!;
 }

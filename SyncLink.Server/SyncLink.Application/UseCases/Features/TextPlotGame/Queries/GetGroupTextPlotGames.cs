@@ -14,6 +14,8 @@ public static class GetGroupTextPlotGames
     {
         public int GroupId { get; init; }
         public int UserId { get; init; }
+        public int PageNumber { get; init; }
+        public int PageSize { get; init; }
     }
 
     public class Handler : IRequestHandler<Query, IPaginatedResult<TextPlotGameDto>>
