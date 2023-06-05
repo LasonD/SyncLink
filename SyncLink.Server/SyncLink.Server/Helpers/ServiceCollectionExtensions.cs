@@ -166,6 +166,7 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IMessagesRepository, MessagesRepository>();
         services.AddTransient<IWhiteboardRepository, WhiteboardRepository>();
         services.AddTransient<IWordsChainGamesRepository, WordsChainGamesRepository>();
+        services.AddTransient<ITextPlotGameRepository, TextPlotGameRepository>();
 
         services.AddTransient<IEntityRepository<Group>, GroupsRepository>();
 

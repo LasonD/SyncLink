@@ -9,5 +9,5 @@ public interface ITextPlotGameRepository : IEntityRepository<TextPlotGame>
 
     Task<RepositoryEntityResult<TextPlotEntry>> GetPendingEntryWithMostVotesAsync(int groupId, int gameId, CancellationToken cancellationToken);
 
-    Task<RepositoryEntityResult<TextPlotEntry>> GetPendingEntriesAsync(int groupId, int gameId, CancellationToken cancellationToken);
+    Task<PaginatedRepositoryResultSet<TextPlotEntry>> GetPendingEntriesAsync(int groupId, int gameId, CancellationToken cancellationToken);
 }
