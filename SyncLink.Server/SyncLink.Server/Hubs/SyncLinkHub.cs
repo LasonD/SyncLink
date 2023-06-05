@@ -23,6 +23,8 @@ public interface ISyncLinkHub
     Task GameStarted(TextPlotGameDto game);
     Task NewEntry(TextPlotEntryDto entry);
     Task EntryCommitted(TextPlotEntryDto entry);
+    Task EntryNotCommitted(int gameId);
+    Task EntriesDiscarded(int[] discardedEntryIds);
     Task VoteReceived(TextPlotVoteDto vote);
     Task GameEnded(TextPlotGameDto game);
     #endregion

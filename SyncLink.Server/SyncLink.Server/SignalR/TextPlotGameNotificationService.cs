@@ -33,6 +33,12 @@ internal class TextPlotGameNotificationService : ITextPlotGameNotificationServic
         return _hubContext.Clients.Group(groupName).EntryCommitted(entry);
     }
 
+    public Task NotifyEntryNotCommittedAsync(int groupId, int gameId, CancellationToken cancellationToken)
+    {
+        var groupName = HubHelper.GetGroupNameForGroupId(groupId);
+        return _hubContext.Clients.Group(groupName).EntryNotCommitted(gameId);
+    }
+
     public Task NotifyVoteReceivedAsync(int groupId, TextPlotVoteDto vote, CancellationToken cancellationToken)
     {
         var groupName = HubHelper.GetGroupNameForGroupId(groupId);
@@ -43,5 +49,10 @@ internal class TextPlotGameNotificationService : ITextPlotGameNotificationServic
     {
         var groupName = HubHelper.GetGroupNameForGroupId(groupId);
         return _hubContext.Clients.Group(groupName).GameEnded(game);
+    }
+
+    public Task NotifyEntriesDiscardedAsync(int groupId, int[] discardedEntryIds, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

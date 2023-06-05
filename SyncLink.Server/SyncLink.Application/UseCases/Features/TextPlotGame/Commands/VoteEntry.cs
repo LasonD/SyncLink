@@ -25,15 +25,17 @@ public static class VoteEntry
 
     public class Handler : IRequestHandler<Command, TextPlotVoteDto>
     {
+        private readonly ITextPlotGameRepository _textPlotGameRepository;
         private readonly IAppDbContext _context;
         private readonly ITextPlotGameNotificationService _notificationService;
         private readonly IMapper _mapper;
 
-        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper)
+        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository)
         {
             _context = context;
             _notificationService = notificationService;
             _mapper = mapper;
+            _textPlotGameRepository = textPlotGameRepository;
         }
 
         public async Task<TextPlotVoteDto> Handle(Command request, CancellationToken cancellationToken)

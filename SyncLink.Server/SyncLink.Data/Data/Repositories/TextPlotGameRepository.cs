@@ -24,10 +24,20 @@ public class TextPlotGameRepository : GenericEntityRepository<TextPlotGame>, ITe
     public async Task<RepositoryEntityResult<TextPlotEntry>> GetPendingEntryWithMostVotesAsync(int groupId, int gameId, CancellationToken cancellationToken)
     {
         var entry = await DbContext.TextPlotEntries
-            .Where(e => e.GameId == gameId && e.Game.GroupId == groupId && !e.IsCommitted)
+            .Where(e => e.GameId == gameId && e.Game.GroupId == groupId && !e.IsCommitted && !e.IsDiscarded)
             .OrderByDescending(e => e.Votes.Count)
             .FirstOrDefaultAsync(cancellationToken);
 
         return RepositoryEntityResult<TextPlotEntry>.FromEntity(entry);
+    }
+
+    public Task<PaginatedRepositoryResultSet<TextPlotEntry>> GetPendingEntriesAsync(int groupId, int gameId, CancellationToken cancellationToken)
+    {
+        var query = new OrderedPaginationQuery<TextPlotEntry>(1, int.MaxValue);
+        query.OrderingExpressions.Add(new OrderingCriteria<TextPlotEntry>(x => x.CreationDate, false));
+        query.FilteringExpressions.Add(e => e.GameId == gameId && e.Game.GroupId == groupId && !e.IsCommitted && !e.IsDiscarded);
+        query.IncludeExpressions.Add(e => e.Votes);
+
+        return GetBySpecificationAsync(query, cancellationToken);
     }
 }

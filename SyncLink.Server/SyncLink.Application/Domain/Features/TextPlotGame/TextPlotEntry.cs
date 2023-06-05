@@ -12,6 +12,7 @@ public class TextPlotEntry : EntityBase
     public DateTime CreatedAt { get; set; }
     public IList<TextPlotVote> Votes { get; set; } = new List<TextPlotVote>();
     public bool IsCommitted { get; set; } = false;
+    public bool IsDiscarded { get; set; } = false;
 
     protected TextPlotEntry() { }
 
