@@ -38,6 +38,9 @@ export const featureRoutes: Routes = [
   {
     path: 'features/words-chain', component: WordsChainListComponent,
   },
+  {
+    path: 'features/text-plot-games', component: TextPlotGamesListComponent,
+  },
 ];
 
 @NgModule({

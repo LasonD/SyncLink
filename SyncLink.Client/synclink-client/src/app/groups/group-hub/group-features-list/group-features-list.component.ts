@@ -10,6 +10,7 @@ export class GroupFeaturesListComponent {
   features: Feature[] = [
     { name: 'Whiteboard', path: ['features', 'whiteboards'] },
     { name: 'Words Chain', path: ['features', 'words-chain'] },
+    { name: 'Text Plot Game', path: ['features', 'text-plot-games'] },
   ];
 
   constructor(private activatedRoute: ActivatedRoute,
