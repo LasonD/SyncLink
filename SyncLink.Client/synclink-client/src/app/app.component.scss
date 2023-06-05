@@ -1,0 +1,9 @@
+.header-hidden {
+  transition: transform 0.5s;
+  transform: translateY(-100%);
+}
+
+.header-visible {
+  transition: transform 0.5s;
+  transform: translateY(0);
+}

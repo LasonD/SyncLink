@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { HostListener, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from "./app-routing/app-routing.module";
@@ -23,6 +23,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { WhiteboardEffects } from "./features/whiteboard/store/whiteboard.effects";
 import { TextPlotGameEffects } from "./features/text-plot-game/store/text-plot-game.effects";
+import { debounceTime, Subject } from "rxjs";
 
 @NgModule({
   declarations: [
