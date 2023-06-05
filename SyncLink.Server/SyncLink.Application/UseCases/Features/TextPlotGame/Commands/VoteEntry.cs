@@ -20,6 +20,7 @@ public static class VoteEntry
         public int GroupId { get; set; }
         public int EntryId { get; set; }
         public int UserId { get; set; }
+        public string? Comment { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, TextPlotVoteDto>
@@ -56,7 +57,7 @@ public static class VoteEntry
                 throw new RepositoryActionException(RepositoryActionStatus.NotFound, null, typeof(User));
             }
 
-            var vote = new TextPlotVote(voter, entry);
+            var vote = new TextPlotVote(voter, entry, request.Comment);
 
             _context.TextPlotVotes.Add(vote);
 

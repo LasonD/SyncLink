@@ -2,6 +2,5 @@
 
 public class VoteEntryDto
 {
-    public int GameId { get; set; }
-    public int EntryId { get; set; }
+    public string? Comment { get; set; }
 }

@@ -9,11 +9,14 @@ public class TextPlotVote : EntityBase
     public int EntryId { get; set; }
     public TextPlotEntry Entry { get; set; }
 
+    public string? Comment { get; set; }
+
     protected TextPlotVote() { }
 
-    public TextPlotVote(User user, TextPlotEntry entry)
+    public TextPlotVote(User user, TextPlotEntry entry, string? comment)
     {
         User = user;
         Entry = entry;
+        Comment = comment;
     }
 }
