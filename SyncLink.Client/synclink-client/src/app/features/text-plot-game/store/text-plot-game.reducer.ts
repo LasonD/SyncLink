@@ -7,13 +7,13 @@ export const entryAdapter: EntityAdapter<TextPlotEntry> = createEntityAdapter<Te
 export const voteAdapter: EntityAdapter<TextPlotVote> = createEntityAdapter<TextPlotVote>();
 
 export interface TextPlotGameState {
-  game: EntityState<TextPlotGame>;
+  games: EntityState<TextPlotGame>;
   entries: EntityState<TextPlotEntry>;
   votes: EntityState<TextPlotVote>;
 }
 
 export const initialState: TextPlotGameState = {
-  game: adapter.getInitialState(),
+  games: adapter.getInitialState(),
   entries: entryAdapter.getInitialState(),
   votes: voteAdapter.getInitialState(),
 };
@@ -23,7 +23,7 @@ export const textPlotGameReducer = createReducer(
   on(TextPlotGameActions.startGameSuccess, (state, action) => {
     return {
       ...state,
-      game: adapter.setOne(action.game, state.game),
+      game: adapter.setOne(action.game, state.games),
       entries: entryAdapter.removeAll(state.entries),
       votes: voteAdapter.removeAll(state.votes),
     };
@@ -43,7 +43,7 @@ export const textPlotGameReducer = createReducer(
   on(TextPlotGameActions.endGameSuccess, (state, action) => {
     return {
       ...state,
-      game: adapter.removeAll(state.game),
+      game: adapter.removeAll(state.games),
     };
   }),
   on(TextPlotGameActions.gameStartedExternal, (state, action) => {
@@ -59,7 +59,6 @@ export interface TextPlotEntry {
   gameId: number;
   text: string;
   createdAt: Date;
-  votes: TextPlotVote[];
 }
 
 export interface TextPlotGame {
@@ -68,7 +67,6 @@ export interface TextPlotGame {
   starterId: number;
   startedAt: Date;
   endedAt: Date | null;
-  entries: TextPlotEntry[];
 }
 
 export interface TextPlotVote {
