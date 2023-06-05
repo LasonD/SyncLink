@@ -1,8 +1,14 @@
-import { createReducer, on } from '@ngrx/store';
-import * as TextPlotGameActions from './text-plot-game.actions';
+import { combineReducers, createReducer, on } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
+import {
+  entryCommittedExternal,
+  entryVotedExternal,
+  gameStartedExternal, newEntryExternal,
+  startGameSuccess,
+  submitEntrySuccess, voteEntrySuccess,
+} from "./text-plot-game.actions";
 
-export const adapter: EntityAdapter<TextPlotGame> = createEntityAdapter<TextPlotGame>();
+export const gamesAdapter: EntityAdapter<TextPlotGame> = createEntityAdapter<TextPlotGame>();
 export const entryAdapter: EntityAdapter<TextPlotEntry> = createEntityAdapter<TextPlotEntry>();
 export const voteAdapter: EntityAdapter<TextPlotVote> = createEntityAdapter<TextPlotVote>();
 
@@ -12,46 +18,60 @@ export interface TextPlotGameState {
   votes: EntityState<TextPlotVote>;
 }
 
-export const initialState: TextPlotGameState = {
-  games: adapter.getInitialState(),
-  entries: entryAdapter.getInitialState(),
-  votes: voteAdapter.getInitialState(),
-};
+export interface TextPlotGamesState extends EntityState<TextPlotGame> {
 
-export const textPlotGameReducer = createReducer(
-  initialState,
-  on(TextPlotGameActions.startGameSuccess, (state, action) => {
-    return {
-      ...state,
-      game: adapter.setOne(action.game, state.games),
-      entries: entryAdapter.removeAll(state.entries),
-      votes: voteAdapter.removeAll(state.votes),
-    };
+}
+
+export interface TextPlotEntriesState extends EntityState<TextPlotEntry> {
+
+}
+
+export interface TextPlotVotesState extends EntityState<TextPlotVote> {
+
+}
+
+export const textPlotGamesInitialState = gamesAdapter.getInitialState();
+export const textPlotEntriesInitialState = entryAdapter.getInitialState();
+export const textPlotVotesInitialState = voteAdapter.getInitialState();
+
+export const textPlotGamesReducer = createReducer(
+  textPlotGamesInitialState,
+  on(startGameSuccess, (state, action) => {
+    return gamesAdapter.upsertOne(action.game, state);
   }),
-  on(TextPlotGameActions.submitEntrySuccess, (state, action) => {
-    return {
-      ...state,
-      entries: entryAdapter.addOne(action.entry, state.entries),
-    };
+  on(gameStartedExternal, (state, action) => {
+    return gamesAdapter.upsertOne(action.game, state);
   }),
-  on(TextPlotGameActions.voteEntrySuccess, (state, action) => {
-    return {
-      ...state,
-      votes: voteAdapter.addOne(action.vote, state.votes),
-    };
+);
+
+export const textPlotEntriesReducer = createReducer(
+  textPlotEntriesInitialState,
+  on(submitEntrySuccess, (state, action) => {
+    return entryAdapter.upsertOne(action.entry, state);
   }),
-  on(TextPlotGameActions.endGameSuccess, (state, action) => {
-    return {
-      ...state,
-      game: adapter.removeAll(state.games),
-    };
+  on(newEntryExternal, (state, action) => {
+    return entryAdapter.upsertOne(action.entry, state);
   }),
-  on(TextPlotGameActions.gameStartedExternal, (state, action) => {
-    return {
-      ...state,
-    };
+  on(entryCommittedExternal, (state, action) => {
+    return entryAdapter.upsertOne(action.entry, state);
   })
 );
+
+export const textPlotVotesReducer = createReducer(
+  textPlotVotesInitialState,
+  on(voteEntrySuccess, (state, action) => {
+    return voteAdapter.upsertOne(action.vote, state);
+  }),
+  on(entryVotedExternal, (state, action) => {
+    return voteAdapter.upsertOne(action.vote, state);
+  })
+);
+
+export const textPlotGamesFeatureReducer = combineReducers({
+  games: textPlotGamesReducer,
+  entries: textPlotEntriesReducer,
+  votes: textPlotVotesReducer
+});
 
 export interface TextPlotEntry {
   id: number;

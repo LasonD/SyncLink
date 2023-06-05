@@ -4,6 +4,7 @@ import { TextPlotEntry, TextPlotGame, TextPlotVote } from "../../features/text-p
 import { AppState } from "../../store/app.reducer";
 import { Store } from "@ngrx/store";
 import {
+  entryCommittedExternal,
   entryVotedExternal, gameEndedExternal,
   gameStartedExternal,
   newEntryExternal
@@ -28,6 +29,10 @@ export class TextPlotGameService {
 
     this.signalrService.on('gameEnded', (game: TextPlotGame) => {
       this.store.dispatch(gameEndedExternal({ game }));
+    });
+
+    this.signalrService.on('entryCommitted', (entry: TextPlotEntry) => {
+      this.store.dispatch(entryCommittedExternal({ entry }));
     });
   }
 }

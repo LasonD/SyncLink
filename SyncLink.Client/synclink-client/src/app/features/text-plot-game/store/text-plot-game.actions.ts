@@ -23,4 +23,5 @@ export const enterGame = createAction('[Text Plot Game] Enter Game', props<{ gro
 export const gameStartedExternal = createAction('[Text Plot Game] Game Started External', props<{ game: TextPlotGame }>());
 export const gameEndedExternal = createAction('[Text Plot Game] Game Ended External', props<{ game: TextPlotGame }>());
 export const newEntryExternal = createAction('[Text Plot Game] New Entry External', props<{ entry: TextPlotEntry }>());
+export const entryCommittedExternal = createAction('[Text Plot Game] Entry Committed External', props<{ entry: TextPlotEntry }>());
 export const entryVotedExternal = createAction('[Text Plot Game] Entry Voted External', props<{ vote: TextPlotVote }>());
