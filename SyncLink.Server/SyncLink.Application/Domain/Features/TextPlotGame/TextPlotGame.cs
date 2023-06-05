@@ -4,6 +4,8 @@ namespace SyncLink.Application.Domain.Features.TextPlotGame;
 
 public class TextPlotGame : EntityBase
 {
+    public string Topic { get; set; } = null!;
+
     public int GroupId { get; set; }
     public Group Group { get; set; }
     public int? CreatorId { get; set; }

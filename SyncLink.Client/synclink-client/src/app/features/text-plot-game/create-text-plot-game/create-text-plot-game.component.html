@@ -1,0 +1,19 @@
+<mat-card class="form-card">
+  <mat-card-title class="m-4">Create Text Plot Game</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="createTexPlotGameForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-field">
+        <mat-form-field class="example-full-width">
+          <mat-label>Text Plot Game Topic</mat-label>
+          <input matInput formControlName="topic">
+        </mat-form-field>
+      </div>
+
+      <div class="form-field">
+        <button mat-raised-button color="primary" [disabled]="createTexPlotGameForm.invalid">Submit</button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>

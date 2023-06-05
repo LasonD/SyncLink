@@ -72,6 +72,16 @@ export class TextPlotGameEffects {
     )
   );
 
+  startGameSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TextPlotGameActions.startGameSuccess),
+      tap(({ game }) => {
+          this.notificationsService.success(`A new Text Plot Game with topic ${game.topic} has been successfully started.`, 'Success');
+        }
+      )
+    ), {dispatch: false}
+  );
+
   startGameFailure$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TextPlotGameActions.startGameFailure),

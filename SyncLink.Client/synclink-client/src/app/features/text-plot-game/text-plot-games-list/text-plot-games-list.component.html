@@ -1,1 +1,18 @@
-<p>text-plot-games-list works!</p>
+<div class="whiteboards-panel m-3">
+  <button mat-raised-button (click)="openCreateForm()" class="create-button">
+    <mat-icon>add</mat-icon>
+    Create Text Plot Game
+  </button>
+  <mat-card
+    *ngFor="let textPlotGame of (games$ | async) "
+    (click)="navigateToTextPlotGame(textPlotGame.id)"
+    class="whiteboard-card"
+  >
+    <mat-card-header>
+      <mat-card-title>{{ textPlotGame.topic }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="content-center">
+      <div class="preview-placeholder"></div>
+    </mat-card-content>
+  </mat-card>
+</div>

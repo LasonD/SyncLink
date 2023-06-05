@@ -27,6 +27,11 @@ export const selectVotes = createSelector(
   state => state.votes
 );
 
+export const selectCreatedGame = createSelector(
+  selectTextPlotGameState,
+  state => state.games?.createdGame
+);
+
 export const selectEntriesByGameId = (gameId: number) => createSelector(
   entriesSelectors.selectAll,
   entries => entries.filter(e => e.gameId === gameId)

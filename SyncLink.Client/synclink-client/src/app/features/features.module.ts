@@ -18,6 +18,7 @@ import { WordsChainListComponent } from './words-chain-list/words-chain-list.com
 import { CreateWordsChainComponent } from './words-chain-list/create-words-chain/create-words-chain.component';
 import { MatIconModule } from "@angular/material/icon";
 import { TextPlotGamesListComponent } from './text-plot-game/text-plot-games-list/text-plot-games-list.component';
+import { CreateTextPlotGameComponent } from './text-plot-game/create-text-plot-game/create-text-plot-game.component';
 
 export const featureRoutes: Routes = [
   {
@@ -25,6 +26,9 @@ export const featureRoutes: Routes = [
   },
   {
     path: 'features/words-chain/create', component: CreateWordsChainComponent,
+  },
+  {
+    path: 'features/text-plot-games/create', component: CreateTextPlotGameComponent,
   },
   {
     path: 'features/whiteboards/:whiteboardId', component: WhiteboardComponent,
@@ -51,7 +55,8 @@ export const featureRoutes: Routes = [
     WordsChainComponent,
     WordsChainListComponent,
     CreateWordsChainComponent,
-    TextPlotGamesListComponent
+    TextPlotGamesListComponent,
+    CreateTextPlotGameComponent
   ],
   imports: [
     CommonModule,

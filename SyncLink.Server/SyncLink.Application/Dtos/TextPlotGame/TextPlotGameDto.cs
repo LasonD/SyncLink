@@ -2,6 +2,8 @@
 
 public class TextPlotGameDto
 {
+    public string Topic { get; set; } = null!;
+
     public int Id { get; set; }
     public DateTime StartedAt { get; set; }
     public DateTime? EndedAt { get; set; }

@@ -22,6 +22,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { WhiteboardEffects } from "./features/whiteboard/store/whiteboard.effects";
+import { TextPlotGameEffects } from "./features/text-plot-game/store/text-plot-game.effects";
 
 @NgModule({
   declarations: [
@@ -37,7 +38,7 @@ import { WhiteboardEffects } from "./features/whiteboard/store/whiteboard.effect
     CoreModule,
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
-    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, WhiteboardEffects, NotificationEffects]),
+    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, WhiteboardEffects, TextPlotGameEffects, NotificationEffects]),
     ToastrModule.forRoot(),
     MatCardModule,
     MatIconModule,

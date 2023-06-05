@@ -14,13 +14,13 @@ export const entryAdapter: EntityAdapter<TextPlotEntry> = createEntityAdapter<Te
 export const voteAdapter: EntityAdapter<TextPlotVote> = createEntityAdapter<TextPlotVote>();
 
 export interface TextPlotGameState {
-  games: EntityState<TextPlotGame>;
-  entries: EntityState<TextPlotEntry>;
-  votes: EntityState<TextPlotVote>;
+  games: TextPlotGamesState;
+  entries: TextPlotEntriesState;
+  votes: TextPlotVotesState;
 }
 
 export interface TextPlotGamesState extends EntityState<TextPlotGame> {
-
+  createdGame: TextPlotGame,
 }
 
 export interface TextPlotEntriesState extends EntityState<TextPlotEntry> {
@@ -31,14 +31,16 @@ export interface TextPlotVotesState extends EntityState<TextPlotVote> {
 
 }
 
-export const textPlotGamesInitialState = gamesAdapter.getInitialState();
+export const textPlotGamesInitialState: TextPlotGamesState = gamesAdapter.getInitialState({
+  createdGame: null
+});
 export const textPlotEntriesInitialState = entryAdapter.getInitialState();
 export const textPlotVotesInitialState = voteAdapter.getInitialState();
 
 export const textPlotGamesReducer = createReducer(
   textPlotGamesInitialState,
   on(startGameSuccess, (state, action) => {
-    return gamesAdapter.upsertOne(action.game, state);
+    return gamesAdapter.upsertOne(action.game, {...state, createdGame: action.game });
   }),
   on(gameStartedExternal, (state, action) => {
     return gamesAdapter.upsertOne(action.game, state);
@@ -91,6 +93,7 @@ export interface TextPlotGame {
   starterId: number;
   startedAt: Date;
   endedAt: Date | null;
+  topic: string;
 }
 
 export interface TextPlotVote {
