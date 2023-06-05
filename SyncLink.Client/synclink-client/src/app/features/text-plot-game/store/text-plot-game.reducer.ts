@@ -73,4 +73,5 @@ export interface TextPlotVote {
   id: number;
   userId: number;
   entryId: number;
+  comment: string;
 }

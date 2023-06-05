@@ -8,7 +8,7 @@ export const selectTextPlotGameState = createSelector(
 
 export const selectGame = createSelector(
   selectTextPlotGameState,
-  state => state.game
+  state => state.games
 );
 
 export const selectEntries = createSelector(
