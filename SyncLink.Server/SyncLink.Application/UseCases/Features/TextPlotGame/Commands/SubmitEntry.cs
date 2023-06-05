@@ -13,6 +13,7 @@ public static class SubmitEntry
     {
         public int GameId { get; set; }
         public int UserId { get; set; }
+        public int GroupId { get; set; }
         public string Text { get; set; } = null!;
     }
 

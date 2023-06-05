@@ -109,6 +109,20 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
 
     #endregion
 
+    #region TextPlotGame
+
+    public async Task EndGame()
+    {
+
+    }
+
+    public struct EndGameDto
+    {
+
+    }
+
+    #endregion
+
     #region Utils
 
     protected string GetGroupNameByGroupId(int groupId) => HubHelper.GetGroupNameForGroupId(groupId);

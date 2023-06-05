@@ -12,7 +12,7 @@ namespace SyncLink.Server.Controllers.Features;
 
 [Authorize]
 [ApiController]
-[Route("api/features/[controller]")]
+[Route("api/{groupId}features/[controller]")]
 public class TextPlotGamesController : ApiControllerBase
 {
     private readonly IMediator _mediator;
@@ -23,7 +23,7 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IPaginatedResult<TextPlotGame>>> GetGroupGames([FromQuery] int groupId, CancellationToken cancellationToken)
+    public async Task<ActionResult<IPaginatedResult<TextPlotGame>>> GetGroupGames(int groupId, CancellationToken cancellationToken)
     {
         var query = new GetGroupTextPlotGames.Query
         {
@@ -37,11 +37,11 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpPost("start")]
-    public async Task<ActionResult<TextPlotGame>> StartGame([FromBody] StartGameDto startGameDto, CancellationToken cancellationToken)
+    public async Task<ActionResult<TextPlotGame>> StartGame(int groupId, [FromBody] StartGameDto startGameDto, CancellationToken cancellationToken)
     {
         var command = new StartGame.Command
         {
-            GroupId = startGameDto.GroupId,
+            GroupId = groupId,
             Topic = startGameDto.Topic,
             UserId = GetRequiredAppUserId()
         };
@@ -52,12 +52,13 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpPost("submitEntry")]
-    public async Task<ActionResult<TextPlotEntry>> SubmitEntry([FromBody] SubmitEntryDto submitEntryDto, CancellationToken cancellationToken)
+    public async Task<ActionResult<TextPlotEntry>> SubmitEntry(int groupId, [FromBody] SubmitEntryDto submitEntryDto, CancellationToken cancellationToken)
     {
-        var command = new   SubmitEntry.Command
+        var command = new SubmitEntry.Command
         {
             GameId = submitEntryDto.GameId,
             Text = submitEntryDto.Text,
+            GroupId = groupId,
             UserId = GetRequiredAppUserId()
         };
 
@@ -67,7 +68,7 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpPost("voteEntry")]
-    public async Task<ActionResult> VoteEntry([FromBody] VoteEntryDto voteEntryDto, CancellationToken cancellationToken)
+    public async Task<ActionResult> VoteEntry(int groupId, [FromBody] VoteEntryDto voteEntryDto, CancellationToken cancellationToken)
     {
         var command = new VoteEntry.Command
         {
@@ -82,12 +83,12 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpPost("endGame")]
-    public async Task<ActionResult> EndGame([FromBody] EndGameDto endGameDto, CancellationToken cancellationToken)
+    public async Task<ActionResult> EndGame(int groupId, [FromBody] EndGameDto endGameDto, CancellationToken cancellationToken)
     {
         var command = new EndGame.Command
         {
             GameId = endGameDto.GameId,
-            GroupId = endGameDto.GroupId,
+            GroupId = groupId,
             UserId = GetRequiredAppUserId()
         };
 
