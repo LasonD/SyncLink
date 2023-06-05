@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Dtos.TextPlotGame;
@@ -22,13 +22,13 @@ public static class GetGroupTextPlotGames
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _usersRepository;
-        private readonly IAppDbContext _context;
+        private readonly ITextPlotGameRepository _textPlotGameRepository;
 
-        public Handler(IMapper mapper, IUserRepository usersRepository, IAppDbContext context)
+        public Handler(IMapper mapper, IUserRepository usersRepository, ITextPlotGameRepository textPlotGameRepository)
         {
             _mapper = mapper;
             _usersRepository = usersRepository;
-            _context = context;
+            _textPlotGameRepository = textPlotGameRepository;
         }
 
         public async Task<IPaginatedResult<TextPlotGameDto>> Handle(Query request, CancellationToken cancellationToken)
@@ -40,10 +40,13 @@ public static class GetGroupTextPlotGames
                 throw new BusinessException($"User {request.UserId} is not a member of group {request.GroupId}.");
             }
 
-            var games = await _context.TextPlotGames
-                .Where(g => g.GroupId == request.GroupId)
-                .Include(g => g.Entries)
-                .ToListAsync(cancellationToken);
+            var query = new OrderedPaginationQuery<Domain.Features.TextPlotGame.TextPlotGame>(request.PageNumber, request.PageSize);
+            query.OrderingExpressions.Add(new OrderingCriteria<Domain.Features.TextPlotGame.TextPlotGame>(x => x.CreationDate, false));
+            query.IncludeExpressions.Add(x => x.Creator);
+
+            var gamesResult = await _textPlotGameRepository.GetBySpecificationAsync(query, cancellationToken);
+
+            var games = gamesResult.GetResult();
 
             var dto = _mapper.Map<PaginatedResult<TextPlotGameDto>>(games);
 

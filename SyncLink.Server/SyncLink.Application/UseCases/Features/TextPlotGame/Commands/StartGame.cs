@@ -38,9 +38,9 @@ public static class StartGame
             _context.TextPlotGames.Add(game);
             await _context.SaveChangesAsync(cancellationToken);
 
-            await _notificationService.NotifyGameStartedAsync(group.Id, game, cancellationToken);
-
             var dto = _mapper.Map<TextPlotGameDto>(game);
+
+            await _notificationService.NotifyGameStartedAsync(group.Id, dto, cancellationToken);
 
             return dto;
         }

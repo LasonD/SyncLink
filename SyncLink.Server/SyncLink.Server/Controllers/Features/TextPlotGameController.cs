@@ -37,6 +37,23 @@ public class TextPlotGamesController : ApiControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{gameId}/entries")]
+    public async Task<IActionResult> GetTextPlotGameEntries(int groupId, int gameId, [FromQuery] PageQueryParams page, CancellationToken cancellationToken)
+    {
+        var query = new GetTextPlotGameEntries.Query
+        {
+            GroupId = groupId,
+            GameId = gameId,
+            UserId = GetRequiredAppUserId(),
+            PageNumber = page.PageNumber,
+            PageSize = page.PageSize
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+
     [HttpPost("start")]
     public async Task<IActionResult> StartGame(int groupId, [FromBody] StartGameDto startGameDto, CancellationToken cancellationToken)
     {

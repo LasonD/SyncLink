@@ -7,7 +7,6 @@ public class TextPlotGameDto
     public DateTime? EndedAt { get; set; }
 
     public int GroupId { get; set; }
-    public GroupDto Group { get; set; } = null!;
 
     public int CreatorId { get; set; }
     public GroupMemberDto Creator { get; set; } = null!;

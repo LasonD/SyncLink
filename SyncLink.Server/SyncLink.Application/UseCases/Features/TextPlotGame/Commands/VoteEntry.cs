@@ -62,9 +62,9 @@ public static class VoteEntry
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            await _notificationService.NotifyVoteReceivedAsync(entry.Game.GroupId, vote, cancellationToken);
-
             var dto = _mapper.Map<TextPlotVoteDto>(vote);
+
+            await _notificationService.NotifyVoteReceivedAsync(entry.Game.GroupId, dto, cancellationToken);
 
             return dto;
         }

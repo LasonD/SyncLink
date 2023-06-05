@@ -2,47 +2,44 @@
 using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.RealTime;
-using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.Dtos.TextPlotGame;
 
 namespace SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
 
-public static class SubmitEntry
+public static class CommitEntry
 {
     public class Command : IRequest<TextPlotEntryDto>
     {
         public int GameId { get; set; }
-        public int UserId { get; set; }
         public int GroupId { get; set; }
-        public string Text { get; set; } = null!;
     }
 
     public class Handler : IRequestHandler<Command, TextPlotEntryDto>
     {
-        private readonly IAppDbContext _context;
+        private readonly ITextPlotGameRepository _textPlotGameRepository;
         private readonly ITextPlotGameNotificationService _notificationService;
         private readonly IMapper _mapper;
 
-        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper)
+        public Handler(ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository)
         {
-            _context = context;
             _notificationService = notificationService;
             _mapper = mapper;
+            _textPlotGameRepository = textPlotGameRepository;
         }
 
         public async Task<TextPlotEntryDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var game = await _context.TextPlotGames.FindAsync(request.GameId, cancellationToken);
-            var user = await _context.ApplicationUsers.FindAsync(request.UserId, cancellationToken);
+            var pendingWithMostVotesResult = await _textPlotGameRepository.GetPendingEntryWithMostVotesAsync(request.GroupId, request.GameId, cancellationToken);
 
-            var entry = new TextPlotEntry(user, game, request.Text);
+            var entry = pendingWithMostVotesResult.GetResult();
 
-            _context.TextPlotEntries.Add(entry);
-            await _context.SaveChangesAsync(cancellationToken);
+            entry.IsCommitted = true;
 
             var dto = _mapper.Map<TextPlotEntryDto>(entry);
 
-            await _notificationService.NotifyNewEntryAsync(game.GroupId, dto, cancellationToken);
+            await _textPlotGameRepository.SaveChangesAsync(cancellationToken);
+
+            await _notificationService.NotifyEntryCommittedAsync(request.GroupId, dto, cancellationToken);
 
             return dto;
         }

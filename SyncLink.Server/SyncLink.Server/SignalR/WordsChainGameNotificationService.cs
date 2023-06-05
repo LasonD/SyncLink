@@ -10,6 +10,11 @@ public class WordsChainGameNotificationService : IWordsChainGameNotificationServ
 {
     private readonly IHubContext<SyncLinkHub, ISyncLinkHub> _hubContext;
 
+    public WordsChainGameNotificationService(IHubContext<SyncLinkHub, ISyncLinkHub> hubContext)
+    {
+        _hubContext = hubContext;
+    }
+
     public Task NotifyNewEntryAsync(int groupId, WordsChainGameEntryDto entry, CancellationToken cancellationToken)
     {
         var groupName = HubHelper.GetGroupNameForGroupId(groupId);

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
-using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.Dtos;
+using SyncLink.Application.Dtos.TextPlotGame;
 using SyncLink.Application.Dtos.WordsChainGame;
 using SyncLink.Application.Exceptions;
 using SyncLink.Application.UseCases.Features.Whiteboard.Commands;
@@ -20,10 +20,11 @@ public interface ISyncLinkHub
     Task BoardUpdated(int groupId, int whiteboardId, WhiteboardElementDto[] change);
 
     #region TextPlotGame
-    Task GameStarted(TextPlotGame game);
-    Task NewEntry(TextPlotEntry entry);
-    Task VoteReceived(TextPlotVote vote);
-    Task GameEnded(TextPlotGame game);
+    Task GameStarted(TextPlotGameDto game);
+    Task NewEntry(TextPlotEntryDto entry);
+    Task EntryCommitted(TextPlotEntryDto entry);
+    Task VoteReceived(TextPlotVoteDto vote);
+    Task GameEnded(TextPlotGameDto game);
     #endregion
 
     #region WordsChainGame

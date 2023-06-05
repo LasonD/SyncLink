@@ -12,7 +12,7 @@ public partial class CreateRoom
 {
     public record Handler : IRequestHandler<Command, RoomDto>
     {
-        // private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IUserRepository _usersRepository;
         private readonly IRoomsRepository _roomsRepository;
 

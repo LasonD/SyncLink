@@ -36,9 +36,9 @@ public static class EndGame
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            await _notificationService.NotifyGameEndedAsync(game.GroupId, game, cancellationToken);
-
             var dto = _mapper.Map<TextPlotGameDto>(game);
+
+            await _notificationService.NotifyGameEndedAsync(game.GroupId, dto, cancellationToken);
 
             return dto;
         }
