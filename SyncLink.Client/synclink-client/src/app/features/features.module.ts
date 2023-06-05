@@ -17,6 +17,7 @@ import { WordsChainComponent } from './words-chain-list/words-chain/words-chain.
 import { WordsChainListComponent } from './words-chain-list/words-chain-list.component';
 import { CreateWordsChainComponent } from './words-chain-list/create-words-chain/create-words-chain.component';
 import { MatIconModule } from "@angular/material/icon";
+import { TextPlotGamesListComponent } from './text-plot-game/text-plot-games-list/text-plot-games-list.component';
 
 export const featureRoutes: Routes = [
   {
@@ -46,7 +47,8 @@ export const featureRoutes: Routes = [
     TextPlotGameComponent,
     WordsChainComponent,
     WordsChainListComponent,
-    CreateWordsChainComponent
+    CreateWordsChainComponent,
+    TextPlotGamesListComponent
   ],
   imports: [
     CommonModule,

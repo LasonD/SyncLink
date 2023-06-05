@@ -1,6 +1,7 @@
 import { combineReducers, createReducer, on } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import {
+  entriesDiscardedExternal,
   entryCommittedExternal,
   entryVotedExternal,
   gameStartedExternal, newEntryExternal,
@@ -54,6 +55,9 @@ export const textPlotEntriesReducer = createReducer(
   }),
   on(entryCommittedExternal, (state, action) => {
     return entryAdapter.upsertOne(action.entry, state);
+  }),
+  on(entriesDiscardedExternal, (state, action) => {
+    return entryAdapter.removeMany(action.discardedEntryIds, state)
   })
 );
 

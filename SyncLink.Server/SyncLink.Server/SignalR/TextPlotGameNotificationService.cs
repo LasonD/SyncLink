@@ -53,6 +53,7 @@ internal class TextPlotGameNotificationService : ITextPlotGameNotificationServic
 
     public Task NotifyEntriesDiscardedAsync(int groupId, int[] discardedEntryIds, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var groupName = HubHelper.GetGroupNameForGroupId(groupId);
+        return _hubContext.Clients.Group(groupName).EntriesDiscarded(discardedEntryIds);
     }
 }
