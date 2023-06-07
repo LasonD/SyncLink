@@ -100,6 +100,7 @@ export interface TextPlotEntry {
   gameId: number;
   text: string;
   creationDate: Date;
+  isCommitted: boolean;
 }
 
 export interface TextPlotGame {

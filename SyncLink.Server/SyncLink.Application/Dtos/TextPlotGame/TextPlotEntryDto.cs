@@ -1,11 +1,8 @@
 ﻿namespace SyncLink.Application.Dtos.TextPlotGame;
 
-public class TextPlotEntryDto
+public class TextPlotEntryDto : DtoBase
 {
-    public int Id { get; set; }
-
     public string Text { get; set; } = null!;
-    public DateTime CreatedAt { get; set; }
 
     public int GameId { get; set; }
 

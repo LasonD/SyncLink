@@ -15,10 +15,19 @@ public class TextPlotGame : EntityBase
 
     protected TextPlotGame() { }
 
-    public TextPlotGame(Group group, User creator)
+    public TextPlotGame(Group group, User creator, string topic)
     {
         Group = group;
         Creator = creator;
+        Topic = topic;
+    }
+
+    public TextPlotEntry AddEntry(User sender, string text)
+    {
+        var entry = new TextPlotEntry(sender, this, text);
+        Entries.Add(entry);
+
+        return entry;
     }
 
     public void EndGame()

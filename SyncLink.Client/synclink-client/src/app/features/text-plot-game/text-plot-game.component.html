@@ -1,1 +1,27 @@
-<p>text-plot-game works!</p>
+<!-- text-plot-game.component.html -->
+<mat-card class="card game-card">
+  <mat-card-header>
+    <mat-card-title class="game-topic">{{game.topic}}</mat-card-title>
+    <mat-card-subtitle>Started at {{game.createdAt | date}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <h2>Committed Entries:</h2>
+    <mat-list>
+      <mat-list-item *ngFor="let entry of committedEntries" class="committed-entry">
+        <mat-icon class="entry-icon">check_circle</mat-icon>
+        {{entry.text}}
+      </mat-list-item>
+    </mat-list>
+    <h2>Uncommitted Entries:</h2>
+    <mat-list>
+      <mat-list-item *ngFor="let entry of uncommittedEntries" class="uncommitted-entry">
+        {{entry.text}}
+        <button mat-button (click)="vote(entry)" class="vote-button">
+          <mat-icon>thumb_up</mat-icon>
+          Vote
+        </button>
+        <span class="vote-count">Votes: {{getVoteCount(entry.id)}}</span>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

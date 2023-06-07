@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SyncLink.Infrastructure.Data.Context;
 
@@ -11,9 +12,11 @@ using SyncLink.Infrastructure.Data.Context;
 namespace SyncLink.Infrastructure.Migrations
 {
     [DbContext(typeof(SyncLinkDbContext))]
-    partial class SyncLinkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230607185407_Adjust12131413")]
+    partial class Adjust12131413
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

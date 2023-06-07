@@ -36,6 +36,15 @@ public class UserRepository : GenericEntityRepository<User>, IUserRepository
         return users.ToPaginatedOkResult(specification.Page, specification.PageSize, totalCount);
     }
 
+    public async Task<RepositoryEntityResult<User>> GetUserFromGroupAsync(int groupId, int userId, CancellationToken cancellationToken)
+    {
+        var user = await DbContext.ApplicationUsers
+            .Where(u => u.Id == userId && u.UserGroups.Any(ug => ug.GroupId == groupId))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return RepositoryEntityResult<User>.FromEntity(user);
+    }
+
     public async Task<PaginatedRepositoryResultSet<UserGroup>> GetGroupMembersAsync(int groupId, OrderedPaginationQuery<UserGroup> query, CancellationToken cancellationToken)
     {
         query.FilteringExpressions.Add(utg => utg.GroupId == groupId);

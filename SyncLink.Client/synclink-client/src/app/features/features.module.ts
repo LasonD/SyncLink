@@ -19,6 +19,7 @@ import { CreateWordsChainComponent } from './words-chain-list/create-words-chain
 import { MatIconModule } from "@angular/material/icon";
 import { TextPlotGamesListComponent } from './text-plot-game/text-plot-games-list/text-plot-games-list.component';
 import { CreateTextPlotGameComponent } from './text-plot-game/create-text-plot-game/create-text-plot-game.component';
+import { MatListModule } from "@angular/material/list";
 
 export const featureRoutes: Routes = [
   {
@@ -72,6 +73,7 @@ export const featureRoutes: Routes = [
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatListModule,
   ],
 })
 export class FeaturesModule { }

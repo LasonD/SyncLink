@@ -3,6 +3,7 @@ using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Dtos.TextPlotGame;
+using SyncLink.Application.Exceptions;
 
 namespace SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
 
@@ -17,26 +18,37 @@ public static class StartGame
 
     public class Handler : IRequestHandler<Command, TextPlotGameDto>
     {
-        private readonly IAppDbContext _context;
+        private readonly IUserRepository _usersRepository;
+        private readonly IGroupsRepository _groupsRepository;
+        private readonly ITextPlotGameRepository _textPlotGamesRepository;
         private readonly ITextPlotGameNotificationService _notificationService;
         private readonly IMapper _mapper;
 
-        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper)
+        public Handler(ITextPlotGameNotificationService notificationService, IMapper mapper, IUserRepository usersRepository, IGroupsRepository groupsRepository, ITextPlotGameRepository textPlotGamesRepository)
         {
-            _context = context;
             _notificationService = notificationService;
             _mapper = mapper;
+            _usersRepository = usersRepository;
+            _groupsRepository = groupsRepository;
+            _textPlotGamesRepository = textPlotGamesRepository;
         }
 
         public async Task<TextPlotGameDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var group = await _context.Groups.FindAsync(request.GroupId, cancellationToken);
-            var starter = await _context.ApplicationUsers.FindAsync(request.UserId, cancellationToken);
+            var isUserInGroup = await _usersRepository.IsUserInGroupAsync(request.UserId, request.GroupId, cancellationToken);
 
-            var game = new Domain.Features.TextPlotGame.TextPlotGame(group, starter);
+            if (!isUserInGroup)
+            {
+                throw new BusinessException($"User {request.UserId} is not a member of group {request.GroupId}.");
+            }
 
-            _context.TextPlotGames.Add(game);
-            await _context.SaveChangesAsync(cancellationToken);
+            var group = (await _groupsRepository.GetByIdAsync(request.GroupId, cancellationToken)).GetResult();
+            var starter = (await _usersRepository.GetByIdAsync(request.UserId, cancellationToken)).GetResult();
+
+            var game = new Domain.Features.TextPlotGame.TextPlotGame(group, starter, request.Topic);
+
+            await _textPlotGamesRepository.CreateAsync(game, cancellationToken);
+            await _textPlotGamesRepository.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<TextPlotGameDto>(game);
 

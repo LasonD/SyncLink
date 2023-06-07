@@ -3,12 +3,11 @@ import { AppState } from "../../../store/app.reducer";
 import { Store } from "@ngrx/store";
 import { ActivatedRoute, Router } from "@angular/router";
 import { distinctUntilChanged, Observable, Subject, takeUntil } from "rxjs";
-import { filter, map, switchMap, tap } from "rxjs/operators";
+import { filter, switchMap, tap } from "rxjs/operators";
 import * as TextPlotGameActions from "../store/text-plot-game.actions";
 import { TextPlotGame } from "../store/text-plot-game.reducer";
 import { selectGamesByGroupId } from "../store/text-plot-game.selectors";
 import { selectCurrentGroupId } from "../../../groups/group-hub/store/group-hub.selectors";
-import { getWhiteboards } from "../../whiteboard/store/whiteboard.actions";
 
 @Component({
   selector: 'app-text-plot-games-list',
@@ -25,8 +24,6 @@ export class TextPlotGamesListComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    //this.store.select()
-
     this.games$ = this.store.select(selectCurrentGroupId)
       .pipe(
         takeUntil(this.destroyed$),
