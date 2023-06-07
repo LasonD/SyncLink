@@ -1,11 +1,8 @@
 ﻿namespace SyncLink.Application.Dtos.TextPlotGame;
 
-public class TextPlotGameDto
+public class TextPlotGameDto : DtoBase
 {
     public string Topic { get; set; } = null!;
-
-    public int Id { get; set; }
-    public DateTime StartedAt { get; set; }
     public DateTime? EndedAt { get; set; }
 
     public int GroupId { get; set; }

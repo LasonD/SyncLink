@@ -37,6 +37,9 @@ export const featureRoutes: Routes = [
     path: 'features/words-chain/:wordsChainId', component: WordsChainComponent,
   },
   {
+    path: 'features/text-plot-games/:textPlotGameId', component: TextPlotGameComponent,
+  },
+  {
     path: 'features/whiteboards', component: WhiteboardsListComponent,
   },
   {

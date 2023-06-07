@@ -2,7 +2,6 @@
 using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.RealTime;
-using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.Dtos.TextPlotGame;
 
 namespace SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
@@ -19,26 +18,27 @@ public static class SubmitEntry
 
     public class Handler : IRequestHandler<Command, TextPlotEntryDto>
     {
-        private readonly IAppDbContext _context;
+        private readonly IUserRepository _userRepository;
+        private readonly ITextPlotGameRepository _textPlotGameRepository;
         private readonly ITextPlotGameNotificationService _notificationService;
         private readonly IMapper _mapper;
 
-        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper)
+        public Handler(ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository, IUserRepository userRepository)
         {
-            _context = context;
             _notificationService = notificationService;
             _mapper = mapper;
+            _textPlotGameRepository = textPlotGameRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<TextPlotEntryDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var game = await _context.TextPlotGames.FindAsync(request.GameId, cancellationToken);
-            var user = await _context.ApplicationUsers.FindAsync(request.UserId, cancellationToken);
+            var user = (await _userRepository.GetUserFromGroupAsync(request.GroupId, request.UserId, cancellationToken)).GetResult();
+            var game = (await _textPlotGameRepository.GetByIdAsync(request.GameId, cancellationToken)).GetResult();
 
-            var entry = new TextPlotEntry(user, game, request.Text);
-
-            _context.TextPlotEntries.Add(entry);
-            await _context.SaveChangesAsync(cancellationToken);
+            var entry = game.AddEntry(user, request.Text);
+           
+            await _textPlotGameRepository.SaveChangesAsync(cancellationToken);
 
             var dto = _mapper.Map<TextPlotEntryDto>(entry);
 

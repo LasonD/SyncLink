@@ -119,11 +119,6 @@ public class SyncLinkHub : Hub<ISyncLinkHub>
 
     }
 
-    public struct EndGameDto
-    {
-
-    }
-
     #endregion
 
     #region Utils

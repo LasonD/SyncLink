@@ -137,6 +137,16 @@ export class TextPlotGameEffects {
       )
     ), {dispatch: false}
   );
+
+  gameStartedExternal$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TextPlotGameActions.gameStartedExternal),
+      tap(({ game }) => {
+          this.notificationsService.info(`A new Text Plot Game with topic ${game.topic} has been started.`, 'Join your group mates!');
+        }
+      )
+    ), {dispatch: false}
+  );
 }
 
 export interface SubmitTextPlotVoteData {

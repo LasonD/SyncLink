@@ -7,6 +7,8 @@ import { filter, map, switchMap, tap } from "rxjs/operators";
 import * as TextPlotGameActions from "../store/text-plot-game.actions";
 import { TextPlotGame } from "../store/text-plot-game.reducer";
 import { selectGamesByGroupId } from "../store/text-plot-game.selectors";
+import { selectCurrentGroupId } from "../../../groups/group-hub/store/group-hub.selectors";
+import { getWhiteboards } from "../../whiteboard/store/whiteboard.actions";
 
 @Component({
   selector: 'app-text-plot-games-list',
@@ -23,14 +25,17 @@ export class TextPlotGamesListComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.games$ = this.activatedRoute.paramMap.pipe(
-      takeUntil(this.destroyed$),
-      map((p) => +p.get('groupId')),
-      filter(id => !!id),
-      distinctUntilChanged(),
-      tap((id) => this.store.dispatch(TextPlotGameActions.getGames({groupId: id}))),
-      switchMap((id) => this.store.select(selectGamesByGroupId(id)))
-    );
+    //this.store.select()
+
+    this.games$ = this.store.select(selectCurrentGroupId)
+      .pipe(
+        takeUntil(this.destroyed$),
+        filter(id => !!id),
+        distinctUntilChanged(),
+        tap((id) => {
+          this.store.dispatch(TextPlotGameActions.getGames({groupId: id}));
+        }),
+        switchMap(groupId => this.store.select(selectGamesByGroupId(groupId))));
   }
 
   navigateToTextPlotGame(id: number) {

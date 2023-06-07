@@ -16,7 +16,7 @@ import {
 })
 export class TextPlotGameService {
   constructor(private signalrService: SignalRService, private store: Store<AppState>) {
-    this.signalrService.on('gameStarted', (game: TextPlotGame) => {
+    this.signalrService.on('gameStarted', (game: any) => {
       this.store.dispatch(gameStartedExternal({ game }));
     });
 

@@ -41,7 +41,7 @@ export class SignalRService {
       .catch(err => console.log('Error while starting SignalR connection: ', err));
   }
 
-  public on(eventName: string, newMethod: (...args: any[]) => void): void {
+  public on(eventName: string, newMethod: (...args: any[]) => void) {
     this.hubConnection.on(eventName, newMethod);
   }
 
@@ -50,7 +50,7 @@ export class SignalRService {
     return this.hubConnection.invoke(methodName, ...args);
   }
 
-  public off(eventName: string): void {
+  public off(eventName: string) {
     this.hubConnection.off(eventName);
   }
 

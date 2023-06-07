@@ -4,14 +4,26 @@ import {
   entriesDiscardedExternal,
   entryCommittedExternal,
   entryVotedExternal,
-  gameStartedExternal, newEntryExternal,
+  gameStartedExternal, getGamesSuccess, newEntryExternal,
   startGameSuccess,
   submitEntrySuccess, voteEntrySuccess,
 } from "./text-plot-game.actions";
 
-export const gamesAdapter: EntityAdapter<TextPlotGame> = createEntityAdapter<TextPlotGame>();
-export const entryAdapter: EntityAdapter<TextPlotEntry> = createEntityAdapter<TextPlotEntry>();
-export const voteAdapter: EntityAdapter<TextPlotVote> = createEntityAdapter<TextPlotVote>();
+export const gamesAdapter: EntityAdapter<TextPlotGame> = createEntityAdapter<TextPlotGame>({
+  sortComparer: (a, b) => {
+    return -(new Date(a.creationDate)?.getTime() - new Date(b.creationDate)?.getTime());
+  }
+});
+export const entryAdapter: EntityAdapter<TextPlotEntry> = createEntityAdapter<TextPlotEntry>({
+  sortComparer: (a, b) => {
+    return -(new Date(a.creationDate)?.getTime() - new Date(b.creationDate)?.getTime());
+  }
+});
+export const voteAdapter: EntityAdapter<TextPlotVote> = createEntityAdapter<TextPlotVote>({
+  sortComparer: (a, b) => {
+    return -(new Date(a.creationDate)?.getTime() - new Date(b.creationDate)?.getTime());
+  }
+});
 
 export interface TextPlotGameState {
   games: TextPlotGamesState;
@@ -39,6 +51,9 @@ export const textPlotVotesInitialState = voteAdapter.getInitialState();
 
 export const textPlotGamesReducer = createReducer(
   textPlotGamesInitialState,
+  on(getGamesSuccess, (state, action) => {
+    return gamesAdapter.upsertMany(action.games?.entities, state)
+  }),
   on(startGameSuccess, (state, action) => {
     return gamesAdapter.upsertOne(action.game, {...state, createdGame: action.game });
   }),
@@ -84,15 +99,15 @@ export interface TextPlotEntry {
   userId: number;
   gameId: number;
   text: string;
-  createdAt: Date;
+  creationDate: Date;
 }
 
 export interface TextPlotGame {
   id: number;
   groupId: number;
   starterId: number;
-  startedAt: Date;
-  endedAt: Date | null;
+  createdAt: Date;
+  creationDate: Date;
   topic: string;
 }
 
@@ -101,4 +116,5 @@ export interface TextPlotVote {
   userId: number;
   entryId: number;
   comment: string;
+  creationDate: Date;
 }

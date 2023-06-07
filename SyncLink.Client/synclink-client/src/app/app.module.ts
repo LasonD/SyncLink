@@ -24,6 +24,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { WhiteboardEffects } from "./features/whiteboard/store/whiteboard.effects";
 import { TextPlotGameEffects } from "./features/text-plot-game/store/text-plot-game.effects";
 import { debounceTime, Subject } from "rxjs";
+import { TextPlotGameService } from "./common/services/testPlotGames.service";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import { debounceTime, Subject } from "rxjs";
     CoreModule,
     MatSlideToggleModule,
     StoreModule.forRoot(appReducer),
-    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, WhiteboardEffects, TextPlotGameEffects, NotificationEffects]),
+    EffectsModule.forRoot([AuthEffects, GroupSearchEffects, CreateGroupEffects, GroupHubEffects, RoomEffects, WhiteboardEffects, TextPlotGameEffects, NotificationEffects, TextPlotGameService]),
     ToastrModule.forRoot(),
     MatCardModule,
     MatIconModule,

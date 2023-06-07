@@ -22,8 +22,10 @@ public class TextPlotGamesController : ApiControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetGroupGames(int groupId, [FromQuery] PageQueryParams page, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetGroupGames(int groupId, [FromQuery] PageQueryParams? page, CancellationToken cancellationToken)
     {
+        page ??= new PageQueryParams();
+
         var query = new GetGroupTextPlotGames.Query
         {
             GroupId = groupId,
