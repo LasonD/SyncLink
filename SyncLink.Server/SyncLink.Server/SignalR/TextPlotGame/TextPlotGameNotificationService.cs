@@ -4,7 +4,7 @@ using SyncLink.Application.Dtos.TextPlotGame;
 using SyncLink.Server.Helpers;
 using SyncLink.Server.Hubs;
 
-namespace SyncLink.Server.SignalR;
+namespace SyncLink.Server.SignalR.TextPlotGame;
 
 internal class TextPlotGameNotificationService : ITextPlotGameNotificationService
 {

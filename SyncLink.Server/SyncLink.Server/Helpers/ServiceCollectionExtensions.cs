@@ -25,6 +25,7 @@ using SyncLink.Server.Common;
 using SyncLink.Server.Filters;
 using SyncLink.Server.Middleware;
 using SyncLink.Server.SignalR;
+using SyncLink.Server.SignalR.TextPlotGame;
 
 namespace SyncLink.Server.Helpers;
 
@@ -179,6 +180,9 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IWordsChainGameNotificationService, WordsChainGameNotificationService>();
 
         services.AddTransient<IWordCheckerService, WordCheckerService>();
+
+        services.AddHostedService<TextPlotGameVotingBackgroundService>();
+        services.AddTransient<ITextPlotGameVotingNotifier, TextPlotGameVotingBackgroundService>();
 
         return services;
     }

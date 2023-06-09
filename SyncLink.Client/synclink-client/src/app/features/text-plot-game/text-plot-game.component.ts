@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TextPlotEntry, TextPlotGame, TextPlotVote } from "./store/text-plot-game.reducer";
+import { voteEntry } from "./store/text-plot-game.actions";
 
 @Component({
   selector: 'app-text-plot-game',
@@ -42,7 +43,7 @@ export class TextPlotGameComponent {
   }
 
   vote(entry: TextPlotEntry) {
-
+    // this.store.dispatch(voteEntry({  }))
   }
 
   getVoteCount(id: number) {

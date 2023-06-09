@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Contracts.Data.Result.Exceptions;
@@ -29,18 +28,22 @@ public static class VoteEntry
         private readonly IAppDbContext _context;
         private readonly ITextPlotGameNotificationService _notificationService;
         private readonly IMapper _mapper;
+        private readonly ITextPlotGameVotingNotifier _votingNotifier;
 
-        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository)
+        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository, ITextPlotGameVotingNotifier votingNotifier)
         {
             _context = context;
             _notificationService = notificationService;
             _mapper = mapper;
             _textPlotGameRepository = textPlotGameRepository;
+            _votingNotifier = votingNotifier;
         }
 
         public async Task<TextPlotVoteDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var entry = await _context.TextPlotEntries.SingleOrDefaultAsync(e => e.GameId == request.GameId && e.Id == request.EntryId, cancellationToken);
+            var pendingEntries = (await _textPlotGameRepository.GetPendingEntriesAsync(request.GroupId, request.GameId, cancellationToken)).GetResult().Entities;
+
+            var entry = pendingEntries.SingleOrDefault(e => e.Id == request.EntryId);
 
             if (entry == null)
             {
