@@ -65,7 +65,8 @@ public class TextPlotGamesController : ApiControllerBase
             GameId = gameId,
             GroupId = groupId,
             UserId = GetRequiredAppUserId(),
-            Comment = voteEntryDto.Comment
+            Comment = voteEntryDto.Comment,
+            Score = voteEntryDto.Score,
         };
 
         var result = await _mediator.Send(command, cancellationToken);

@@ -14,7 +14,7 @@ import {
   selectSelectedTextPlotGame,
   selectSelectedTextPlotGameId, selectVotesByEntryId
 } from "./store/text-plot-game.selectors";
-import { voteEntry } from "./store/text-plot-game.actions";
+import { submitEntry, voteEntry } from "./store/text-plot-game.actions";
 
 @Component({
   selector: 'app-text-plot-game',
@@ -30,6 +30,8 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
   committedEntries$: Observable<TextPlotEntry[]>;
   uncommittedEntries$: Observable<TextPlotEntry[]>;
   votes$: Observable<TextPlotVote[]>;
+
+  newEntryText: string;
 
   constructor(private dialog: MatDialog,
               private store: Store<AppState>,
@@ -103,6 +105,26 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
   getEntryVotes(id: number): Observable<TextPlotVote[]> {
     return this.store.select(selectVotesByEntryId(id))
       .pipe(take(1));
+  }
+
+  addNewEntry() {
+    if (!this.newEntryText) {
+      return;
+    }
+
+    this.store.select(selectCurrentGroupId)
+      .pipe(
+        take(1),
+        withLatestFrom(this.gameId$)
+      ).subscribe(([groupId, gameId]) => {
+      this.store.dispatch(submitEntry({
+        groupId, gameId, entry: {
+          text: this.newEntryText
+        }
+      }));
+    });
+
+    this.newEntryText = '';
   }
 
   ngOnDestroy() {

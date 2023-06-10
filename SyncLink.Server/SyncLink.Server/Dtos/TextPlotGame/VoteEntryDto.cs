@@ -3,4 +3,5 @@
 public class VoteEntryDto
 {
     public string? Comment { get; set; }
+    public int Score { get; set; }
 }

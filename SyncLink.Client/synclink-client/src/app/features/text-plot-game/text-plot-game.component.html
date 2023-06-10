@@ -1,7 +1,7 @@
 <mat-card class="card game-card">
   <mat-card-header>
-    <mat-card-title class="game-topic">{{(game$ | async).topic}}</mat-card-title>
-    <mat-card-subtitle>Started at {{(game$ | async).createdAt | date}}</mat-card-subtitle>
+    <mat-card-title class="game-topic">{{(game$ | async)?.topic}}</mat-card-title>
+    <mat-card-subtitle>Started at {{(game$ | async)?.createdAt | date}}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <h2>Committed Entries:</h2>
@@ -23,5 +23,13 @@
         <span class="vote-count">Score: {{getScore(entry.id) | async}}</span>
       </mat-list-item>
     </mat-list>
+    <h2>Add a New Entry:</h2>
+    <div class="new-entry-form">
+      <mat-form-field appearance="outline" class="new-entry-input">
+        <mat-label>Enter your new entry</mat-label>
+        <input matInput [(ngModel)]="newEntryText" >
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="addNewEntry()" [disabled]="!newEntryText" class="add-button">Add</button>
+    </div>
   </mat-card-content>
 </mat-card>

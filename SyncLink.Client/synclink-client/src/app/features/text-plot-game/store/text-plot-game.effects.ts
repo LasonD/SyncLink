@@ -96,7 +96,7 @@ export class TextPlotGameEffects {
     this.actions$.pipe(
       ofType(TextPlotGameActions.submitEntry),
       mergeMap(({ entry, groupId, gameId }) =>
-        this.http.post<TextPlotEntry>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/textPlotGames`, entry)
+        this.http.post<TextPlotEntry>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/textPlotGames/${gameId}/entries`, entry)
           .pipe(
             map((entry) => TextPlotGameActions.submitEntrySuccess({ entry })),
             catchError(err => of(TextPlotGameActions.submitEntryFailure({ error: err })))

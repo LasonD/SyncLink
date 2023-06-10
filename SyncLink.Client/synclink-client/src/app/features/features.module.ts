@@ -9,7 +9,7 @@ import { CreateWhiteboardComponent } from './whiteboard/create-whiteboard/create
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from "@angular/material/card";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { TextPlotGameComponent } from './text-plot-game/text-plot-game.component';
@@ -66,21 +66,22 @@ export const featureRoutes: Routes = [
     CreateTextPlotGameComponent,
     VoteModalComponent
   ],
-  imports: [
-    CommonModule,
-    NgWhiteboardModule,
-    NgxColorsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatListModule,
-    MatSelectModule,
-    MatDialogModule,
-  ],
+    imports: [
+        CommonModule,
+        NgWhiteboardModule,
+        NgxColorsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatListModule,
+        MatSelectModule,
+        MatDialogModule,
+        FormsModule,
+    ],
   providers: [
 
   ]

@@ -3,6 +3,8 @@ using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Dtos.TextPlotGame;
+using SyncLink.Application.Exceptions;
+using SyncLink.Common.Helpers.Extensions;
 
 namespace SyncLink.Application.UseCases.Features.TextPlotGame.Commands;
 
@@ -33,6 +35,11 @@ public static class SubmitEntry
 
         public async Task<TextPlotEntryDto> Handle(Command request, CancellationToken cancellationToken)
         {
+            if (request.Text.IsNotNullOrWhiteSpace())
+            {
+                throw new BusinessException("Text cannot be empty");
+            }
+
             var user = (await _userRepository.GetUserFromGroupAsync(request.GroupId, request.UserId, cancellationToken)).GetResult();
             var game = (await _textPlotGameRepository.GetByIdAsync(request.GameId, cancellationToken)).GetResult();
 

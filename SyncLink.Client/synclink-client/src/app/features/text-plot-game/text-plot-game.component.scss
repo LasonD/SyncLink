@@ -39,3 +39,21 @@
   float: right;
   font-weight: bold;
 }
+
+.new-entry-form {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 20px;
+}
+
+.new-entry-input {
+  flex-grow: 1;
+  max-width: 300px;
+}
+
+.add-button {
+  margin-left: 10px;
+}
+
+
