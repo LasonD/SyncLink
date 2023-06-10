@@ -151,6 +151,7 @@ export class TextPlotGameEffects {
 
 export interface SubmitTextPlotVoteData {
   comment: string;
+  score: number;
 }
 
 export interface SubmitTextPlotEntryData {

@@ -4,7 +4,7 @@ import {
   entriesDiscardedExternal,
   entryCommittedExternal,
   entryVotedExternal,
-  gameStartedExternal, getGamesSuccess, newEntryExternal,
+  gameStartedExternal, getGameEntries, getGameEntriesSuccess, getGamesSuccess, newEntryExternal,
   startGameSuccess,
   submitEntrySuccess, voteEntrySuccess,
 } from "./text-plot-game.actions";
@@ -33,6 +33,7 @@ export interface TextPlotGameState {
 
 export interface TextPlotGamesState extends EntityState<TextPlotGame> {
   createdGame: TextPlotGame,
+  selectedGameId: number,
 }
 
 export interface TextPlotEntriesState extends EntityState<TextPlotEntry> {
@@ -44,7 +45,8 @@ export interface TextPlotVotesState extends EntityState<TextPlotVote> {
 }
 
 export const textPlotGamesInitialState: TextPlotGamesState = gamesAdapter.getInitialState({
-  createdGame: null
+  createdGame: null,
+  selectedGameId: null,
 });
 export const textPlotEntriesInitialState = entryAdapter.getInitialState();
 export const textPlotVotesInitialState = voteAdapter.getInitialState();
@@ -60,6 +62,9 @@ export const textPlotGamesReducer = createReducer(
   on(gameStartedExternal, (state, action) => {
     return gamesAdapter.upsertOne(action.game, state);
   }),
+  on(getGameEntries, (state, action) => {
+    return {...state, selectedGameId: action.gameId};
+  })
 );
 
 export const textPlotEntriesReducer = createReducer(
@@ -75,6 +80,9 @@ export const textPlotEntriesReducer = createReducer(
   }),
   on(entriesDiscardedExternal, (state, action) => {
     return entryAdapter.removeMany(action.discardedEntryIds, state)
+  }),
+  on(getGameEntriesSuccess, (state, action) => {
+    return entryAdapter.upsertMany(action.entries.entities, state);
   })
 );
 
@@ -85,6 +93,9 @@ export const textPlotVotesReducer = createReducer(
   }),
   on(entryVotedExternal, (state, action) => {
     return voteAdapter.upsertOne(action.vote, state);
+  }),
+  on(getGameEntriesSuccess, (state, action) => {
+    return voteAdapter.upsertMany(action.entries.entities.flatMap(e => e.votes), state);
   })
 );
 
@@ -101,6 +112,7 @@ export interface TextPlotEntry {
   text: string;
   creationDate: Date;
   isCommitted: boolean;
+  votes: TextPlotVote[];
 }
 
 export interface TextPlotGame {

@@ -26,6 +26,12 @@ export class VoteModalComponent implements OnInit {
 
   selectScore(score: number) {
     this.voteForm.get('score').setValue(score);
+
+    this.dialogRef.close({
+      isConfirmed: true,
+      comment: this.voteForm.get('comment').value,
+      score: +this.voteForm.get('score').value
+    });
   }
 
   getButtonClass(score: number): string {

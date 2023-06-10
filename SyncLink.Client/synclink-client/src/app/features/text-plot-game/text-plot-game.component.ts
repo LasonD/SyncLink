@@ -1,7 +1,20 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TextPlotEntry, TextPlotGame, TextPlotVote } from "./store/text-plot-game.reducer";
 import { VoteModalComponent } from "./vote-modal/vote-modal.component";
 import { MatDialog } from "@angular/material/dialog";
+import { AppState } from "../../store/app.reducer";
+import { Store } from "@ngrx/store";
+import { ActivatedRoute } from "@angular/router";
+import * as TextPlotGameActions from "./store/text-plot-game.actions";
+import { selectCurrentGroupId } from "../../groups/group-hub/store/group-hub.selectors";
+import { distinctUntilChanged, forkJoin, mergeMap, Observable, Subject, takeUntil, withLatestFrom } from "rxjs";
+import { filter, map, take } from "rxjs/operators";
+import {
+  selectEntriesByGameId,
+  selectSelectedTextPlotGame,
+  selectSelectedTextPlotGameId, selectVotesByEntryId
+} from "./store/text-plot-game.selectors";
+import { voteEntry } from "./store/text-plot-game.actions";
 
 @Component({
   selector: 'app-text-plot-game',
@@ -9,57 +22,90 @@ import { MatDialog } from "@angular/material/dialog";
   styleUrls: ['./text-plot-game.component.scss'],
   providers: [MatDialog]
 })
-export class TextPlotGameComponent {
-  @Input() game: TextPlotGame;
-  @Input() entries: TextPlotEntry[];
-  @Input() votes: TextPlotVote[];
+export class TextPlotGameComponent implements OnInit, OnDestroy {
+  destroyed$: Subject<boolean> = new Subject<boolean>();
+  gameId$: Observable<number> = new Subject<number>();
+  game$: Observable<TextPlotGame>;
+  entries$: Observable<TextPlotEntry[]>;
+  committedEntries$: Observable<TextPlotEntry[]>;
+  uncommittedEntries$: Observable<TextPlotEntry[]>;
+  votes$: Observable<TextPlotVote[]>;
 
-  committedEntries: TextPlotEntry[];
-  uncommittedEntries: TextPlotEntry[];
-
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog,
+              private store: Store<AppState>,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.game = {
-      id: 1,
-      groupId: 1,
-      starterId: 1,
-      createdAt: new Date(),
-      creationDate: new Date(),
-      topic: 'Sample Topic'
-    };
-    this.entries = [
-      { id: 1, userId: 1, gameId: 1, text: 'Entry 1', creationDate: new Date(), isCommitted: true },
-      { id: 2, userId: 1, gameId: 1, text: 'Entry 2', creationDate: new Date(), isCommitted: true },
-      { id: 3, userId: 1, gameId: 1, text: 'Entry 3', creationDate: new Date(), isCommitted: false },
-      { id: 4, userId: 1, gameId: 1, text: 'Entry 4', creationDate: new Date(), isCommitted: false }
-    ];
-    this.votes = [
-      { id: 1, userId: 1, entryId: 3, comment: 'Great entry!', creationDate: new Date(), score: 8 },
-      { id: 2, userId: 1, entryId: 4, comment: 'I like this one.', creationDate: new Date(), score: 9 }
-    ];
+    this.game$ = this.store.select(selectSelectedTextPlotGame).pipe(takeUntil(this.destroyed$));
 
-    this.committedEntries = this.entries.filter(entry => entry.isCommitted);
-    this.uncommittedEntries = this.entries.filter(entry => !entry.isCommitted);
+    this.gameId$ = this.activatedRoute.paramMap
+      .pipe(
+        map(p => +p.get('textPlotGameId')),
+        filter(id => !!id),
+      );
 
-    this.committedEntries = this.entries.filter(entry => entry.isCommitted);
-    this.uncommittedEntries = this.entries.filter(entry => !entry.isCommitted);
+    forkJoin([
+      this.store.select(selectCurrentGroupId)
+        .pipe(
+          filter(id => !!id),
+          distinctUntilChanged()
+        ),
+      this.gameId$
+    ]).pipe(takeUntil(this.destroyed$))
+      .subscribe(([groupId, gameId]) => {
+        TextPlotGameActions.getGameEntries({groupId, gameId})
+      });
+
+    this.entries$ = this.gameId$.pipe(
+      takeUntil(this.destroyed$),
+      mergeMap(gameId => this.store.select(selectEntriesByGameId(gameId)))
+    );
+
+    this.committedEntries$ = this.entries$.pipe(map(entries => entries.filter(e => e.isCommitted)));
+    this.uncommittedEntries$ = this.entries$.pipe(map(entries => entries.filter(e => !e.isCommitted)));
   }
 
-  openVoteModal(entry): void {
+  openVoteModal(entry: TextPlotEntry): void {
     const dialogRef = this.dialog.open(VoteModalComponent, {
       width: '550px',
       data: {entry: entry}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      // perform your voting logic here with result.comment and result.score
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      this.store.select(selectCurrentGroupId)
+        .pipe(take(1), withLatestFrom(this.store.select(selectSelectedTextPlotGameId)))
+        .subscribe(([groupId, gameId]) => {
+          this.store.dispatch(voteEntry({
+            entryId: entry.id, gameId: gameId, groupId: groupId, vote: {
+              comment: result.comment,
+              score: result.score
+            }
+          }))
+        })
     });
   }
 
-  getVoteCount(id: number) {
-    return this.votes.filter(v => v.entryId === id).length;
+  getVoteCount(id: number): Observable<number> {
+    return this.getEntryVotes(id)
+      .pipe(map(votes => votes?.length));
+  }
+
+  getScore(id: number): Observable<number> {
+    return this.getEntryVotes(id)
+      .pipe(map(votes => votes.map(v => v.score).reduce((acc, current) => acc + current, 0)));
+  }
+
+  getEntryVotes(id: number): Observable<TextPlotVote[]> {
+    return this.store.select(selectVotesByEntryId(id))
+      .pipe(take(1));
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(true);
   }
 }
