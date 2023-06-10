@@ -1,0 +1,24 @@
+<mat-dialog-content>
+  <mat-card-header>
+    <mat-card-title class="mb-3">Vote Entry</mat-card-title>
+  </mat-card-header>
+  <form [formGroup]="voteForm">
+    <mat-form-field class="w-100">
+      <textarea matInput formControlName="comment" placeholder="Add comment..."></textarea>
+    </mat-form-field>
+    <div class="scores-buttons mb-3">
+      <button
+        *ngFor="let score of scores"
+        [class]="getButtonClass(score)"
+        type="button"
+        class="btn score-button rounded-circle me-2"
+        (click)="selectScore(score)">
+        {{score}}
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="voteForm.value" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

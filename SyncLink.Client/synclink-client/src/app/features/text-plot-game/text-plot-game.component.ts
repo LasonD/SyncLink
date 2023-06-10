@@ -1,11 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { TextPlotEntry, TextPlotGame, TextPlotVote } from "./store/text-plot-game.reducer";
-import { voteEntry } from "./store/text-plot-game.actions";
+import { VoteModalComponent } from "./vote-modal/vote-modal.component";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-text-plot-game',
   templateUrl: './text-plot-game.component.html',
-  styleUrls: ['./text-plot-game.component.scss']
+  styleUrls: ['./text-plot-game.component.scss'],
+  providers: [MatDialog]
 })
 export class TextPlotGameComponent {
   @Input() game: TextPlotGame;
@@ -14,6 +16,9 @@ export class TextPlotGameComponent {
 
   committedEntries: TextPlotEntry[];
   uncommittedEntries: TextPlotEntry[];
+
+  constructor(private dialog: MatDialog) {
+  }
 
   ngOnInit() {
     this.game = {
@@ -42,11 +47,19 @@ export class TextPlotGameComponent {
     this.uncommittedEntries = this.entries.filter(entry => !entry.isCommitted);
   }
 
-  vote(entry: TextPlotEntry) {
-    // this.store.dispatch(voteEntry({  }))
+  openVoteModal(entry): void {
+    const dialogRef = this.dialog.open(VoteModalComponent, {
+      width: '550px',
+      data: {entry: entry}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // perform your voting logic here with result.comment and result.score
+    });
   }
 
   getVoteCount(id: number) {
-
+    return this.votes.filter(v => v.entryId === id).length;
   }
 }

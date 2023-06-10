@@ -28,6 +28,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatRadioModule } from "@angular/material/radio";
+import { MatDialogModule } from "@angular/material/dialog";
 
 const routes: Routes = [
   {
@@ -79,6 +80,7 @@ const routes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
+    MatDialogModule,
   ]
 })
 export class GroupsModule { }

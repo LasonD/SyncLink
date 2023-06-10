@@ -20,6 +20,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { TextPlotGamesListComponent } from './text-plot-game/text-plot-games-list/text-plot-games-list.component';
 import { CreateTextPlotGameComponent } from './text-plot-game/create-text-plot-game/create-text-plot-game.component';
 import { MatListModule } from "@angular/material/list";
+import { VoteModalComponent } from './text-plot-game/vote-modal/vote-modal.component';
+import { MatSelectModule } from "@angular/material/select";
+import { MatDialogModule } from "@angular/material/dialog";
 
 export const featureRoutes: Routes = [
   {
@@ -60,7 +63,8 @@ export const featureRoutes: Routes = [
     WordsChainListComponent,
     CreateWordsChainComponent,
     TextPlotGamesListComponent,
-    CreateTextPlotGameComponent
+    CreateTextPlotGameComponent,
+    VoteModalComponent
   ],
   imports: [
     CommonModule,
@@ -74,6 +78,11 @@ export const featureRoutes: Routes = [
     MatIconModule,
     MatProgressSpinnerModule,
     MatListModule,
+    MatSelectModule,
+    MatDialogModule,
   ],
+  providers: [
+
+  ]
 })
 export class FeaturesModule { }
