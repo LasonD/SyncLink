@@ -7,5 +7,7 @@ public class TextPlotVoteDto : DtoBase
 
     public string? Comment { get; set; }
 
+    public int Score { get; set; }
+
     public int EntryId { get; set; }
 }

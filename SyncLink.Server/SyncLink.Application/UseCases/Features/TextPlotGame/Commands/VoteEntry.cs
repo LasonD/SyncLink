@@ -20,6 +20,7 @@ public static class VoteEntry
         public int EntryId { get; set; }
         public int UserId { get; set; }
         public string? Comment { get; set; }
+        public int Score { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, TextPlotVoteDto>
@@ -45,7 +46,7 @@ public static class VoteEntry
 
             var entry = pendingEntries.SingleOrDefault(e => e.Id == request.EntryId);
 
-            Validate(request, entry);
+            entry = Validate(request, entry);
 
             var entryWithVotes = (await _textPlotGameRepository.GetByIdAsync<TextPlotEntry>(entry.Id, cancellationToken, include: e => e.Votes)).GetResult();
 
@@ -68,7 +69,7 @@ public static class VoteEntry
                 throw new RepositoryActionException(RepositoryActionStatus.NotFound, null, typeof(User));
             }
 
-            var vote = new TextPlotVote(voter, entry, request.Comment);
+            var vote = new TextPlotVote(voter, entry, request.Comment, request.Score);
 
             entry.Votes.Add(vote);
 
@@ -96,7 +97,7 @@ public static class VoteEntry
             return dto;
         }
 
-        private static void Validate(Command request, TextPlotEntry? entry)
+        private static TextPlotEntry Validate(Command request, TextPlotEntry? entry)
         {
             if (entry == null)
             {
@@ -107,6 +108,13 @@ public static class VoteEntry
             {
                 throw new BusinessException("A user cannot vote for his own text entry.");
             }
+
+            if (request.Score is < 0 or > 10)
+            {
+                throw new BusinessException("Score must be between 0 and 10");
+            }
+
+            return entry;
         }
     }
 }
