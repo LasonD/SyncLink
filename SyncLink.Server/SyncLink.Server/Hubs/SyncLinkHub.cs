@@ -26,6 +26,7 @@ public interface ISyncLinkHub
     Task EntryNotCommitted(int gameId);
     Task EntriesDiscarded(int[] discardedEntryIds);
     Task VoteReceived(TextPlotVoteDto vote);
+    Task VoteRevoked(int gameId, int voteId);
     Task GameEnded(TextPlotGameDto game);
     Task VotingTimerProgress(int gameId, double percent);
     #endregion

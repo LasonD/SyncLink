@@ -20,11 +20,16 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
         DbContext = dbContext;
     }
 
-    public async Task<RepositoryEntityResult<TEntity>> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] inclusions)
+    public Task<RepositoryEntityResult<TEntity>> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] inclusions)
+    {
+        return GetByIdAsync<TEntity>(id, cancellationToken, inclusions);
+    }
+
+    public async Task<RepositoryEntityResult<TLocalEntity>> GetByIdAsync<TLocalEntity>(int id, CancellationToken cancellationToken = default, params Expression<Func<TLocalEntity, object>>[] inclusions) where TLocalEntity : EntityBase 
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var query = DbContext.Set<TEntity>().AsQueryable<TEntity>();
+        var query = DbContext.Set<TLocalEntity>().AsQueryable<TLocalEntity>();
 
         foreach (var inclusion in inclusions)
         {
@@ -35,10 +40,10 @@ public class GenericEntityRepository<TEntity> : IEntityRepository<TEntity> where
 
         if (entity == null)
         {
-            return RepositoryEntityResult<TEntity>.NotFound();
+            return RepositoryEntityResult<TLocalEntity>.NotFound();
         }
 
-        return RepositoryEntityResult<TEntity>.Ok(entity);
+        return RepositoryEntityResult<TLocalEntity>.Ok(entity);
     }
 
     public virtual async Task<PaginatedRepositoryResultSet<TLocalEntity>> GetBySpecificationAsync<TLocalEntity>(OrderedPaginationQuery<TLocalEntity> specification, CancellationToken cancellationToken) where TLocalEntity : class

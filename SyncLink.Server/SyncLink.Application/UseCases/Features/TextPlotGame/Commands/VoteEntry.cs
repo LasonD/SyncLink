@@ -25,18 +25,18 @@ public static class VoteEntry
     public class Handler : IRequestHandler<Command, TextPlotVoteDto>
     {
         private readonly ITextPlotGameRepository _textPlotGameRepository;
-        private readonly IAppDbContext _context;
         private readonly ITextPlotGameNotificationService _notificationService;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ITextPlotGameVotingProgressNotifier _votingNotifier;
 
-        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository, ITextPlotGameVotingProgressNotifier votingNotifier)
+        public Handler(ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository, ITextPlotGameVotingProgressNotifier votingNotifier, IUserRepository userRepository)
         {
-            _context = context;
             _notificationService = notificationService;
             _mapper = mapper;
             _textPlotGameRepository = textPlotGameRepository;
             _votingNotifier = votingNotifier;
+            _userRepository = userRepository;
         }
 
         public async Task<TextPlotVoteDto> Handle(Command request, CancellationToken cancellationToken)
@@ -45,6 +45,59 @@ public static class VoteEntry
 
             var entry = pendingEntries.SingleOrDefault(e => e.Id == request.EntryId);
 
+            Validate(request, entry);
+
+            var entryWithVotes = (await _textPlotGameRepository.GetByIdAsync<TextPlotEntry>(entry.Id, cancellationToken, include: e => e.Votes)).GetResult();
+
+            var existingVote = entryWithVotes.Votes.SingleOrDefault(v => v.UserId == request.UserId);
+
+            if (existingVote != null)
+            {
+                return await HandleVoteRevocationAsync(request, entryWithVotes, existingVote, cancellationToken);
+            }
+
+            return await HandleVoteCreationAsync(request, entry, cancellationToken);
+        }
+
+        private async Task<TextPlotVoteDto> HandleVoteCreationAsync(Command request, TextPlotEntry entry, CancellationToken cancellationToken)
+        {
+            var voter = (await _userRepository.GetByIdAsync(request.UserId, cancellationToken)).GetResult();
+
+            if (voter == null)
+            {
+                throw new RepositoryActionException(RepositoryActionStatus.NotFound, null, typeof(User));
+            }
+
+            var vote = new TextPlotVote(voter, entry, request.Comment);
+
+            entry.Votes.Add(vote);
+
+            await _textPlotGameRepository.SaveChangesAsync(cancellationToken);
+
+            var dto = _mapper.Map<TextPlotVoteDto>(vote);
+
+            await _notificationService.NotifyVoteReceivedAsync(request.GroupId, dto, cancellationToken);
+
+            _votingNotifier.StartGameTimerIfNotYetStarted(request.GroupId, entry.GameId, TimeSpan.FromMinutes(1));
+
+            return dto;
+        }
+
+        private async Task<TextPlotVoteDto> HandleVoteRevocationAsync(Command request, TextPlotEntry entryWithVotes, TextPlotVote existingVote, CancellationToken cancellationToken)
+        {
+            entryWithVotes.Votes.Remove(existingVote);
+
+            await _textPlotGameRepository.SaveChangesAsync(cancellationToken);
+
+            var dto = _mapper.Map<TextPlotVoteDto>(existingVote);
+
+            await _notificationService.NotifyVoteRevokedAsync(request.GroupId, request.GameId, existingVote.Id, cancellationToken);
+
+            return dto;
+        }
+
+        private static void Validate(Command request, TextPlotEntry? entry)
+        {
             if (entry == null)
             {
                 throw new RepositoryActionException(RepositoryActionStatus.NotFound, null, typeof(TextPlotEntry));
@@ -54,25 +107,6 @@ public static class VoteEntry
             {
                 throw new BusinessException("A user cannot vote for his own text entry.");
             }
-
-            var voter = await _context.ApplicationUsers.FindAsync(request.UserId, cancellationToken);
-
-            if (voter == null)
-            {
-                throw new RepositoryActionException(RepositoryActionStatus.NotFound, null, typeof(User));
-            }
-
-            var vote = new TextPlotVote(voter, entry, request.Comment);
-
-            _context.TextPlotVotes.Add(vote);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var dto = _mapper.Map<TextPlotVoteDto>(vote);
-
-            await _notificationService.NotifyVoteReceivedAsync(entry.Game.GroupId, dto, cancellationToken);
-
-            return dto;
         }
     }
 }

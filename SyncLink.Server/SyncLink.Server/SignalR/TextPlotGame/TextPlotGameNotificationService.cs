@@ -45,6 +45,12 @@ internal class TextPlotGameNotificationService : ITextPlotGameNotificationServic
         return _hubContext.Clients.Group(groupName).VoteReceived(vote);
     }
 
+    public Task NotifyVoteRevokedAsync(int groupId, int gameId, int voteId, CancellationToken cancellationToken)
+    {
+        var groupName = HubHelper.GetGroupNameForGroupId(groupId);
+        return _hubContext.Clients.Group(groupName).VoteRevoked(gameId, voteId);
+    }
+
     public Task NotifyGameEndedAsync(int groupId, TextPlotGameDto game, CancellationToken cancellationToken)
     {
         var groupName = HubHelper.GetGroupNameForGroupId(groupId);
