@@ -117,5 +117,6 @@ export interface TextPlotVote {
   userId: number;
   entryId: number;
   comment: string;
+  score: number;
   creationDate: Date;
 }

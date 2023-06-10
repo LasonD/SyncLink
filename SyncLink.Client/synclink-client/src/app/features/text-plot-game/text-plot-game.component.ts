@@ -31,8 +31,8 @@ export class TextPlotGameComponent {
       { id: 4, userId: 1, gameId: 1, text: 'Entry 4', creationDate: new Date(), isCommitted: false }
     ];
     this.votes = [
-      { id: 1, userId: 1, entryId: 3, comment: 'Great entry!', creationDate: new Date() },
-      { id: 2, userId: 1, entryId: 4, comment: 'I like this one.', creationDate: new Date() }
+      { id: 1, userId: 1, entryId: 3, comment: 'Great entry!', creationDate: new Date(), score: 8 },
+      { id: 2, userId: 1, entryId: 4, comment: 'I like this one.', creationDate: new Date(), score: 9 }
     ];
 
     this.committedEntries = this.entries.filter(entry => entry.isCommitted);
