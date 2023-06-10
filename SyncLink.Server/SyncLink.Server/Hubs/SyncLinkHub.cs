@@ -28,7 +28,6 @@ public interface ISyncLinkHub
     Task VoteReceived(TextPlotVoteDto vote);
     Task GameEnded(TextPlotGameDto game);
     Task VotingTimerProgress(int gameId, double percent);
-    Task VotingTimerCancelled(int gameId);
     #endregion
 
     #region WordsChainGame

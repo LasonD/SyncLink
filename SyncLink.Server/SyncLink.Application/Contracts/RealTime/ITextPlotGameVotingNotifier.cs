@@ -2,6 +2,6 @@
 
 public interface ITextPlotGameVotingProgressNotifier
 {
-    void StartGameTimer(int groupId, int gameId, TimeSpan gameDuration);
+    void StartGameTimerIfNotYetStarted(int groupId, int gameId, TimeSpan gameDuration);
     void StopGameTimer(int gameId);
 }

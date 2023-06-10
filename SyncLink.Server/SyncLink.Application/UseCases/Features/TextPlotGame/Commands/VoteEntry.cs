@@ -28,9 +28,9 @@ public static class VoteEntry
         private readonly IAppDbContext _context;
         private readonly ITextPlotGameNotificationService _notificationService;
         private readonly IMapper _mapper;
-        private readonly ITextPlotGameVotingNotifier _votingNotifier;
+        private readonly ITextPlotGameVotingProgressNotifier _votingNotifier;
 
-        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository, ITextPlotGameVotingNotifier votingNotifier)
+        public Handler(IAppDbContext context, ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository, ITextPlotGameVotingProgressNotifier votingNotifier)
         {
             _context = context;
             _notificationService = notificationService;

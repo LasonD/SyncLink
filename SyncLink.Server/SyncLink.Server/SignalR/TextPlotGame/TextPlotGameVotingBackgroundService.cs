@@ -8,8 +8,9 @@ using SyncLink.Server.Helpers;
 
 namespace SyncLink.Server.SignalR.TextPlotGame;
 
-public class TextPlotGameVotingBackgroundService : BackgroundService, ITextPlotGameVotingNotifier
+public class TextPlotGameVotingBackgroundService : BackgroundService, ITextPlotGameVotingProgressNotifier
 {
+    private readonly object _lock = new();
     private readonly ConcurrentDictionary<int, CancellationTokenSource> _gameTimers = new();
     private readonly IHubContext<SyncLinkHub, ISyncLinkHub> _hubContext;
     private readonly IMediator _mediator;
@@ -28,42 +29,53 @@ public class TextPlotGameVotingBackgroundService : BackgroundService, ITextPlotG
         }
     }
 
-    public void StartGameTimer(int groupId, int gameId, TimeSpan gameDuration)
+    public void StartGameTimerIfNotYetStarted(int groupId, int gameId, TimeSpan gameDuration)
     {
-        StopGameTimer(gameId);
-
-        var cts = new CancellationTokenSource();
-
-        _ = Task.Run(async () =>
+        lock (_lock)
         {
-            var totalSeconds = gameDuration.TotalSeconds;
-
-            for (var secondsElapsed = gameDuration.TotalSeconds; secondsElapsed >= 0; secondsElapsed--)
+            if (IsGameTimerRunning(gameId))
             {
-                if (cts.Token.IsCancellationRequested)
-                    break;
-
-                var progressPercent = secondsElapsed / totalSeconds * 100;
-
-                await _hubContext.Clients.Group(HubHelper.GetGroupNameForGroupId(groupId)).VotingTimerProgress(gameId, progressPercent);
-                
-                await Task.Delay(1000, cts.Token);
+                return;
             }
 
-            if (!cts.Token.IsCancellationRequested)
+            var cts = new CancellationTokenSource();
+
+            _ = Task.Run(async () =>
             {
-                await _hubContext.Clients.Group(HubHelper.GetGroupNameForGroupId(groupId)).VotingTimerCancelled(gameId);
-            }
-            else
-            {
-                await CommitGameEntryAsync(groupId, gameId, cts);
-            }
+                var totalSeconds = gameDuration.TotalSeconds;
 
-            _gameTimers.TryRemove(gameId, out _);
+                for (var secondsElapsed = gameDuration.TotalSeconds; secondsElapsed >= 0; secondsElapsed--)
+                {
+                    if (cts.Token.IsCancellationRequested)
+                        break;
 
-        }, cts.Token);
+                    var progressPercent = secondsElapsed / totalSeconds * 100;
 
-        _gameTimers[gameId] = cts;
+                    await _hubContext.Clients.Group(HubHelper.GetGroupNameForGroupId(groupId)).VotingTimerProgress(gameId, progressPercent);
+
+                    await Task.Delay(1000, cts.Token);
+                }
+
+                if (!cts.Token.IsCancellationRequested)
+                {
+                    await _hubContext.Clients.Group(HubHelper.GetGroupNameForGroupId(groupId)).EntryNotCommitted(gameId);
+                }
+                else
+                {
+                    await CommitGameEntryAsync(groupId, gameId, cts);
+                }
+
+                _gameTimers.TryRemove(gameId, out _);
+
+            }, cts.Token);
+
+            _gameTimers[gameId] = cts;
+        }
+    }
+
+    private bool IsGameTimerRunning(int gameId)
+    {
+        return _gameTimers.ContainsKey(gameId);
     }
 
     private async Task CommitGameEntryAsync(int groupId, int gameId, CancellationTokenSource cts)

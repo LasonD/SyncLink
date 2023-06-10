@@ -182,7 +182,7 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IWordCheckerService, WordCheckerService>();
 
         services.AddHostedService<TextPlotGameVotingBackgroundService>();
-        services.AddTransient<ITextPlotGameVotingNotifier, TextPlotGameVotingBackgroundService>();
+        services.AddTransient<ITextPlotGameVotingProgressNotifier, TextPlotGameVotingBackgroundService>();
 
         return services;
     }
