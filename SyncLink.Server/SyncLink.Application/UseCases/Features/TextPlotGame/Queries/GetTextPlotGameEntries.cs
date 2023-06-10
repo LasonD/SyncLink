@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using MediatR;
 using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
@@ -44,13 +45,20 @@ public static class GetTextPlotGameEntries
             var entriesResult = await _textPlotGameRepository.GetTextPlotGameEntriesAsync(
                 request.GroupId,
                 request.GameId,
-                new OrderedPaginationQuery<TextPlotEntry>(request.PageNumber, request.PageSize),
+                new OrderedPaginationQuery<TextPlotEntry>(request.PageNumber, request.PageSize)
+                {
+                    IncludeExpressions = new List<Expression<Func<TextPlotEntry, object>>>
+                    {
+                        entry => entry.User,
+                        entry => entry.Votes,
+                    }
+                },
                 cancellationToken
             );
 
             var entries = entriesResult.GetResult();
 
-            var dto = _mapper.Map<IPaginatedResult<TextPlotEntryDto>>(entries);
+            var dto = _mapper.Map<PaginatedResult<TextPlotEntryDto>>(entries);
 
             return dto;
         }

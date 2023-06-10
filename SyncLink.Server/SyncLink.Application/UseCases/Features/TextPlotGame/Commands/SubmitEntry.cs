@@ -35,9 +35,9 @@ public static class SubmitEntry
 
         public async Task<TextPlotEntryDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            if (request.Text.IsNotNullOrWhiteSpace())
+            if (request.Text.IsNullOrWhiteSpace())
             {
-                throw new BusinessException("Text cannot be empty");
+                throw new BusinessException("Text cannot be empty.");
             }
 
             var user = (await _userRepository.GetUserFromGroupAsync(request.GroupId, request.UserId, cancellationToken)).GetResult();

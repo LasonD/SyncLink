@@ -7,8 +7,17 @@ import { Store } from "@ngrx/store";
 import { ActivatedRoute } from "@angular/router";
 import * as TextPlotGameActions from "./store/text-plot-game.actions";
 import { selectCurrentGroupId } from "../../groups/group-hub/store/group-hub.selectors";
-import { distinctUntilChanged, forkJoin, mergeMap, Observable, Subject, takeUntil, withLatestFrom } from "rxjs";
-import { filter, map, take } from "rxjs/operators";
+import {
+  combineLatestWith,
+  distinctUntilChanged,
+  forkJoin,
+  mergeMap,
+  Observable,
+  Subject,
+  takeUntil,
+  withLatestFrom
+} from "rxjs";
+import { combineLatest, filter, map, take, tap } from "rxjs/operators";
 import {
   selectEntriesByGameId,
   selectSelectedTextPlotGame,
@@ -47,16 +56,15 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
         filter(id => !!id),
       );
 
-    forkJoin([
-      this.store.select(selectCurrentGroupId)
-        .pipe(
-          filter(id => !!id),
-          distinctUntilChanged()
-        ),
-      this.gameId$
-    ]).pipe(takeUntil(this.destroyed$))
+    this.store.select(selectCurrentGroupId)
+      .pipe(
+        filter(id => !!id),
+        distinctUntilChanged(),
+        withLatestFrom(this.gameId$),
+      )
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(([groupId, gameId]) => {
-        TextPlotGameActions.getGameEntries({groupId, gameId})
+        this.store.dispatch(TextPlotGameActions.getGameEntries({groupId, gameId}))
       });
 
     this.entries$ = this.gameId$.pipe(
