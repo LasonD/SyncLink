@@ -29,6 +29,7 @@ export interface GroupJoinRequest {
   userId: number,
   groupId: number,
   status: GroupJoinRequestStatus,
+  id: number,
 }
 
 export interface UpdateGroupJonRequest {

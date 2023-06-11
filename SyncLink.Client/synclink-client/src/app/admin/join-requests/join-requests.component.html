@@ -1,1 +1,18 @@
-<p>join-requests works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h2>Join Requests</h2>
+      <mat-list>
+        <mat-list-item *ngFor="let request of joinRequests$ | async">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">User: {{request.userId}}, Group: {{request.groupId}}</h5>
+            <small>Status: {{GroupJoinRequestStatus[request.status]}}</small>
+          </div>
+          <p class="mb-1">{{request.message}}</p>
+          <button *ngIf="request.status === GroupJoinRequestStatus.Pending" mat-raised-button color="primary" (click)="approve(request)">Approve</button>
+          <button *ngIf="request.status === GroupJoinRequestStatus.Pending" mat-raised-button color="warn" (click)="reject(request)">Reject</button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+</div>
