@@ -23,6 +23,7 @@ import { MatListModule } from "@angular/material/list";
 import { VoteModalComponent } from './text-plot-game/vote-modal/vote-modal.component';
 import { MatSelectModule } from "@angular/material/select";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 export const featureRoutes: Routes = [
   {
@@ -66,22 +67,23 @@ export const featureRoutes: Routes = [
     CreateTextPlotGameComponent,
     VoteModalComponent
   ],
-    imports: [
-        CommonModule,
-        NgWhiteboardModule,
-        NgxColorsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatCardModule,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatListModule,
-        MatSelectModule,
-        MatDialogModule,
-        FormsModule,
-    ],
+  imports: [
+    CommonModule,
+    NgWhiteboardModule,
+    NgxColorsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatListModule,
+    MatSelectModule,
+    MatDialogModule,
+    FormsModule,
+    MatProgressBarModule,
+  ],
   providers: [
 
   ]

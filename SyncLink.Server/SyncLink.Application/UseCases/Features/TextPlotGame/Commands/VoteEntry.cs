@@ -93,7 +93,9 @@ public static class VoteEntry
 
             var dto = _mapper.Map<TextPlotVoteDto>(existingVote);
 
-            await _notificationService.NotifyVoteRevokedAsync(request.GroupId, request.GameId, existingVote.Id, cancellationToken);
+            await _notificationService.NotifyVoteReceivedAsync(request.GroupId, dto, cancellationToken);
+
+            _votingNotifier.StartGameTimerIfNotYetStarted(request.GroupId, request.GameId, TimeSpan.FromMinutes(1));
 
             return dto;
         }

@@ -40,6 +40,9 @@
         </mat-card-content>
       </mat-card>
     </ng-template>
+    <div class="vote-progress" *ngIf="(votingTimerProgress$ | async) as votingTimerProgress">
+      <mat-progress-bar mode="determinate" [value]="votingTimerProgress"></mat-progress-bar>
+    </div>
     <div class="new-entry-form mt-4" *ngIf="!(canAddEntry$ | async)">
       <h2>Add a New Entry:</h2>
       <mat-form-field appearance="outline" class="new-entry-input">
