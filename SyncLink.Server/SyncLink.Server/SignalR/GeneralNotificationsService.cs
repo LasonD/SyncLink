@@ -22,10 +22,10 @@ internal class GeneralNotificationsService : IGeneralNotificationsService
         return _hubContext.Clients.Group(groupName).MessageReceived(roomId, otherUserId, isPrivate, message);
     }
 
-    public Task NotifyJoinGroupRequestReceivedAsync(int groupId, JoinGroupRequestDto joinRequest, CancellationToken cancellationToken)
+    public Task NotifyJoinGroupRequestCreatedOrUpdatedAsync(int groupId, GroupJoinRequestDto groupJoinRequest, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var groupName = HubHelper.GetGroupNameForGroupId(groupId);
-        return _hubContext.Clients.Group(groupName).NotifyJoinGroupRequestReceived(joinRequest);
+        return _hubContext.Clients.Group(groupName).NotifyJoinGroupRequestReceived(groupJoinRequest);
     }
 }

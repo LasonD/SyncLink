@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
-using SyncLink.Application.Domain;
+using SyncLink.Application.Domain.Groups;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
