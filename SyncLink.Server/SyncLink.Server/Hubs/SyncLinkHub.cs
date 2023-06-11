@@ -15,9 +15,14 @@ namespace SyncLink.Server.Hubs;
 
 public interface ISyncLinkHub
 {
+    #region General
     Task MessageReceived(int? roomId, int? otherUserId, bool isPrivate, MessageDto message);
+    Task NotifyJoinGroupRequestReceived(GroupJoinRequestDto groupJoinRequest);
+    #endregion
 
+    #region Whiteboard
     Task BoardUpdated(int groupId, int whiteboardId, WhiteboardElementDto[] change);
+    #endregion
 
     #region TextPlotGame
     Task GameStarted(TextPlotGameDto game);

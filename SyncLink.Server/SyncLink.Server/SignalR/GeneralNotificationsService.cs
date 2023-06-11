@@ -18,9 +18,14 @@ internal class GeneralNotificationsService : IGeneralNotificationsService
     public Task NotifyMessageReceivedAsync(int groupId, int? roomId, int? otherUserId, bool isPrivate, MessageDto message, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
         var groupName = HubHelper.GetGroupNameForGroupId(groupId);
-
         return _hubContext.Clients.Group(groupName).MessageReceived(roomId, otherUserId, isPrivate, message);
+    }
+
+    public Task NotifyJoinGroupRequestReceivedAsync(int groupId, JoinGroupRequestDto joinRequest, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var groupName = HubHelper.GetGroupNameForGroupId(groupId);
+        return _hubContext.Clients.Group(groupName).NotifyJoinGroupRequestReceived(joinRequest);
     }
 }

@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SyncLink.Application.Contracts.Data.Enums;
+using SyncLink.Application.UseCases.Groups.Commands;
 using SyncLink.Application.UseCases.Groups.Commands.CreateGroup;
 using SyncLink.Application.UseCases.Groups.Queries;
 using SyncLink.Application.UseCases.Groups.Queries.SearchGroups;
@@ -146,13 +147,40 @@ public class GroupsController : ApiControllerBase
         return Ok(result);
     }
 
-    [HttpPost()]
-    public async Task<IActionResult> JoinGroup([FromBody] JoinGroupDto joinGroupDto, CancellationToken cancellationToken = default)
+    [HttpPost("{groupId}/join-requests")]
+    public async Task<IActionResult> JoinGroup(int groupId, [FromBody] JoinGroupDto joinGroupDto, CancellationToken cancellationToken = default)
     {
-        var command = _mapper.Map<JoinGroup.Command>(joinGroupDto);
+        var command = new RequestJoinGroup.Command
+        {
+            GroupId = groupId,
+            UserId = GetRequiredAppUserId(),
+            Message = joinGroupDto.Message
+        };
 
-        command.UserId = GetRequiredAppUserId();
+        var result = await _mediator.Send(command, cancellationToken);
 
+        return Ok(result);
+    }
+
+    [HttpPut("{groupId}/join-requests/{joinRequestId}")]
+    public async Task<IActionResult> PutJoinGroupRequest(int groupId, int joinRequestId, [FromBody] UpdateGroupJoinRequestDto updateRequest, CancellationToken cancellationToken = default)
+    {
+        var command = new UpdateJoinGroupRequest.Command
+        {
+            GroupId = groupId,
+            UserId = GetRequiredAppUserId(),
+            Status = updateRequest.NewStatus,
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpGet("{groupId}/join-requests")]
+    public async Task<IActionResult> GetGroupJoinRequests(int groupId, CancellationToken cancellationToken = default)
+    {
+        var command = new GetGroupJoinRequests.Query(groupId, GetRequiredAppUserId());
         var result = await _mediator.Send(command, cancellationToken);
 
         return Ok(result);

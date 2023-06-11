@@ -104,19 +104,4 @@ public class TextPlotGamesController : ApiControllerBase
 
         return Ok(game);
     }
-
-    // [HttpPost("endGame")]
-    // public async Task<IActionResult> EndGame(int groupId, [FromBody] EndGameDto endGameDto, CancellationToken cancellationToken)
-    // {
-    //     var command = new EndGame.Command
-    //     {
-    //         GameId = endGameDto.GameId,
-    //         GroupId = groupId,
-    //         UserId = GetRequiredAppUserId()
-    //     };
-    //
-    //     var result = await _mediator.Send(command, cancellationToken);
-    //
-    //     return Ok(result);
-    // }
 }
