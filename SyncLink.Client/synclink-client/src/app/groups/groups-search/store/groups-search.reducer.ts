@@ -1,26 +1,31 @@
 import { createReducer, on } from '@ngrx/store';
 import { Group } from "../../../models/group.model";
 import { searchGroups, searchGroupsFailure, searchGroupsSuccess } from "./groups-search.actions";
-import { Page } from "../../../models/pagination.model";
-import { createEntityAdapter, EntityAdapter } from "@ngrx/entity";
+import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 
-export interface GroupsSearchState {
-  searchedGroups: Page<Group>[];
+export const groupsAdapter: EntityAdapter<Group> = createEntityAdapter<Group>();
+
+export interface GroupsSearchState extends EntityState<Group> {
   searchGroupLoading: boolean;
   groupSearchError: any;
 }
 
-export const initialState: GroupsSearchState = {
-  searchedGroups: [],
+export const initialState: GroupsSearchState = groupsAdapter.getInitialState({
   searchGroupLoading: false,
   groupSearchError: null,
-};
+});
 
 export const adapter: EntityAdapter<Group> = createEntityAdapter<Group>();
 
 export const groupsSearchReducer = createReducer(
   initialState,
-  on(searchGroups, (state): GroupsSearchState => ({ ...state, searchGroupLoading: true })),
-  on(searchGroupsSuccess, (state, { groups }): GroupsSearchState => ({...state, searchGroupLoading: false, searchedGroups: [...state.searchedGroups, groups]})),
-  on(searchGroupsFailure, (state, { error }): GroupsSearchState => ({ ...state, searchGroupLoading: false, groupSearchError: error })),
+  on(searchGroups, (state): GroupsSearchState => {
+    return ({...state, searchGroupLoading: true});
+  }),
+  on(searchGroupsSuccess, (state, { groups }): GroupsSearchState => {
+    return adapter.upsertMany(groups.entities, adapter.removeAll({...state, searchGroupLoading: false}));
+  }),
+  on(searchGroupsFailure, (state, { error }): GroupsSearchState => {
+    return adapter.removeAll({...state, searchGroupLoading: false, groupSearchError: error});
+  }),
 );

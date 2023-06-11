@@ -1,8 +1,9 @@
 import { createSelector } from '@ngrx/store';
-import { GroupsSearchState } from "./groups-search.reducer";
+import { adapter, GroupsSearchState } from "./groups-search.reducer";
 import { selectGroupsFeature } from "../../group-hub/store/group-hub.selectors";
-import * as _ from "lodash";
-import { Group } from "../../../models/group.model";
+import { AppState } from "../../../store/app.reducer";
+
+const groupsSelectors = adapter.getSelectors((state: AppState) => state.groups.groupsSearch);
 
 export const selectGroupSearchFeature = createSelector(
   selectGroupsFeature,
@@ -10,8 +11,10 @@ export const selectGroupSearchFeature = createSelector(
 );
 
 export const selectGroupsSearchGroups = createSelector(
-  selectGroupSearchFeature,
-  (state: GroupsSearchState) => _.uniqBy(state.searchedGroups.flatMap((p) => p.entities), 'id') as Group[]
+  groupsSelectors.selectAll,
+  (groups) => {
+    return groups ?? [];
+  }
 );
 
 export const selectGroupSearchLoading = createSelector(
