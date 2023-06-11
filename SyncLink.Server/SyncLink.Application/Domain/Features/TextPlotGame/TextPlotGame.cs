@@ -1,4 +1,5 @@
 ﻿using SyncLink.Application.Domain.Base;
+using SyncLink.Application.Domain.Groups;
 
 namespace SyncLink.Application.Domain.Features.TextPlotGame;
 

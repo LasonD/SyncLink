@@ -3,7 +3,7 @@ using MediatR;
 using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
-using SyncLink.Application.Domain.Associations;
+using SyncLink.Application.Domain.Groups;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 

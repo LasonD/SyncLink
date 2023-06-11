@@ -1,5 +1,5 @@
 ﻿using SyncLink.Application.Contracts.Data.Result;
-using SyncLink.Application.Domain;
+using SyncLink.Application.Domain.Groups.Rooms;
 
 namespace SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 

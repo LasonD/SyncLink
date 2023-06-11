@@ -1,6 +1,8 @@
 ﻿using SyncLink.Application.Domain.Base;
+using SyncLink.Application.Domain.Groups;
+using SyncLink.Application.Domain.Groups.Rooms;
 
-namespace SyncLink.Application.Domain;
+namespace SyncLink.Application.Domain.Groups.Feed;
 
 public class Post : EntityBase
 {

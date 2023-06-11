@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SyncLink.Application.Domain.Associations;
+using SyncLink.Application.Domain.Groups;
 
 namespace SyncLink.Infrastructure.Data.Configurations;
 

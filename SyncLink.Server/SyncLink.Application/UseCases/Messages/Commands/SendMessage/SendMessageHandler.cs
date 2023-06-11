@@ -4,6 +4,7 @@ using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Domain;
+using SyncLink.Application.Domain.Groups.Rooms;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 

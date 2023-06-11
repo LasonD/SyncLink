@@ -1,6 +1,6 @@
 ﻿using SyncLink.Common.Validation;
 
-namespace SyncLink.Application.Domain.Associations;
+namespace SyncLink.Application.Domain.Groups.Rooms;
 
 public class UserRoom
 {

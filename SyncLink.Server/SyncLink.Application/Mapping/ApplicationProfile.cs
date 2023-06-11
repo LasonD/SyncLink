@@ -2,9 +2,10 @@
 using AutoMapper;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Domain;
-using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Domain.Features.TextPlotGame;
+using SyncLink.Application.Domain.Groups;
+using SyncLink.Application.Domain.Groups.Rooms;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Dtos.TextPlotGame;
 using SyncLink.Application.Dtos.WordsChainGame;

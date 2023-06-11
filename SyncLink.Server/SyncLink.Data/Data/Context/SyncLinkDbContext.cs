@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Domain;
-using SyncLink.Application.Domain.Associations;
 using SyncLink.Application.Domain.Features;
 using SyncLink.Application.Domain.Features.TextPlotGame;
-using SyncLink.Application.Domain.Feed;
+using SyncLink.Application.Domain.Groups;
+using SyncLink.Application.Domain.Groups.Feed;
+using SyncLink.Application.Domain.Groups.Rooms;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using System.Reflection;
 

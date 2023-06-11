@@ -1,7 +1,7 @@
 ﻿using SyncLink.Application.Domain.Base;
 using SyncLink.Common.Validation;
 
-namespace SyncLink.Application.Domain;
+namespace SyncLink.Application.Domain.Groups.Rooms;
 
 public class Message : EntityBase
 {

@@ -1,6 +1,6 @@
 ﻿using SyncLink.Application.Domain.Base;
 
-namespace SyncLink.Application.Domain.Feed;
+namespace SyncLink.Application.Domain.Groups.Feed;
 
 public class Voting : FeedItem
 {

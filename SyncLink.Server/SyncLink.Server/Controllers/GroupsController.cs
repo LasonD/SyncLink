@@ -7,7 +7,6 @@ using SyncLink.Application.UseCases.Groups.Commands.CreateGroup;
 using SyncLink.Application.UseCases.Groups.Queries;
 using SyncLink.Application.UseCases.Groups.Queries.SearchGroups;
 using SyncLink.Application.UseCases.Messages.Queries;
-using SyncLink.Application.UseCases.Queries;
 using SyncLink.Application.UseCases.Rooms.Queries;
 using SyncLink.Server.Controllers.Base;
 using SyncLink.Server.Dtos;
@@ -143,6 +142,18 @@ public class GroupsController : ApiControllerBase
         var query = new SearchGroups.Query(userId, searchQuery, groupSearchMode);
 
         var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpPost()]
+    public async Task<IActionResult> JoinGroup([FromBody] JoinGroupDto joinGroupDto, CancellationToken cancellationToken = default)
+    {
+        var command = _mapper.Map<JoinGroup.Command>(joinGroupDto);
+
+        command.UserId = GetRequiredAppUserId();
+
+        var result = await _mediator.Send(command, cancellationToken);
 
         return Ok(result);
     }

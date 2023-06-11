@@ -2,10 +2,10 @@
 using SyncLink.Application.Contracts.Data.Enums;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
-using SyncLink.Application.Domain;
 using SyncLink.Infrastructure.Data.Context;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using SyncLink.Application.Domain.Groups;
 
 namespace SyncLink.Infrastructure.Data.Repositories;
 

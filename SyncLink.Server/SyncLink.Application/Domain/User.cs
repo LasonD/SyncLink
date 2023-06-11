@@ -1,5 +1,6 @@
-﻿using SyncLink.Application.Domain.Associations;
-using SyncLink.Application.Domain.Base;
+﻿using SyncLink.Application.Domain.Base;
+using SyncLink.Application.Domain.Groups;
+using SyncLink.Application.Domain.Groups.Rooms;
 using SyncLink.Common.Validation;
 
 namespace SyncLink.Application.Domain;

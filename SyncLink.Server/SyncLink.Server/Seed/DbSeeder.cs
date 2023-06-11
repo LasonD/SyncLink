@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SyncLink.Application.Domain;
+using SyncLink.Application.Domain.Groups;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 

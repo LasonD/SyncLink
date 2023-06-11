@@ -1,6 +1,7 @@
 ﻿using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
-using SyncLink.Application.Domain.Associations;
+using SyncLink.Application.Domain.Groups;
+using SyncLink.Application.Domain.Groups.Rooms;
 
 namespace SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 

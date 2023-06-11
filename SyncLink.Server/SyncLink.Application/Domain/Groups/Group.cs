@@ -1,8 +1,8 @@
-﻿using SyncLink.Application.Domain.Associations;
-using SyncLink.Application.Domain.Base;
+﻿using SyncLink.Application.Domain.Base;
+using SyncLink.Application.Domain.Groups.Rooms;
 using SyncLink.Common.Validation;
 
-namespace SyncLink.Application.Domain;
+namespace SyncLink.Application.Domain.Groups;
 
 public class Group : EntityBase
 {
@@ -22,7 +22,7 @@ public class Group : EntityBase
     {
         room.ThrowIfNull(nameof(room));
 
-        if ((room.Group != null && room.Group != this) || (room.GroupId != default && room.GroupId != Id))
+        if (room.Group != null && room.Group != this || room.GroupId != default && room.GroupId != Id)
         {
             throw new InvalidOperationException($"Room {room.Name} {room.Id} is already assigned to a group.");
         }

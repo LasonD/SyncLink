@@ -4,7 +4,8 @@ using SyncLink.Application.Contracts.Data;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result;
 using SyncLink.Application.Domain;
-using SyncLink.Application.Domain.Associations;
+using SyncLink.Application.Domain.Groups;
+using SyncLink.Application.Domain.Groups.Rooms;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Helpers;
 

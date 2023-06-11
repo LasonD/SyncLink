@@ -1,9 +1,9 @@
-﻿using SyncLink.Application.Domain.Associations;
-using SyncLink.Application.Domain.Base;
+﻿using SyncLink.Application.Domain.Base;
+using SyncLink.Application.Domain.Groups;
 using SyncLink.Application.Exceptions;
 using SyncLink.Common.Validation;
 
-namespace SyncLink.Application.Domain;
+namespace SyncLink.Application.Domain.Groups.Rooms;
 
 public class Room : EntityBase
 {

@@ -1,6 +1,7 @@
 ﻿using SyncLink.Application.Domain.Base;
+using SyncLink.Application.Domain.Groups;
 
-namespace SyncLink.Application.Domain.Feed;
+namespace SyncLink.Application.Domain.Groups.Feed;
 
 public abstract class FeedItem : EntityBase
 {

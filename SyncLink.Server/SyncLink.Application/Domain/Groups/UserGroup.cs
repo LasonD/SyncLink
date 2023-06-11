@@ -1,12 +1,12 @@
 ﻿using SyncLink.Common.Validation;
 
-namespace SyncLink.Application.Domain.Associations;
+namespace SyncLink.Application.Domain.Groups;
 
 public class UserGroup
 {
     protected UserGroup() { }
 
-    public UserGroup(User user, Group group, bool isCreator = false, bool isAdmin = false) 
+    public UserGroup(User user, Group group, bool isCreator = false, bool isAdmin = false)
     {
         User = user.GetValueOrThrowIfNull(nameof(user));
         Group = group.GetValueOrThrowIfNull(nameof(group));

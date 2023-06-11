@@ -1,6 +1,6 @@
 ﻿using SyncLink.Application.Contracts.Data.Enums;
 using SyncLink.Application.Contracts.Data.Result;
-using SyncLink.Application.Domain;
+using SyncLink.Application.Domain.Groups;
 
 namespace SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 
