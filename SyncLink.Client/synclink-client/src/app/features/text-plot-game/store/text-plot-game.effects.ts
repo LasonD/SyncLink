@@ -138,6 +138,19 @@ export class TextPlotGameEffects {
     ), {dispatch: false}
   );
 
+  revokeVote$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TextPlotGameActions.revokeVote),
+      mergeMap(({ groupId, gameId, entryId }) =>
+        this.http.delete<boolean>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/textPlotGames/${gameId}/entries/${entryId}/votes`)
+          .pipe(
+            map((isDeleted) => TextPlotGameActions.revokeVoteSuccess()),
+            catchError(err => of(TextPlotGameActions.revokeVoteFailure({ error: err })))
+          )
+      )
+    )
+  );
+
   gameStartedExternal$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TextPlotGameActions.gameStartedExternal),

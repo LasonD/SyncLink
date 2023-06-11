@@ -9,7 +9,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 })
 export class VoteModalComponent implements OnInit {
   voteForm: FormGroup;
-  scores = Array.from({length: 10}, (_, i) => i + 1);
+  scores = ['Revoke', ...Array.from({length: 10}, (_, i) => i + 1)];
 
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<any>) {
     this.voteForm = this.fb.group({
@@ -24,17 +24,29 @@ export class VoteModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  selectScore(score: number) {
+  selectScore(score: number | string) {
     this.voteForm.get('score').setValue(score);
 
-    this.dialogRef.close({
-      isConfirmed: true,
-      comment: this.voteForm.get('comment').value,
-      score: +this.voteForm.get('score').value
-    });
+    if (typeof score === 'number') {
+      this.dialogRef.close({
+        isConfirmed: true,
+        comment: this.voteForm.get('comment').value,
+        score: +this.voteForm.get('score').value
+      });
+    } else {
+      this.dialogRef.close({
+        isConfirmed: true,
+        comment: this.voteForm.get('comment').value,
+        isRevocation: true,
+      });
+    }
   }
 
-  getButtonClass(score: number): string {
+  getButtonClass(score: number | string): string {
+    if (typeof score === 'string') {
+      return 'btn-danger';
+    }
+
     if (score <= 3) {
       return 'btn-danger';
     } else if (score <= 6) {

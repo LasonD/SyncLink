@@ -8,7 +8,7 @@ import {
   entryCommittedExternal,
   entryVotedExternal, gameEndedExternal,
   gameStartedExternal,
-  newEntryExternal
+  newEntryExternal, voteRevokedExternal
 } from "../../features/text-plot-game/store/text-plot-game.actions";
 
 @Injectable({
@@ -26,6 +26,14 @@ export class TextPlotGameService {
 
     this.signalrService.on('voteReceived', (vote: TextPlotVote) => {
       this.store.dispatch(entryVotedExternal({ vote }));
+    });
+
+    this.signalrService.on('voteReceived', (vote: TextPlotVote) => {
+      this.store.dispatch(entryVotedExternal({ vote }));
+    });
+
+    this.signalrService.on('voteRevoked', (gameId: number, voteId: number) => {
+      this.store.dispatch(voteRevokedExternal({ voteId }));
     });
 
     this.signalrService.on('gameEnded', (game: TextPlotGame) => {

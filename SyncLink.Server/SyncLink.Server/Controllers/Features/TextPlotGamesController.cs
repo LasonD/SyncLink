@@ -74,6 +74,22 @@ public class TextPlotGamesController : ApiControllerBase
         return Ok(result);
     }
 
+    [HttpDelete("{gameId}/entries/{entryId}/votes")]
+    public async Task<IActionResult> RevokeVote(int groupId, int gameId, int entryId, CancellationToken cancellationToken)
+    {
+        var command = new VoteEntry.Command
+        {
+            EntryId = entryId,
+            GameId = gameId,
+            GroupId = groupId,
+            UserId = GetRequiredAppUserId(),
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+
+        return Ok(result);
+    }
+
     [HttpPost("{gameId}/entries")]
     public async Task<IActionResult> SubmitEntry(int groupId, int gameId, [FromBody] SubmitEntryDto submitEntryDto, CancellationToken cancellationToken)
     {

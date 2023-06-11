@@ -6,7 +6,7 @@ import {
   entryVotedExternal,
   gameStartedExternal, getGameWithEntries, getGameWithEntriesSuccess, getGamesSuccess, newEntryExternal,
   startGameSuccess,
-  submitEntrySuccess, voteEntrySuccess,
+  submitEntrySuccess, voteEntrySuccess, voteRevokedExternal,
 } from "./text-plot-game.actions";
 
 export const gamesAdapter: EntityAdapter<TextPlotGame> = createEntityAdapter<TextPlotGame>({
@@ -96,6 +96,9 @@ export const textPlotVotesReducer = createReducer(
   }),
   on(entryVotedExternal, (state, action) => {
     return voteAdapter.upsertOne(action.vote, state);
+  }),
+  on(voteRevokedExternal, (state, action) => {
+    return voteAdapter.removeOne(action.voteId, state);
   }),
   on(getGameWithEntriesSuccess, (state, action) => {
     return voteAdapter.upsertMany(action.game?.entries?.flatMap(e => e.votes), state);

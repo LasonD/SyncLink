@@ -21,6 +21,10 @@ export const voteEntry = createAction('[Text Plot Game] Vote Entry', props<{ gam
 export const voteEntrySuccess = createAction('[Text Plot Game] Vote Entry Success', props<{ vote: TextPlotVote }>());
 export const voteEntryFailure = createAction('[Text Plot Game] Vote Entry Failure', props<{ error: any }>());
 
+export const revokeVote = createAction('[Text Plot Game] Revoke Vote', props<{ gameId: number, groupId: number, entryId: number }>());
+export const revokeVoteSuccess = createAction('[Text Plot Game] Revoke Vote Success');
+export const revokeVoteFailure = createAction('[Text Plot Game] Revoke Vote Failure', props<{ error: any }>());
+
 export const endGame = createAction('[Text Plot Game] End Game', props<{ gameId: number }>());
 export const endGameSuccess = createAction('[Text Plot Game] End Game Success');
 export const endGameFailure = createAction('[Text Plot Game] End Game Failure', props<{ error: any }>());
@@ -33,3 +37,4 @@ export const newEntryExternal = createAction('[Text Plot Game] New Entry Externa
 export const entriesDiscardedExternal = createAction('[Text Plot Game] Entries Discarded External', props<{ discardedEntryIds: number[] }>());
 export const entryCommittedExternal = createAction('[Text Plot Game] Entry Committed External', props<{ entry: TextPlotEntry }>());
 export const entryVotedExternal = createAction('[Text Plot Game] Entry Voted External', props<{ vote: TextPlotVote }>());
+export const voteRevokedExternal = createAction('[Text Plot Game] Vote Revoked External', props<{ voteId: number }>());

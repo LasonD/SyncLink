@@ -24,7 +24,7 @@
       <mat-list>
         <mat-list-item *ngFor="let entry of uncommittedEntries$ | async" class="uncommitted-entry">
           {{entry.text}}
-          <button mat-button (click)="openVoteModal(entry)" class="vote-button">
+          <button *ngIf="canVote(entry) | async" mat-button (click)="openVoteModal(entry)" class="vote-button">
             <mat-icon>thumb_up</mat-icon>
             Vote
           </button>

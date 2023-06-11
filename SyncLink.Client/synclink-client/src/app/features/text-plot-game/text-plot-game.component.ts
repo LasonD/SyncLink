@@ -21,7 +21,7 @@ import {
   selectSelectedTextPlotGame,
   selectSelectedTextPlotGameId, selectVotesByEntryId
 } from "./store/text-plot-game.selectors";
-import { submitEntry, voteEntry } from "./store/text-plot-game.actions";
+import { revokeVote, submitEntry, voteEntry } from "./store/text-plot-game.actions";
 import { selectUserId } from "../../auth/store/auth.selectors";
 
 @Component({
@@ -75,14 +75,24 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
       this.store.select(selectCurrentGroupId)
         .pipe(take(1), withLatestFrom(this.store.select(selectSelectedTextPlotGameId)))
         .subscribe(([groupId, gameId]) => {
-          this.store.dispatch(voteEntry({
-            entryId: entry.id, gameId: gameId, groupId: groupId, vote: {
-              comment: result.comment,
-              score: result.score
-            }
-          }))
+          if (result.isRevocation) {
+            this.store.dispatch(revokeVote({
+              entryId: entry.id, gameId: gameId, groupId: groupId
+            }));
+          } else {
+            this.store.dispatch(voteEntry({
+              entryId: entry.id, gameId: gameId, groupId: groupId, vote: {
+                comment: result.comment,
+                score: result.score
+              }
+            }));
+          }
         })
     });
+  }
+
+  canVote(entry: TextPlotEntry) {
+    return this.currentUserId$.pipe(take(1), map(userId => entry.userId !== userId));
   }
 
   getVoteCount(id: number): Observable<number> {

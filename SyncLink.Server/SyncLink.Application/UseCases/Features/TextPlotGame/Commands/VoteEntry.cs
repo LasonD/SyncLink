@@ -54,7 +54,7 @@ public static class VoteEntry
 
             if (existingVote != null)
             {
-                return await HandleVoteRevocationAsync(request, entryWithVotes, existingVote, cancellationToken);
+                return await HandleVoteUpdateAsync(request, entryWithVotes, existingVote, cancellationToken);
             }
 
             return await HandleVoteCreationAsync(request, entry, cancellationToken);
@@ -84,9 +84,10 @@ public static class VoteEntry
             return dto;
         }
 
-        private async Task<TextPlotVoteDto> HandleVoteRevocationAsync(Command request, TextPlotEntry entryWithVotes, TextPlotVote existingVote, CancellationToken cancellationToken)
+        private async Task<TextPlotVoteDto> HandleVoteUpdateAsync(Command request, TextPlotEntry entryWithVotes, TextPlotVote existingVote, CancellationToken cancellationToken)
         {
-            entryWithVotes.Votes.Remove(existingVote);
+            existingVote.Comment = request.Comment;
+            existingVote.Score = request.Score;
 
             await _textPlotGameRepository.SaveChangesAsync(cancellationToken);
 
