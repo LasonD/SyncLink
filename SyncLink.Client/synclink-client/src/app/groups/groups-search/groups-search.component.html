@@ -30,7 +30,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="$event.stopPropagation(); navigateToGroup(group.id)"
+          (click)="$event.stopPropagation(); selectGroup(group.id)"
         >
           {{ groupSearchMode === GroupSearchMode.ExplorePublic ? 'Join' : 'Enter' }}
         </button>

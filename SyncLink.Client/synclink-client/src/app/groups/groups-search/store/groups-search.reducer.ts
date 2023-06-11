@@ -29,3 +29,20 @@ export const groupsSearchReducer = createReducer(
     return adapter.removeAll({...state, searchGroupLoading: false, groupSearchError: error});
   }),
 );
+
+export interface SendGroupJoinRequest {
+  message: string,
+}
+
+export interface GroupJoinRequestState {
+  message: string,
+  userId: number,
+  groupId: number,
+  status: GroupJoinRequestStatus,
+}
+
+export enum GroupJoinRequestStatus {
+  Pending = 0,
+  Accepted = 1,
+  Rejected = 2,
+}

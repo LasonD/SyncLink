@@ -169,6 +169,7 @@ public class GroupsController : ApiControllerBase
         {
             GroupId = groupId,
             UserId = GetRequiredAppUserId(),
+            JoinRequestId = joinRequestId,
             Status = updateRequest.NewStatus,
         };
 

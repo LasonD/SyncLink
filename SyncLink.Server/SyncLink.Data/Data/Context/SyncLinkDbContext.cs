@@ -25,6 +25,8 @@ public class SyncLinkDbContext : IdentityDbContext<SyncLinkIdentityUser>, IAppDb
 
     public DbSet<Group> Groups { get; set; } = null!;
 
+    public DbSet<GroupJoinRequest> GroupJoinRequests { get; set; } = null!;
+
     public DbSet<User> ApplicationUsers { get; set; } = null!;
 
     public DbSet<UserGroup> UsersToGroups { get; set; } = null!;

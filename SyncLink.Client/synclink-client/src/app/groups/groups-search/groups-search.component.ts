@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { GroupSearchMode } from '../../models/group.model';
 import { selectGroupSearchLoading, selectGroupsSearchGroups } from "./store/groups-search.selectors";
-import { searchGroups } from "./store/groups-search.actions";
+import { searchGroups, sendGroupJoinRequest } from "./store/groups-search.actions";
 import { debounceTime, Subject, takeUntil } from "rxjs";
 
 @Component({
@@ -40,8 +40,12 @@ export class GroupsSearchComponent implements OnInit, OnDestroy {
     this.search$.next(this.searchQuery);
   }
 
-  navigateToGroup(groupId: number): void {
-    this.router.navigate([`/groups/${groupId}/hub`]);
+  selectGroup(groupId: number): void {
+    if (this.groupSearchMode === GroupSearchMode.ExplorePublic) {
+      this.store.dispatch(sendGroupJoinRequest({ groupId, request: { message: '' } }))
+    } else{
+      this.router.navigate([`/groups/${groupId}/hub`]);
+    }
   }
 
   navigateToCreateGroup(): void {
