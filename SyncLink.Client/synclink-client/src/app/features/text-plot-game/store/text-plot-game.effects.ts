@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, mergeMap, tap } from "rxjs/operators";
-import { TextPlotEntry, TextPlotGame, TextPlotVote } from "./text-plot-game.reducer";
+import { TextPlotEntry, TextPlotGame, TextPlotGameWithEntries, TextPlotVote } from "./text-plot-game.reducer";
 import { environment } from "../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import * as TextPlotGameActions from './text-plot-game.actions';
@@ -38,12 +38,12 @@ export class TextPlotGameEffects {
 
   getGameEntries$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TextPlotGameActions.getGameEntries),
+      ofType(TextPlotGameActions.getGameWithEntries),
       mergeMap(({ gameId, groupId }) =>
-        this.http.get<Page<TextPlotEntry>>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/textPlotGames/${gameId}/entries`)
+        this.http.get<TextPlotGameWithEntries>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/textPlotGames/${gameId}/entries`)
           .pipe(
-            map(entries => TextPlotGameActions.getGameEntriesSuccess({ entries })),
-            catchError(err => of(TextPlotGameActions.getGameEntriesFailure({ error: err })))
+            map(game => TextPlotGameActions.getGameWithEntriesSuccess({ game })),
+            catchError(err => of(TextPlotGameActions.getGameWithEntriesFailure({ error: err })))
           )
       )
     )
@@ -51,7 +51,7 @@ export class TextPlotGameEffects {
 
   getGameEntriesFailure$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TextPlotGameActions.getGameEntriesFailure),
+      ofType(TextPlotGameActions.getGameWithEntriesFailure),
       tap(({error}) => {
           this.notificationsService.error(error, 'Something went wrong when fetching game entries.');
         }

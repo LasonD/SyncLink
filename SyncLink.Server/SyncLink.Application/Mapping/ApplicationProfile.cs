@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections;
+using AutoMapper;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Domain.Associations;
@@ -50,9 +51,26 @@ public class ApplicationProfile : Profile
         CreateMap<WordsChainEntry, WordsChainGameEntryDto>().ReverseMap();
 
         CreateMap<TextPlotGame, TextPlotGameDto>().ReverseMap();
+        CreateMap<TextPlotGame, TextPlotGameWithEntriesDto>().ReverseMap();
         CreateMap<TextPlotEntry, TextPlotEntryDto>().ReverseMap();
         CreateMap<TextPlotVote, TextPlotVoteDto>().ReverseMap();
 
         CreateMap(typeof(PaginatedResult<>), typeof(PaginatedResult<>));
+        CreateMap(typeof(PaginatedResult<>), typeof(List<>)).ConvertUsing(typeof(PaginatedResultToListConverter<,>));
+    }
+
+    public class PaginatedResultToListConverter<T, TDto> : ITypeConverter<PaginatedResult<T>, List<TDto>>
+    {
+        private readonly IMapper _mapper;
+
+        public PaginatedResultToListConverter(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        public List<TDto> Convert(PaginatedResult<T> source, List<TDto> destination, ResolutionContext context)
+        {
+            return source.Entities.Select(e => _mapper.Map<TDto>(e)).ToList();
+        }
     }
 }

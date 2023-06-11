@@ -4,7 +4,7 @@ import {
   entriesDiscardedExternal,
   entryCommittedExternal,
   entryVotedExternal,
-  gameStartedExternal, getGameEntries, getGameEntriesSuccess, getGamesSuccess, newEntryExternal,
+  gameStartedExternal, getGameWithEntries, getGameWithEntriesSuccess, getGamesSuccess, newEntryExternal,
   startGameSuccess,
   submitEntrySuccess, voteEntrySuccess,
 } from "./text-plot-game.actions";
@@ -62,8 +62,11 @@ export const textPlotGamesReducer = createReducer(
   on(gameStartedExternal, (state, action) => {
     return gamesAdapter.upsertOne(action.game, state);
   }),
-  on(getGameEntries, (state, action) => {
+  on(getGameWithEntries, (state, action) => {
     return {...state, selectedGameId: action.gameId};
+  }),
+  on(getGameWithEntriesSuccess, (state, action) => {
+    return gamesAdapter.upsertOne(action.game, state);
   })
 );
 
@@ -81,8 +84,8 @@ export const textPlotEntriesReducer = createReducer(
   on(entriesDiscardedExternal, (state, action) => {
     return entryAdapter.removeMany(action.discardedEntryIds, state)
   }),
-  on(getGameEntriesSuccess, (state, action) => {
-    return entryAdapter.upsertMany(action.entries.entities, state);
+  on(getGameWithEntriesSuccess, (state, action) => {
+    return entryAdapter.upsertMany(action.game?.entries, state);
   })
 );
 
@@ -94,8 +97,8 @@ export const textPlotVotesReducer = createReducer(
   on(entryVotedExternal, (state, action) => {
     return voteAdapter.upsertOne(action.vote, state);
   }),
-  on(getGameEntriesSuccess, (state, action) => {
-    return voteAdapter.upsertMany(action.entries.entities.flatMap(e => e.votes), state);
+  on(getGameWithEntriesSuccess, (state, action) => {
+    return voteAdapter.upsertMany(action.game?.entries?.flatMap(e => e.votes), state);
   })
 );
 
@@ -122,6 +125,10 @@ export interface TextPlotGame {
   createdAt: Date;
   creationDate: Date;
   topic: string;
+}
+
+export interface TextPlotGameWithEntries extends TextPlotGame {
+  entries: TextPlotEntry[]
 }
 
 export interface TextPlotVote {

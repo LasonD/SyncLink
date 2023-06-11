@@ -1,7 +1,7 @@
 <mat-card class="card game-card">
   <mat-card-header>
     <mat-card-title class="game-topic">{{(game$ | async)?.topic}}</mat-card-title>
-    <mat-card-subtitle>Started at {{(game$ | async)?.createdAt | date}}</mat-card-subtitle>
+    <mat-card-subtitle>Started at {{(game$ | async)?.creationDate | date}}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <h2>Committed Entries:</h2>

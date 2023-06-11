@@ -13,14 +13,14 @@ namespace SyncLink.Application.UseCases.Features.TextPlotGame.Queries;
 
 public static class GetTextPlotGameEntries
 {
-    public class Query : QueryWithPagination, IRequest<IPaginatedResult<TextPlotEntryDto>>
+    public class Query : QueryWithPagination, IRequest<TextPlotGameWithEntriesDto>
     {
         public int GroupId { get; set; }
         public int UserId { get; set; }
         public int GameId { get; set; }
     }
 
-    public class Handler : IRequestHandler<Query, IPaginatedResult<TextPlotEntryDto>>
+    public class Handler : IRequestHandler<Query, TextPlotGameWithEntriesDto>
     {
         private readonly IUserRepository _userRepository;
         private readonly ITextPlotGameRepository _textPlotGameRepository;
@@ -33,7 +33,7 @@ public static class GetTextPlotGameEntries
             _textPlotGameRepository = textPlotGameRepository;
         }
 
-        public async Task<IPaginatedResult<TextPlotEntryDto>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<TextPlotGameWithEntriesDto> Handle(Query request, CancellationToken cancellationToken)
         {
             var isUserInGroup = await _userRepository.IsUserInGroupAsync(request.UserId, request.GroupId, cancellationToken);
 
@@ -41,6 +41,8 @@ public static class GetTextPlotGameEntries
             {
                 throw new BusinessException($"User {request.UserId} is not a member of group {request.GroupId}.");
             }
+
+            var game = (await _textPlotGameRepository.GetByIdAsync(request.GameId, cancellationToken)).GetResult();
 
             var entriesResult = await _textPlotGameRepository.GetTextPlotGameEntriesAsync(
                 request.GroupId,
@@ -58,7 +60,8 @@ public static class GetTextPlotGameEntries
 
             var entries = entriesResult.GetResult();
 
-            var dto = _mapper.Map<PaginatedResult<TextPlotEntryDto>>(entries);
+            var dto = _mapper.Map<TextPlotGameWithEntriesDto>(game);
+            dto.Entries = _mapper.Map<List<TextPlotEntryDto>>((PaginatedResult<TextPlotEntry>)entries);
 
             return dto;
         }

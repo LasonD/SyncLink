@@ -64,7 +64,7 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
       )
       .pipe(takeUntil(this.destroyed$))
       .subscribe(([groupId, gameId]) => {
-        this.store.dispatch(TextPlotGameActions.getGameEntries({groupId, gameId}))
+        this.store.dispatch(TextPlotGameActions.getGameWithEntries({groupId, gameId}))
       });
 
     this.entries$ = this.gameId$.pipe(
