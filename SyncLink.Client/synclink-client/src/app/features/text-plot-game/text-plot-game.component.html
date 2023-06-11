@@ -1,33 +1,50 @@
 <mat-card class="card game-card">
-  <mat-card-header>
-    <mat-card-title class="game-topic">{{(game$ | async)?.topic}}</mat-card-title>
-    <mat-card-subtitle>Started at {{(game$ | async)?.creationDate | date}}</mat-card-subtitle>
+  <mat-card-header class="card-header justify-content-center">
+    <mat-card-title class="game-topic mb-1 mt-1">{{(game$ | async)?.topic | titlecase}}</mat-card-title>
+    <mat-card-subtitle class="game-date">Started at {{(game$ | async)?.creationDate | date}}</mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content>
-    <h2>Committed Entries:</h2>
-    <mat-list>
-      <mat-list-item *ngFor="let entry of committedEntries$ | async" class="committed-entry">
-        <mat-icon class="entry-icon">check_circle</mat-icon>
-        {{entry.text}}
-      </mat-list-item>
-    </mat-list>
-    <h2>Uncommitted Entries:</h2>
-    <mat-list>
-      <mat-list-item *ngFor="let entry of uncommittedEntries$ | async" class="uncommitted-entry">
-        {{entry.text}}
-        <button mat-button (click)="openVoteModal(entry)" class="vote-button">
-          <mat-icon>thumb_up</mat-icon>
-          Vote
-        </button>
-        <span class="vote-count">Votes: {{getVoteCount(entry.id) | async}}</span>
-        <span class="vote-count">Score: {{getScore(entry.id) | async}}</span>
-      </mat-list-item>
-    </mat-list>
-    <h2>Add a New Entry:</h2>
-    <div class="new-entry-form">
+  <mat-card-content class="card-content">
+    <h2 class="mt-4">Committed text:</h2>
+    <ng-container *ngIf="(committedEntries$ | async)?.length; else noCommittedEntries">
+      <mat-card class="committed-entries-card">
+        <mat-card-content>
+          {{(committedEntries$ | async)?.join(' ')}}
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+    <ng-template #noCommittedEntries>
+      <mat-card class="no-entries-card">
+        <mat-card-content>
+          <p class="m-2"><mat-icon>info</mat-icon>  No committed entries yet.</p>
+        </mat-card-content>
+      </mat-card>
+    </ng-template>
+    <h2 class="mt-4">Uncommitted Entries:</h2>
+    <ng-container *ngIf="(uncommittedEntries$ | async)?.length; else noUncommittedEntries">
+      <mat-list>
+        <mat-list-item *ngFor="let entry of uncommittedEntries$ | async" class="uncommitted-entry">
+          {{entry.text}}
+          <button mat-button (click)="openVoteModal(entry)" class="vote-button">
+            <mat-icon>thumb_up</mat-icon>
+            Vote
+          </button>
+          <span class="vote-count me-2">Votes: {{getVoteCount(entry.id) | async}}</span>
+          <span class="vote-count me-2">Score: {{getScore(entry.id) | async}}</span>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+    <ng-template #noUncommittedEntries>
+      <mat-card class="no-entries-card">
+        <mat-card-content>
+          <p><mat-icon>info</mat-icon>No uncommitted entries yet.</p>
+        </mat-card-content>
+      </mat-card>
+    </ng-template>
+    <div class="new-entry-form mt-4" *ngIf="!(canAddEntry$ | async)">
+      <h2>Add a New Entry:</h2>
       <mat-form-field appearance="outline" class="new-entry-input">
         <mat-label>Enter your new entry</mat-label>
-        <input matInput [(ngModel)]="newEntryText" >
+        <textarea matInput rows="1" placeholder="Enter your story continuation" [(ngModel)]="newEntryText"></textarea>
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="addNewEntry()" [disabled]="!newEntryText" class="add-button">Add</button>
     </div>

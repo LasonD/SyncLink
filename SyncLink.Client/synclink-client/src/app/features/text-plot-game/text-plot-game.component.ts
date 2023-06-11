@@ -8,22 +8,21 @@ import { ActivatedRoute } from "@angular/router";
 import * as TextPlotGameActions from "./store/text-plot-game.actions";
 import { selectCurrentGroupId } from "../../groups/group-hub/store/group-hub.selectors";
 import {
-  combineLatestWith,
   distinctUntilChanged,
-  forkJoin,
   mergeMap,
   Observable,
   Subject,
   takeUntil,
   withLatestFrom
 } from "rxjs";
-import { combineLatest, filter, map, take, tap } from "rxjs/operators";
+import { filter, map, take } from "rxjs/operators";
 import {
   selectEntriesByGameId,
   selectSelectedTextPlotGame,
   selectSelectedTextPlotGameId, selectVotesByEntryId
 } from "./store/text-plot-game.selectors";
 import { submitEntry, voteEntry } from "./store/text-plot-game.actions";
+import { selectUserId } from "../../auth/store/auth.selectors";
 
 @Component({
   selector: 'app-text-plot-game',
@@ -32,13 +31,15 @@ import { submitEntry, voteEntry } from "./store/text-plot-game.actions";
   providers: [MatDialog]
 })
 export class TextPlotGameComponent implements OnInit, OnDestroy {
+  currentUserId$ = this.store.select(selectUserId);
   destroyed$: Subject<boolean> = new Subject<boolean>();
-  gameId$: Observable<number> = new Subject<number>();
-  game$: Observable<TextPlotGame>;
-  entries$: Observable<TextPlotEntry[]>;
-  committedEntries$: Observable<TextPlotEntry[]>;
-  uncommittedEntries$: Observable<TextPlotEntry[]>;
+  gameId$ = this.activatedRoute.paramMap.pipe(map(p => +p.get('textPlotGameId')), filter(id => !!id));
+  game$: Observable<TextPlotGame> = this.store.select(selectSelectedTextPlotGame).pipe(takeUntil(this.destroyed$));
+  entries$ = this.gameId$.pipe(takeUntil(this.destroyed$), mergeMap(gameId => this.store.select(selectEntriesByGameId(gameId))));
+  committedEntries$ = this.entries$.pipe(map(entries => entries.filter(e => e.isCommitted)));
+  uncommittedEntries$ = this.entries$.pipe(map(entries => entries.filter(e => !e.isCommitted)));
   votes$: Observable<TextPlotVote[]>;
+  canAddEntry$ = this.uncommittedEntries$.pipe(withLatestFrom(this.currentUserId$), map((([entries, userId]) => entries.some(e => e.id === userId))));
 
   newEntryText: string;
 
@@ -48,14 +49,6 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.game$ = this.store.select(selectSelectedTextPlotGame).pipe(takeUntil(this.destroyed$));
-
-    this.gameId$ = this.activatedRoute.paramMap
-      .pipe(
-        map(p => +p.get('textPlotGameId')),
-        filter(id => !!id),
-      );
-
     this.store.select(selectCurrentGroupId)
       .pipe(
         filter(id => !!id),
@@ -66,14 +59,6 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
       .subscribe(([groupId, gameId]) => {
         this.store.dispatch(TextPlotGameActions.getGameWithEntries({groupId, gameId}))
       });
-
-    this.entries$ = this.gameId$.pipe(
-      takeUntil(this.destroyed$),
-      mergeMap(gameId => this.store.select(selectEntriesByGameId(gameId)))
-    );
-
-    this.committedEntries$ = this.entries$.pipe(map(entries => entries.filter(e => e.isCommitted)));
-    this.uncommittedEntries$ = this.entries$.pipe(map(entries => entries.filter(e => !e.isCommitted)));
   }
 
   openVoteModal(entry: TextPlotEntry): void {
