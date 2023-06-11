@@ -38,3 +38,4 @@ export const entriesDiscardedExternal = createAction('[Text Plot Game] Entries D
 export const entryCommittedExternal = createAction('[Text Plot Game] Entry Committed External', props<{ entry: TextPlotEntry }>());
 export const entryVotedExternal = createAction('[Text Plot Game] Entry Voted External', props<{ vote: TextPlotVote }>());
 export const voteRevokedExternal = createAction('[Text Plot Game] Vote Revoked External', props<{ voteId: number }>());
+export const votingTimerProgressExternal = createAction('[Text Plot Game] Voting Timer Progress External', props<{ gameId: number, percent: number }>());

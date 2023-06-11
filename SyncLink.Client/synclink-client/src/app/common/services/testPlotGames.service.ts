@@ -8,7 +8,7 @@ import {
   entryCommittedExternal,
   entryVotedExternal, gameEndedExternal,
   gameStartedExternal,
-  newEntryExternal, voteRevokedExternal
+  newEntryExternal, voteRevokedExternal, votingTimerProgressExternal
 } from "../../features/text-plot-game/store/text-plot-game.actions";
 
 @Injectable({
@@ -42,6 +42,10 @@ export class TextPlotGameService {
 
     this.signalrService.on('entryCommitted', (entry: TextPlotEntry) => {
       this.store.dispatch(entryCommittedExternal({ entry }));
+    });
+
+    this.signalrService.on('votingTimerProgress', (gameId: number, percent: number) => {
+      this.store.dispatch(votingTimerProgressExternal({ gameId, percent }));
     });
 
     this.signalrService.on('entriesDiscarded', (discardedEntryIds: number[]) => {

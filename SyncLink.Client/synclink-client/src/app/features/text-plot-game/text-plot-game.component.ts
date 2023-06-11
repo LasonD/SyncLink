@@ -17,7 +17,7 @@ import {
 } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
 import {
-  selectEntriesByGameId,
+  selectEntriesByGameId, selectSelectedGameVotingTimerProgress,
   selectSelectedTextPlotGame,
   selectSelectedTextPlotGameId, selectVotesByEntryId
 } from "./store/text-plot-game.selectors";
@@ -36,6 +36,7 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
   gameId$ = this.activatedRoute.paramMap.pipe(map(p => +p.get('textPlotGameId')), filter(id => !!id));
   game$: Observable<TextPlotGame> = this.store.select(selectSelectedTextPlotGame).pipe(takeUntil(this.destroyed$));
   entries$ = this.gameId$.pipe(takeUntil(this.destroyed$), mergeMap(gameId => this.store.select(selectEntriesByGameId(gameId))));
+  votingTimerProgress$ = this.store.select(selectSelectedGameVotingTimerProgress).pipe(takeUntil(this.destroyed$));
   committedEntries$ = this.entries$.pipe(map(entries => entries.filter(e => e.isCommitted)));
   uncommittedEntries$ = this.entries$.pipe(map(entries => entries.filter(e => !e.isCommitted)));
   votes$: Observable<TextPlotVote[]>;

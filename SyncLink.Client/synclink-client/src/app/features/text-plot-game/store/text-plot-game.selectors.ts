@@ -58,6 +58,11 @@ export const selectSelectedTextPlotGame = createSelector(
   (gameId, entities) => entities[gameId]
 )
 
+export const selectSelectedGameVotingTimerProgress = createSelector(
+  selectTextPlotGameState,
+  (state) => state.games.selectedGameVotingTimerProgress
+)
+
 export const selectVotesByGameId = (gameId: number) => createSelector(
   votesSelectors.selectAll,
   entriesSelectors.selectEntities,

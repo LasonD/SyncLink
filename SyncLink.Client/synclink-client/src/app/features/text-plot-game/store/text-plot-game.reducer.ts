@@ -6,7 +6,7 @@ import {
   entryVotedExternal,
   gameStartedExternal, getGameWithEntries, getGameWithEntriesSuccess, getGamesSuccess, newEntryExternal,
   startGameSuccess,
-  submitEntrySuccess, voteEntrySuccess, voteRevokedExternal,
+  submitEntrySuccess, voteEntrySuccess, voteRevokedExternal, votingTimerProgressExternal,
 } from "./text-plot-game.actions";
 
 export const gamesAdapter: EntityAdapter<TextPlotGame> = createEntityAdapter<TextPlotGame>({
@@ -34,6 +34,7 @@ export interface TextPlotGameState {
 export interface TextPlotGamesState extends EntityState<TextPlotGame> {
   createdGame: TextPlotGame,
   selectedGameId: number,
+  selectedGameVotingTimerProgress: number,
 }
 
 export interface TextPlotEntriesState extends EntityState<TextPlotEntry> {
@@ -47,6 +48,7 @@ export interface TextPlotVotesState extends EntityState<TextPlotVote> {
 export const textPlotGamesInitialState: TextPlotGamesState = gamesAdapter.getInitialState({
   createdGame: null,
   selectedGameId: null,
+  selectedGameVotingTimerProgress: null,
 });
 export const textPlotEntriesInitialState = entryAdapter.getInitialState();
 export const textPlotVotesInitialState = voteAdapter.getInitialState();
@@ -67,7 +69,14 @@ export const textPlotGamesReducer = createReducer(
   }),
   on(getGameWithEntriesSuccess, (state, action) => {
     return gamesAdapter.upsertOne(action.game, state);
-  })
+  }),
+  on(votingTimerProgressExternal, (state, action) => {
+    if (action.gameId !== state.selectedGameId) {
+      return state;
+    }
+
+    return {...state, selectedGameVotingTimerProgress: action.percent};
+  }),
 );
 
 export const textPlotEntriesReducer = createReducer(
