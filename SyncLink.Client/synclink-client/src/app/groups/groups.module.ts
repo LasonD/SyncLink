@@ -30,6 +30,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatDialogModule } from "@angular/material/dialog";
 import { GroupAdminListComponent } from './group-hub/group-admin-list/group-admin-list.component';
+import { adminRoutes } from "../admin/admin.module";
 
 const routes: Routes = [
   {
@@ -45,7 +46,9 @@ const routes: Routes = [
         path: '', component: GroupFeedComponent
       },
       ...roomsRoutes,
-      ...featureRoutes]
+      ...featureRoutes,
+      ...adminRoutes,
+    ]
   },
 ];
 

@@ -15,6 +15,7 @@ export enum GroupSearchMode {
   Membership = 'Membership',
   ExplorePublic = 'ExplorePublic',
   Owned = 'Owned',
+  Private = 'Private',
 }
 
 export interface CreateGroupDto {
