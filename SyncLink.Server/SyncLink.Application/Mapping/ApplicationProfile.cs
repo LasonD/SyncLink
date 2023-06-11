@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using AutoMapper;
+﻿using AutoMapper;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
 using SyncLink.Application.Domain;
 using SyncLink.Application.Domain.Features;
@@ -39,6 +38,7 @@ public class ApplicationProfile : Profile
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.UserName));
 
         CreateMap<Group, GroupDto>();
+        CreateMap<GroupJoinRequest, GroupJoinRequestDto>();
         CreateMap<Room, RoomDto>();
         CreateMap<User, GroupMemberDto>();
         CreateMap<Message, MessageDto>();
