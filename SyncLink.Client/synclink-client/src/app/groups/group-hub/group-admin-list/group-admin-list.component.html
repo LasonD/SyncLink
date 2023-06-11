@@ -1,0 +1,11 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Admin
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <mat-list-item *ngFor="let adminFeature of adminFeatures" (click)="navigateFeature(adminFeature)">
+    {{adminFeature.name}}
+  </mat-list-item>
+</mat-expansion-panel>
+

@@ -13,6 +13,10 @@
           </div>
         </mat-list-item>
       </mat-nav-list>
+      <mat-nav-list *ngIf="group?.isAdmin">
+        <app-group-admin-list></app-group-admin-list>
+      </mat-nav-list>
+      <mat-divider *ngIf="group?.isAdmin"></mat-divider>
       <mat-nav-list>
         <app-group-users-list></app-group-users-list>
       </mat-nav-list>

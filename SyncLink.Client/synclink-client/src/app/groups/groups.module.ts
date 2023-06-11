@@ -29,6 +29,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatDialogModule } from "@angular/material/dialog";
+import { GroupAdminListComponent } from './group-hub/group-admin-list/group-admin-list.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,7 @@ const routes: Routes = [
     DiscussionFeedItemComponent,
     VotingFeedItemComponent,
     QuizFeedItemComponent,
+    GroupAdminListComponent,
   ],
   imports: [
     CommonModule,
