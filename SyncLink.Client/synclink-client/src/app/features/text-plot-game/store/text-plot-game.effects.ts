@@ -119,7 +119,7 @@ export class TextPlotGameEffects {
     this.actions$.pipe(
       ofType(TextPlotGameActions.voteEntry),
       mergeMap(({ vote, groupId, gameId, entryId }) =>
-        this.http.post<TextPlotVote>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/textPlotGames/${gameId}/entries/${entryId}`, vote)
+        this.http.post<TextPlotVote>(`${environment.apiBaseUrl}/api/groups/${groupId}/features/textPlotGames/${gameId}/entries/${entryId}/votes`, vote)
           .pipe(
             map((vote) => TextPlotGameActions.voteEntrySuccess({ vote })),
             catchError(err => of(TextPlotGameActions.voteEntryFailure({ error: err })))
