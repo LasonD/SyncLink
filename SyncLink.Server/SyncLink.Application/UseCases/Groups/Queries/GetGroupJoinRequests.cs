@@ -2,7 +2,6 @@
 using MediatR;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
 using SyncLink.Application.Contracts.Data.Result.Pagination;
-using SyncLink.Application.Domain.Groups;
 using SyncLink.Application.Dtos;
 using SyncLink.Application.Exceptions;
 
@@ -10,9 +9,9 @@ namespace SyncLink.Application.UseCases.Groups.Queries;
 
 public static class GetGroupJoinRequests
 {
-    public record Query(int GroupId, int UserId) : IRequest<IPaginatedResult<GroupJoinRequestDto>>;
+    public record Query(int GroupId, int UserId) : IRequest<PaginatedResult<GroupJoinRequestDto>>;
 
-    public class Handler : IRequestHandler<Query, IPaginatedResult<GroupJoinRequestDto>>
+    public class Handler : IRequestHandler<Query, PaginatedResult<GroupJoinRequestDto>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IGroupsRepository _groupsRepository;
@@ -25,7 +24,7 @@ public static class GetGroupJoinRequests
             _userRepository = userRepository;
         }
 
-        public async Task<IPaginatedResult<GroupJoinRequestDto>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<PaginatedResult<GroupJoinRequestDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             var isUserGroupAdmin = await _userRepository.IsUserAdminOfGroupAsync(request.UserId, request.GroupId, cancellationToken);
 
@@ -38,9 +37,11 @@ public static class GetGroupJoinRequests
                 include: x => x.JoinRequests
             )).GetResult();
 
-            var pendingRequests = group.JoinRequests.Where(r => r.Status == GroupJoinRequestStatus.Pending).ToList();
+            var pendingRequests = group.JoinRequests.ToList();
 
-            return _mapper.Map<PaginatedResult<GroupJoinRequestDto>>(pendingRequests);
+            var dtoList = _mapper.Map<List<GroupJoinRequestDto>>(pendingRequests);
+
+            return new PaginatedResult<GroupJoinRequestDto>(dtoList, dtoList.Count, 1, dtoList.Count);
         }
     }
 }

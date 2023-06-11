@@ -35,6 +35,7 @@ public class GroupsRepository : GenericEntityRepository<Group>, IGroupsRepositor
             GroupSearchMode.ExplorePublic => g => !g.IsPrivate && g.UserGroups.All(ug => ug.UserId != userId),
             GroupSearchMode.Membership => g => g.UserGroups.Any(ug => ug.UserId == userId),
             GroupSearchMode.Owned => g => g.UserGroups.Any(ug => ug.IsCreator && ug.UserId == userId),
+            GroupSearchMode.Private => g => g.IsPrivate && g.UserGroups.All(ug => ug.UserId != userId),
             _ => throw new ArgumentOutOfRangeException(nameof(searchMode), searchMode, null)
         };
 

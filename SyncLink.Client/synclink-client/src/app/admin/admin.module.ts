@@ -4,8 +4,6 @@ import { JoinRequestsComponent } from './join-requests/join-requests.component';
 import { MatListModule } from "@angular/material/list";
 import { MatButtonModule } from "@angular/material/button";
 import { Routes } from "@angular/router";
-import { MatCardModule } from "@angular/material/card";
-import { MatToolbarModule } from "@angular/material/toolbar";
 
 export const adminRoutes: Routes = [
   {
@@ -20,9 +18,7 @@ export const adminRoutes: Routes = [
   imports: [
     CommonModule,
     MatListModule,
-    MatButtonModule,
-    MatCardModule,
-    MatToolbarModule
+    MatButtonModule
   ]
 })
 export class AdminModule { }
