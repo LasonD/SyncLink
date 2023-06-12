@@ -1,41 +1,50 @@
-<mat-dialog-content class="container-fluid">
-  <div class="row">
-    <div class="col-12">
-      <h2>Game ID: {{data.gameId}} - Group ID: {{data.groupId}}</h2>
-      <h3>Topic: {{data.topic}}</h3>
-      <p>Entries Committed: {{data.entriesCommittedCount}}</p>
-      <p>Words Committed: {{data.wordsCommittedCount}}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <h3>Leaderboard</h3>
-      <div *ngFor="let user of data.userStats; let i = index" class="user-stats">
-        <div class="rank">{{i + 1}}</div>
-        <h4>{{user.username}}</h4>
-        <p>Words Committed: {{user.wordsCommittedCount}}</p>
-        <p>Total Received Score: {{user.totalReceivedScore}}</p>
-        <button mat-button class="show-more me-2" (click)="toggleDetails(user.userId)">
-          {{ showMoreDetails[user.userId] ? 'Show Less' : 'Show More' }}
-        </button>
-        <div *ngIf="showMoreDetails[user.userId]">
-          <p>Entries Committed: {{user.entriesCommittedCount}}</p>
-          <p>Entries Submitted: {{user.entriesSubmittedCount}}</p>
-          <p>Words Submitted: {{user.wordsSubmittedCount}}</p>
-          <p>Votes Left Count: {{user.votesLeftCount}}</p>
-        </div>
-        <button mat-button class="show-comments" (click)="toggleComments(user.userId)">
-          {{ showComments[user.userId] ? 'Hide Comments' : 'Show Comments' }}
-        </button>
-        <mat-accordion *ngIf="showComments[user.userId]">
-          <div *ngFor="let comment of user.commentsReceived">
-            <p>{{comment}}</p>
+<mat-dialog-content>
+    <mat-card class="container-fluid">
+      <mat-card-content>
+        <div class="row">
+          <div class="col-12">
+            <h2 class="text-center">Game ID: {{data.gameId}} - Group ID: {{data.groupId}}</h2>
+            <mat-chip-listbox>
+              <mat-chip color="accent" class="mt-4 mb-4" selected>Topic: {{data.topic}}</mat-chip>
+            </mat-chip-listbox>
+            <p>Entries Committed: {{data.entriesCommittedCount}}</p>
+            <p>Words Committed: {{data.wordsCommittedCount}}</p>
           </div>
-        </mat-accordion>
-      </div>
-    </div>
-  </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-12">
+            <h3 class="text-center">Leaderboard</h3>
+            <mat-card *ngFor="let user of data.userStats; let i = index" class="user-stats mt-2">
+              <div class="rank">{{i + 1}}</div>
+              <h4>{{user.username}}</h4>
+              <p>Words Committed: {{user.wordsCommittedCount}}</p>
+              <p>Total Received Score: {{user.totalReceivedScore}}</p>
+              <button mat-raised-button color="primary" class="show-more me-2" (click)="toggleDetails(user.userId)">
+                {{ showMoreDetails[user.userId] ? 'Show Less' : 'Show More' }}
+              </button>
+              <div *ngIf="showMoreDetails[user.userId]">
+                <p>Entries Committed: {{user.entriesCommittedCount}}</p>
+                <p>Entries Submitted: {{user.entriesSubmittedCount}}</p>
+                <p>Words Submitted: {{user.wordsSubmittedCount}}</p>
+                <p>Votes Left Count: {{user.votesLeftCount}}</p>
+              </div>
+              <button mat-raised-button color="primary" class="show-comments mt-2" (click)="toggleComments(user.userId)">
+                {{ showComments[user.userId] ? 'Hide Comments' : 'Show Comments' }}
+              </button>
+              <mat-accordion *ngIf="showComments[user.userId]">
+                <mat-expansion-panel *ngFor="let comment of user.commentsReceived">
+                  <mat-expansion-panel-header>
+                    Comment
+                  </mat-expansion-panel-header>
+                  {{comment}}
+                </mat-expansion-panel>
+              </mat-accordion>
+            </mat-card>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-dialog-actions align="end">
+      <button mat-raised-button color="warn" mat-dialog-close>Close</button>
+    </mat-dialog-actions>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>Close</button>
-</mat-dialog-actions>

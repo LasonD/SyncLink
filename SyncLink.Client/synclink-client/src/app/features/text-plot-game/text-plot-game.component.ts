@@ -134,7 +134,7 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
     };
 
     const dialogRef = this.dialog.open(StatsModalComponent, {
-      width: '70%',
+      width: '50%',
       data: gameStats
     });
   }

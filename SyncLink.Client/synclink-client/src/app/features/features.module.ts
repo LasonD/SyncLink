@@ -26,6 +26,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { StatsModalComponent } from './text-plot-game/stats-modal/stats-modal.component';
 import { MatExpansionModule } from "@angular/material/expansion";
+import { MatChipsModule } from "@angular/material/chips";
 
 export const featureRoutes: Routes = [
   {
@@ -87,6 +88,7 @@ export const featureRoutes: Routes = [
     FormsModule,
     MatProgressBarModule,
     MatExpansionModule,
+    MatChipsModule,
   ],
   providers: [
 
