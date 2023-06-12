@@ -71,7 +71,7 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
 
   openVoteModal(entry: TextPlotEntry): void {
     const dialogRef = this.dialog.open(VoteModalComponent, {
-      width: '550px',
+      width: '620px',
       data: {entry: entry}
     });
 
@@ -125,9 +125,9 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
     };
 
     const gameStats: TextPlotGameStats = {
-      gameId: 123,
-      groupId: 456,
-      topic: "Fantasy Adventure",
+      gameId: 23,
+      groupId: 1,
+      topic: "Summertime Activities",
       entriesCommittedCount: 12,
       wordsCommittedCount: 60,
       userStats: [userStats1, userStats2]
@@ -176,6 +176,11 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
     });
 
     this.newEntryText = '';
+  }
+
+  getCompleteText() {
+    return this.committedEntries$
+      .pipe(take(1), map(e => e.map(x => x.text).join(' ')));
   }
 
   ngOnDestroy() {

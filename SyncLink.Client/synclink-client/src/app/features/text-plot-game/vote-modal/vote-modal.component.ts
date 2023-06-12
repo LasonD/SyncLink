@@ -9,7 +9,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 })
 export class VoteModalComponent implements OnInit {
   voteForm: FormGroup;
-  scores = ['Revoke', ...Array.from({length: 10}, (_, i) => i + 1)];
+  scores = [...Array.from({length: 10}, (_, i) => i + 1)];
 
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<any>) {
     this.voteForm = this.fb.group({

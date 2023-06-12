@@ -8,10 +8,10 @@
   </mat-card-header>
   <mat-card-content class="card-content">
     <h2 class="mt-4">Committed text:</h2>
-    <ng-container *ngIf="(committedEntries$ | async)?.length; else noCommittedEntries">
+    <ng-container *ngIf="(getCompleteText() | async)?.length; else noCommittedEntries">
       <mat-card class="committed-entries-card">
         <mat-card-content>
-          {{(committedEntries$ | async)?.join(' ')}}
+          {{(getCompleteText() | async)}}
         </mat-card-content>
       </mat-card>
     </ng-container>
