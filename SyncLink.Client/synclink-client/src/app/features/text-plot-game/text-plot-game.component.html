@@ -2,6 +2,9 @@
   <mat-card-header class="card-header justify-content-center">
     <mat-card-title class="game-topic mb-1 mt-1">{{(game$ | async)?.topic | titlecase}}</mat-card-title>
     <mat-card-subtitle class="game-date">Started at {{(game$ | async)?.creationDate | date}}</mat-card-subtitle>
+    <button mat-icon-button (click)="showStats()" aria-label="Game statistics">
+      <mat-icon>bar_chart</mat-icon>
+    </button>
   </mat-card-header>
   <mat-card-content class="card-content">
     <h2 class="mt-4">Committed text:</h2>

@@ -31,6 +31,19 @@ public class TextPlotGameRepository : GenericEntityRepository<TextPlotGame>, ITe
         return RepositoryEntityResult<TextPlotEntry>.FromEntity(entry);
     }
 
+    public async Task<RepositoryEntityResult<TextPlotGame>> GetTextPlotGameCompleteAsync(int groupId, int gameId, CancellationToken cancellationToken)
+    {
+        var game = await DbContext.TextPlotGames
+            .Include(g => g.Entries)
+            .ThenInclude(e => e.Votes)
+            .Include(g => g.Entries)
+            .ThenInclude(e => e.User)
+            .Include(g => g.Group)
+            .FirstOrDefaultAsync(g => g.Id == gameId && g.GroupId == groupId, cancellationToken);
+
+        return RepositoryEntityResult<TextPlotGame>.FromEntity(game);
+    }
+
     public Task<PaginatedRepositoryResultSet<TextPlotEntry>> GetPendingEntriesAsync(int groupId, int gameId, CancellationToken cancellationToken)
     {
         var query = new OrderedPaginationQuery<TextPlotEntry>(1, int.MaxValue);

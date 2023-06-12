@@ -151,3 +151,25 @@ export interface TextPlotVote {
   score: number;
   creationDate: Date;
 }
+
+export interface TextPlotGameStats {
+  gameId: number;
+  groupId: number;
+  topic: string;
+  entriesCommittedCount: number;
+  wordsCommittedCount: number;
+  userStats: TextPlotGameUserStats[];
+}
+
+export interface TextPlotGameUserStats {
+  userId: number;
+  username: string;
+  entriesCommittedCount: number;
+  entriesSubmittedCount: number;
+  wordsCommittedCount: number;
+  wordsSubmittedCount: number;
+  totalReceivedScore: number;
+  votesLeftCount: number;
+  commentsReceived: string[];
+}
+

@@ -1,0 +1,43 @@
+.container-fluid {
+  padding: 20px;
+}
+
+h2, h3, h4 {
+  color: #ffffff;
+}
+
+p {
+  margin-bottom: 15px;
+  color: #dddddd;
+}
+
+mat-dialog-actions {
+  justify-content: flex-end;
+}
+
+.user-stats {
+  background-color: #1a1a1a; /* Darker background for each user stat */
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.rank {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  color: #ffffff; /* White color for the rank number */
+  font-weight: bold;
+}
+
+mat-accordion {
+  margin-top: 10px;
+}
+
+button {
+  margin-top: 15px;
+  background-color: #3f51b5; /* Angular Material default color */
+  color: #ffffff; /* White color for better visibility */
+}

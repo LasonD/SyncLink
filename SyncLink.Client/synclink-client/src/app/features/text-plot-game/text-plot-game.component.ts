@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TextPlotEntry, TextPlotGame, TextPlotVote } from "./store/text-plot-game.reducer";
+import {
+  TextPlotEntry,
+  TextPlotGame,
+  TextPlotGameStats,
+  TextPlotGameUserStats,
+  TextPlotVote
+} from "./store/text-plot-game.reducer";
 import { VoteModalComponent } from "./vote-modal/vote-modal.component";
 import { MatDialog } from "@angular/material/dialog";
 import { AppState } from "../../store/app.reducer";
@@ -23,6 +29,7 @@ import {
 } from "./store/text-plot-game.selectors";
 import { revokeVote, submitEntry, voteEntry } from "./store/text-plot-game.actions";
 import { selectUserId } from "../../auth/store/auth.selectors";
+import { StatsModalComponent } from "./stats-modal/stats-modal.component";
 
 @Component({
   selector: 'app-text-plot-game',
@@ -89,6 +96,46 @@ export class TextPlotGameComponent implements OnInit, OnDestroy {
             }));
           }
         })
+    });
+  }
+
+  showStats() {
+    const userStats1: TextPlotGameUserStats = {
+      userId: 1,
+      username: "john_doe",
+      entriesCommittedCount: 5,
+      entriesSubmittedCount: 3,
+      wordsCommittedCount: 20,
+      wordsSubmittedCount: 15,
+      totalReceivedScore: 100,
+      votesLeftCount: 2,
+      commentsReceived: ["Great job!", "Keep it up!"]
+    };
+
+    const userStats2: TextPlotGameUserStats = {
+      userId: 2,
+      username: "jane_smith",
+      entriesCommittedCount: 7,
+      entriesSubmittedCount: 4,
+      wordsCommittedCount: 25,
+      wordsSubmittedCount: 20,
+      totalReceivedScore: 80,
+      votesLeftCount: 3,
+      commentsReceived: ["Well done!", "Impressive work!"]
+    };
+
+    const gameStats: TextPlotGameStats = {
+      gameId: 123,
+      groupId: 456,
+      topic: "Fantasy Adventure",
+      entriesCommittedCount: 12,
+      wordsCommittedCount: 60,
+      userStats: [userStats1, userStats2]
+    };
+
+    const dialogRef = this.dialog.open(StatsModalComponent, {
+      width: '70%',
+      data: gameStats
     });
   }
 

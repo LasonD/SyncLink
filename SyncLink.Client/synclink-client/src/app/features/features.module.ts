@@ -24,6 +24,8 @@ import { VoteModalComponent } from './text-plot-game/vote-modal/vote-modal.compo
 import { MatSelectModule } from "@angular/material/select";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { StatsModalComponent } from './text-plot-game/stats-modal/stats-modal.component';
+import { MatExpansionModule } from "@angular/material/expansion";
 
 export const featureRoutes: Routes = [
   {
@@ -65,7 +67,8 @@ export const featureRoutes: Routes = [
     CreateWordsChainComponent,
     TextPlotGamesListComponent,
     CreateTextPlotGameComponent,
-    VoteModalComponent
+    VoteModalComponent,
+    StatsModalComponent
   ],
   imports: [
     CommonModule,
@@ -83,6 +86,7 @@ export const featureRoutes: Routes = [
     MatDialogModule,
     FormsModule,
     MatProgressBarModule,
+    MatExpansionModule,
   ],
   providers: [
 
