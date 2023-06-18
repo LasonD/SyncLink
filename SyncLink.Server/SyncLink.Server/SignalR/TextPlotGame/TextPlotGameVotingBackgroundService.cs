@@ -13,12 +13,13 @@ public class TextPlotGameVotingBackgroundService : BackgroundService, ITextPlotG
     private readonly object _lock = new();
     private readonly ConcurrentDictionary<int, CancellationTokenSource> _gameTimers = new();
     private readonly IHubContext<SyncLinkHub, ISyncLinkHub> _hubContext;
-    private readonly IMediator _mediator;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public TextPlotGameVotingBackgroundService(IHubContext<SyncLinkHub, ISyncLinkHub> hubContext, IMediator mediator)
+    public TextPlotGameVotingBackgroundService(IHubContext<SyncLinkHub, ISyncLinkHub> hubContext, IServiceScopeFactory serviceScopeFactory)
     {
         _hubContext = hubContext;
-        _mediator = mediator;
+        //_mediator = mediator;
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -86,7 +87,9 @@ public class TextPlotGameVotingBackgroundService : BackgroundService, ITextPlotG
             GroupId = groupId
         };
 
-        await _mediator.Send(command, cts.Token);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Send(command, cts.Token);
     }
 
     public void StopGameTimer(int gameId)
