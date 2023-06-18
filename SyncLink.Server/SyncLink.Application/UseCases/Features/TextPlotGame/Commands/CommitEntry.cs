@@ -43,7 +43,7 @@ public static class CommitEntry
             }
 
             var entriesByVotes = pendingEntries!
-                .GroupBy(e => e.Votes.Count)
+                .GroupBy(e => e.Votes.Sum(v => v.Score))
                 .DistinctBy(g => g.Key)
                 .OrderByDescending(g => g.Key)
                 .ToList();

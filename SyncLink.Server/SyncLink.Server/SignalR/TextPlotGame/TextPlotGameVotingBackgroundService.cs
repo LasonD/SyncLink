@@ -18,7 +18,6 @@ public class TextPlotGameVotingBackgroundService : BackgroundService, ITextPlotG
     public TextPlotGameVotingBackgroundService(IHubContext<SyncLinkHub, ISyncLinkHub> hubContext, IServiceScopeFactory serviceScopeFactory)
     {
         _hubContext = hubContext;
-        //_mediator = mediator;
         _serviceScopeFactory = serviceScopeFactory;
     }
 
