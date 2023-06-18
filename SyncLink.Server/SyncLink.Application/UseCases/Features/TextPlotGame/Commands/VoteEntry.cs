@@ -25,6 +25,7 @@ public static class VoteEntry
 
     public class Handler : IRequestHandler<Command, TextPlotVoteDto>
     {
+        private const int VotingTimeLimitSeconds = 15;
         private readonly ITextPlotGameRepository _textPlotGameRepository;
         private readonly ITextPlotGameNotificationService _notificationService;
         private readonly IUserRepository _userRepository;
@@ -54,7 +55,7 @@ public static class VoteEntry
 
             if (existingVote != null)
             {
-                return await HandleVoteUpdateAsync(request, entryWithVotes, existingVote, cancellationToken);
+                return await HandleVoteUpdateAsync(request, existingVote, cancellationToken);
             }
 
             return await HandleVoteCreationAsync(request, entry, cancellationToken);
@@ -79,12 +80,12 @@ public static class VoteEntry
 
             await _notificationService.NotifyVoteReceivedAsync(request.GroupId, dto, cancellationToken);
 
-            _votingNotifier.StartGameTimerIfNotYetStarted(request.GroupId, entry.GameId, TimeSpan.FromMinutes(1));
+            _votingNotifier.StartGameTimerIfNotYetStarted(request.GroupId, entry.GameId, TimeSpan.FromSeconds(VotingTimeLimitSeconds));
 
             return dto;
         }
 
-        private async Task<TextPlotVoteDto> HandleVoteUpdateAsync(Command request, TextPlotEntry entryWithVotes, TextPlotVote existingVote, CancellationToken cancellationToken)
+        private async Task<TextPlotVoteDto> HandleVoteUpdateAsync(Command request, TextPlotVote existingVote, CancellationToken cancellationToken)
         {
             existingVote.Comment = request.Comment;
             existingVote.Score = request.Score;
@@ -95,7 +96,7 @@ public static class VoteEntry
 
             await _notificationService.NotifyVoteReceivedAsync(request.GroupId, dto, cancellationToken);
 
-            _votingNotifier.StartGameTimerIfNotYetStarted(request.GroupId, request.GameId, TimeSpan.FromMinutes(1));
+            _votingNotifier.StartGameTimerIfNotYetStarted(request.GroupId, request.GameId, TimeSpan.FromSeconds(VotingTimeLimitSeconds));
 
             return dto;
         }

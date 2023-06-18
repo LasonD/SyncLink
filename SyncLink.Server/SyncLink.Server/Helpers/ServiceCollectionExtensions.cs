@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+using SyncLink.Application.Contracts.Data.RepositoryInterfaces.Factories;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Domain.Groups;
 using SyncLink.Application.Dtos;
@@ -20,6 +21,7 @@ using SyncLink.Application.UseCases.Groups.Queries;
 using SyncLink.Infrastructure.Data.Context;
 using SyncLink.Infrastructure.Data.Models.Identity;
 using SyncLink.Infrastructure.Data.Repositories;
+using SyncLink.Infrastructure.Data.Repositories.Factories;
 using SyncLink.Infrastructure.Extensions;
 using SyncLink.Server.Common;
 using SyncLink.Server.Filters;
@@ -98,6 +100,7 @@ internal static class ServiceCollectionExtensions
     {
         var connectionString = config.GetConnectionString("SyncLinkDbContextConnection") ?? throw new InvalidOperationException("Connection string 'SyncLinkDbContextConnection' not found.");
 
+        services.AddDbContextFactory<SyncLinkDbContext>(options => options.UseSqlServer(connectionString));
         services.AddDbContext<SyncLinkDbContext>(options => options.UseSqlServer(connectionString));
         services.AddScoped<IAppDbContext, SyncLinkDbContext>();
 
@@ -168,6 +171,7 @@ internal static class ServiceCollectionExtensions
         services.AddTransient<IWhiteboardRepository, WhiteboardRepository>();
         services.AddTransient<IWordsChainGamesRepository, WordsChainGamesRepository>();
         services.AddTransient<ITextPlotGameRepository, TextPlotGameRepository>();
+        services.AddTransient<ITextPlotGameRepositoryFactory, TextPlotGameRepositoryFactory>();
 
         services.AddTransient<IEntityRepository<Group>, GroupsRepository>();
 

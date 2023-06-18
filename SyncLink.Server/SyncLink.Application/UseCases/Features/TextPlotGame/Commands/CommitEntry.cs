@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using SyncLink.Application.Contracts.Data.RepositoryInterfaces;
+using SyncLink.Application.Contracts.Data.RepositoryInterfaces.Factories;
 using SyncLink.Application.Contracts.RealTime;
 using SyncLink.Application.Domain.Features.TextPlotGame;
 using SyncLink.Application.Dtos.TextPlotGame;
@@ -22,11 +23,11 @@ public static class CommitEntry
         private readonly ITextPlotGameNotificationService _notificationService;
         private readonly IMapper _mapper;
 
-        public Handler(ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepository textPlotGameRepository)
+        public Handler(ITextPlotGameNotificationService notificationService, IMapper mapper, ITextPlotGameRepositoryFactory textPlotGameRepositoryFactory)
         {
             _notificationService = notificationService;
             _mapper = mapper;
-            _textPlotGameRepository = textPlotGameRepository;
+            _textPlotGameRepository = textPlotGameRepositoryFactory.Create();
         }
 
         public async Task<TextPlotEntryDto?> Handle(Command request, CancellationToken cancellationToken)

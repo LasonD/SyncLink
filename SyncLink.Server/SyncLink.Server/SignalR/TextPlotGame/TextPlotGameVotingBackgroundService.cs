@@ -56,7 +56,7 @@ public class TextPlotGameVotingBackgroundService : BackgroundService, ITextPlotG
                     await Task.Delay(1000, cts.Token);
                 }
 
-                if (!cts.Token.IsCancellationRequested)
+                if (cts.Token.IsCancellationRequested)
                 {
                     await _hubContext.Clients.Group(HubHelper.GetGroupNameForGroupId(groupId)).EntryNotCommitted(gameId);
                 }
