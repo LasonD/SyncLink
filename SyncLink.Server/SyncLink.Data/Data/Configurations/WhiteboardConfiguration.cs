@@ -4,21 +4,10 @@ using SyncLink.Application.Domain.Features;
 
 namespace SyncLink.Infrastructure.Data.Configurations;
 
-internal class WhiteboardConfiguration : IEntityTypeConfiguration<Whiteboard>
+internal class WhiteboardConfiguration : IEntityTypeConfiguration<Whiteboard>, IEntityTypeConfiguration<WhiteboardElement>
 {
     public void Configure(EntityTypeBuilder<Whiteboard> builder)
     {
-        builder.OwnsMany(x => x.WhiteboardElements, e =>
-        {
-            e.WithOwner();
-            e.OwnsOne(x => x.Options);
-            e.HasOne(x => x.Author)
-                .WithMany()
-                .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
-        });
-
         builder.HasOne(x => x.Group)
             .WithMany()
             .HasForeignKey(x => x.GroupId)
@@ -30,5 +19,22 @@ internal class WhiteboardConfiguration : IEntityTypeConfiguration<Whiteboard>
             .HasForeignKey(x => x.OwnerId)
             .OnDelete(DeleteBehavior.SetNull)
             .IsRequired(false);
+    }
+
+    public void Configure(EntityTypeBuilder<WhiteboardElement> builder)
+    {
+        builder.HasOne(x => x.Author)
+            .WithMany()
+            .HasForeignKey(x => x.AuthorId)
+            .OnDelete(DeleteBehavior.SetNull)
+            .IsRequired(false);
+
+        builder.HasOne(x => x.Whiteboard)
+            .WithMany(x => x.WhiteboardElements)
+            .HasForeignKey(x => x.WhiteboardId)
+            .OnDelete(DeleteBehavior.SetNull)
+            .IsRequired(false);
+
+        builder.OwnsOne(x => x.Options);
     }
 }

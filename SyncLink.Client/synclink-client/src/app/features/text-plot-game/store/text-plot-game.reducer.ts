@@ -16,7 +16,7 @@ export const gamesAdapter: EntityAdapter<TextPlotGame> = createEntityAdapter<Tex
 });
 export const entryAdapter: EntityAdapter<TextPlotEntry> = createEntityAdapter<TextPlotEntry>({
   sortComparer: (a, b) => {
-    return -(new Date(a.creationDate)?.getTime() - new Date(b.creationDate)?.getTime());
+    return (new Date(a.creationDate)?.getTime() - new Date(b.creationDate)?.getTime());
   }
 });
 export const voteAdapter: EntityAdapter<TextPlotVote> = createEntityAdapter<TextPlotVote>({

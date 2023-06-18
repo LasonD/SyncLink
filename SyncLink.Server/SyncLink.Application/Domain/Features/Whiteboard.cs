@@ -33,6 +33,9 @@ public class WhiteboardElement
 
     public User Author { get; set; } = null!;
     public int? AuthorId { get; set; }
+
+    public Whiteboard Whiteboard { get; set; } = null!;
+    public int? WhiteboardId { get; set; }
 }
 
 public enum ElementTypeEnum

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Whiteboard, WhiteboardState } from "../store/whiteboard.reducer";
+import { Whiteboard } from "../store/whiteboard.reducer";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { getWhiteboards } from "../store/whiteboard.actions";
@@ -7,6 +7,7 @@ import { selectCurrentGroupId } from "../../../groups/group-hub/store/group-hub.
 import { distinctUntilChanged, Observable, Subject, takeUntil } from "rxjs";
 import { selectWhiteboards } from "../store/whiteboard.selectors";
 import { filter, tap } from "rxjs/operators";
+import { AppState } from "../../../store/app.reducer";
 
 @Component({
   selector: 'app-whiteboards-list',
@@ -18,7 +19,7 @@ export class WhiteboardsListComponent implements OnInit, OnDestroy {
 
   whiteboards$: Observable<Whiteboard[]>;
 
-  constructor(private store: Store<WhiteboardState>, private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private store: Store<AppState>, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.store.select(selectCurrentGroupId)

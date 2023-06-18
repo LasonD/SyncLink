@@ -1,6 +1,6 @@
 import * as fromWhiteboard from "../whiteboard/store/whiteboard.reducer";
 import { combineReducers } from "@ngrx/store";
-import { whiteboardReducer } from "../whiteboard/store/whiteboard.reducer";
+import { whiteboardFeatureReducer, whiteboardReducer } from "../whiteboard/store/whiteboard.reducer";
 import {
   textPlotGamesFeatureReducer,
   TextPlotGameState
@@ -12,13 +12,13 @@ import {
 } from "../words-chain-list/store/words-chain.reducer";
 
 export interface FeaturesState {
-  whiteboards: fromWhiteboard.WhiteboardState,
+  whiteboards: fromWhiteboard.WhiteboardsFeatureState,
   textPlotGame: TextPlotGameState,
   wordsChainState: WordsChainState,
 }
 
 export const featuresReducer = combineReducers<FeaturesState>({
-  whiteboards: whiteboardReducer,
+  whiteboards: whiteboardFeatureReducer,
   textPlotGame: textPlotGamesFeatureReducer,
   wordsChainState: combineReducers<WordsChainState>({
     wordsChainDetailsState: wordsChainsReducer,
