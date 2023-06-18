@@ -71,9 +71,14 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$),
     );
 
+    let isSizeCalculated = false;
     this.whiteboard$.pipe(filter(w => !!w))
       .subscribe(w => {
-        setTimeout(() => this.calculateSize(), 0);
+        if (isSizeCalculated) return;
+        setTimeout(() => {
+          this.calculateSize();
+          isSizeCalculated = true;
+        }, 0);
       });
 
     this.isLoading$ = this.store.select(selectWhiteboardLoading).pipe(takeUntil(this.destroyed$));
@@ -103,6 +108,7 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
   }
 
   calculateSize() {
+    console.log('Calculate size');
     const workarea = this.workarea.nativeElement;
     const dim = {
       w: this.options.canvasWidth,
