@@ -25,6 +25,8 @@ public class WhiteboardElementDto
     public float Rotation { get; set; }
     public float Opacity { get; set; }
     public WhiteboardElementOptionsDto Options { get; set; } = null!;
+    public int WhiteboardId { get; set; }
+    public int AuthorId { get; set; }
 }
 
 public class WhiteboardElementOptionsDto

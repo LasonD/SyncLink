@@ -2,7 +2,6 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation 
 import {
   ElementTypeEnum,
   FormatType,
-  LineCapEnum, LineJoinEnum,
   NgWhiteboardService,
   ToolsEnum,
   WhiteboardElement
@@ -19,7 +18,7 @@ import { filter, map, take } from "rxjs/operators";
 import { getWhiteboard, whiteboardUpdated } from "./store/whiteboard.actions";
 import { selectCurrentGroupId } from "../../groups/group-hub/store/group-hub.selectors";
 import { ActivatedRoute } from "@angular/router";
-import { Whiteboard } from "./store/whiteboard.reducer";
+import { ExtendedWhiteboardElement, Whiteboard } from "./store/whiteboard.reducer";
 
 @Component({
   selector: 'app-whiteboard',
@@ -360,8 +359,7 @@ export class WhiteboardComponent implements OnInit, OnDestroy {
         take(1),
         withLatestFrom(this.store.select(selectSelectedWhiteboardId).pipe(filter(id => !!id)))
       ).subscribe(([groupId, selectedWhiteboardId]) => {
-      console.log('Whiteboard updated', groupId, change);
-      this.store.dispatch(whiteboardUpdated({groupId, id: selectedWhiteboardId, changes: change}));
+      this.store.dispatch(whiteboardUpdated({groupId, id: selectedWhiteboardId, changes: change.map(e => e as ExtendedWhiteboardElement)}));
     });
   }
 

@@ -22,12 +22,12 @@ export interface WhiteboardsState extends EntityState<Whiteboard> {
   whiteboardError: any;
 }
 
-export interface WhiteboardElementsState extends EntityState<WhiteboardElement> {
+export interface WhiteboardElementsState extends EntityState<ExtendedWhiteboardElement> {
 
 }
 
 export const whiteboardsAdapter: EntityAdapter<Whiteboard> = createEntityAdapter<Whiteboard>();
-export const whiteboardElementsAdapter: EntityAdapter<WhiteboardElement> = createEntityAdapter<WhiteboardElement>();
+export const whiteboardElementsAdapter: EntityAdapter<ExtendedWhiteboardElement> = createEntityAdapter<ExtendedWhiteboardElement>();
 
 export const whiteboardsInitialState: WhiteboardsState = whiteboardsAdapter.getInitialState({
   selectedWhiteboardId: null,
@@ -41,7 +41,11 @@ export const whiteboardElementsInitialState: WhiteboardElementsState = whiteboar
 });
 
 export const whiteboardElementsReducer = createReducer(
-  whiteboardElementsInitialState
+  whiteboardElementsInitialState,
+  on(getWhiteboardsSuccess, (state, { whiteboards }): WhiteboardElementsState => {
+    const elements = whiteboards.entities.flatMap(ee => ee.whiteboardElements.map(e => adjustExternalElement(e)));
+    return whiteboardElementsAdapter.addMany(elements, state);
+  }),
 );
 
 export const whiteboardReducer = createReducer(
@@ -94,7 +98,7 @@ function adjustExternalWhiteboard(w: Whiteboard): Whiteboard {
   };
 }
 
-function adjustExternalElement(e: WhiteboardElement): WhiteboardElement {
+function adjustExternalElement(e: ExtendedWhiteboardElement): ExtendedWhiteboardElement {
   return {
     ...e,
     type: stringToEnumValue(e.type, ElementTypeEnum),
@@ -113,10 +117,15 @@ function stringToEnumValue<T>(input: string, enumObj: T): T[keyof T] | undefined
   return matchingValue as T[keyof T] | undefined;
 }
 
+export class ExtendedWhiteboardElement extends WhiteboardElement {
+  whiteboardId: number;
+  authorId: number;
+}
+
 export interface Whiteboard {
   id: number,
   name: string,
-  whiteboardElements: WhiteboardElement[],
+  whiteboardElements: ExtendedWhiteboardElement[],
   creatorId: number,
   groupId: number,
 }

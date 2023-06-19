@@ -40,5 +40,5 @@ export const selectSelectedWhiteboard = createSelector(
 
 export const selectWhiteboardElementsById = (whiteboardId: number) => createSelector(
   whiteboardElementsSelectors.selectAll,
-  (elements) => elements.filter(e => e.)
+  (elements) => elements.filter(e => e.whiteboardId === whiteboardId)
 );

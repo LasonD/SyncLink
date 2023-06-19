@@ -1,6 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { Whiteboard } from "./whiteboard.reducer";
-import { WhiteboardElement } from "ng-whiteboard";
+import { ExtendedWhiteboardElement, Whiteboard } from "./whiteboard.reducer";
 import { Page } from "../../../models/pagination.model";
 
 export const getWhiteboard = createAction(
@@ -35,12 +34,12 @@ export const getWhiteboardsFailure = createAction(
 
 export const whiteboardUpdated = createAction(
   '[Whiteboard] Whiteboard Updated',
-  props<{ id: number, groupId: number, changes: WhiteboardElement[] }>()
+  props<{ id: number, groupId: number, changes: ExtendedWhiteboardElement[] }>()
 );
 
 export const whiteboardUpdatedExternal = createAction(
   '[Whiteboard] Whiteboard Updated External',
-  props<{ id: number, groupId: number, changes: WhiteboardElement[] }>()
+  props<{ id: number, groupId: number, changes: ExtendedWhiteboardElement[] }>()
 );
 
 export const whiteboardUpdatedSuccess = createAction(
